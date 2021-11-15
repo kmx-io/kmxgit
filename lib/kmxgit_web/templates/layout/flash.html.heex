@@ -1,0 +1,5 @@
+<div class="container-fluid center">
+  <div class="flash-error"><%= get_flash(@conn)["error"] %></div>
+  <div class="flash-warning"><%= get_flash(@conn)["warning"] %></div>
+  <div class="flash-info"><%= get_flash(@conn)["info"] %></div>
+</div>

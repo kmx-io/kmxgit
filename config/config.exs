@@ -17,6 +17,13 @@ config :kmxgit, KmxgitWeb.Endpoint,
   pubsub_server: Kmxgit.PubSub,
   live_view: [signing_salt: "0HhihW2z"]
 
+config :dart_sass,
+  version: "1.39.0",
+  default: [
+    args: ~w(css/app.scss ../priv/static/assets/app.css),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

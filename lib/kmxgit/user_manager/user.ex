@@ -8,6 +8,7 @@ defmodule Kmxgit.UserManager.User do
 
   schema "users" do
     field :description, :string, null: true
+    field :email, :string, unique: true
     field :encrypted_password, :string
     field :is_admin, :boolean, null: false
     field :login, :string, unique: true
@@ -22,7 +23,8 @@ defmodule Kmxgit.UserManager.User do
     user
     |> check_password_confirmation()
     |> put_password_hash()
-    |> validate_required([:login, :encrypted_password])
+    |> validate_required([:email, :login, :encrypted_password])
+    |> validate_format(:email, ~r/^[-_.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
     |> validate_format(:login, ~r/^[A-Za-z][-_0-9A-Za-z]{1,64}$/)
     |> unique_constraint(:login)
     |> Markdown.validate_markdown(:description)
@@ -31,14 +33,14 @@ defmodule Kmxgit.UserManager.User do
   @doc false
   def changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :login, :name, :password, :password_confirmation])
+    |> cast(attrs, [:description, :email, :login, :name, :password, :password_confirmation])
     |> common_changeset()
   end
 
   @doc false
   def admin_changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :login, :name, :is_admin, :password, :password_confirmation])
+    |> cast(attrs, [:description, :email, :is_admin, :login, :name, :password, :password_confirmation])
     |> common_changeset()
   end
 

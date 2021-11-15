@@ -1,0 +1,18 @@
+<%= if @conn.assigns[:current_organisation] do %>
+  <li class="nav-item">
+    <%= link @current_organisation.name,
+             to: Routes.organisation_path(@conn, :show, @current_organisation.slug),
+             class: "nav-link" %>
+  </li>
+<% end %>
+<li class="nav-item">
+  <%= link User.display_name(@current_user), to: Routes.user_path(@conn, :show, @current_user.login), class: "nav-link" %>
+</li>
+<%= if @current_user.is_admin do %>
+  <li class="nav-item">
+    <%= link gettext("Admin"), to: Routes.admin_dashboard_path(@conn, :index), class: "nav-link" %>
+  </li>
+<% end %>
+<li class="nav-item">
+  <%= link gettext("Logout"), to: Routes.session_path(@conn, :logout), class: "nav-link" %>
+</li>

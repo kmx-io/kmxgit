@@ -1,0 +1,27 @@
+<div class="container-fluid center">
+  <div class="login-form">
+    <h1>
+      <%= gettext "Connection" %>
+    </h1>
+    <%= form_for @changeset, @action, fn f -> %>
+
+      <div class="form-group">
+        <%= label f, :login, class: "control-label" %>
+        <%= text_input f, :login, class: "form-control" %>
+        <%= error_tag f, :login %>
+      </div>
+
+      <div class="form-group">
+        <%= label f, :password, class: "control-label" %>
+        <%= password_input f, :password, class: "form-control" %>
+        <%= error_tag f, :password %>
+      </div>
+
+      <div class="form-group">
+        <%= submit "Submit", class: "btn btn-primary" %>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>

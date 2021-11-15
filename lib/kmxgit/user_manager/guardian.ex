@@ -1,5 +1,5 @@
 defmodule Kmxgit.UserManager.Guardian do
-  use Guardian, otp_app: :accounting
+  use Guardian, otp_app: :kmxgit
 
   alias Kmxgit.UserManager
 

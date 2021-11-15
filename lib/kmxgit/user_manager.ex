@@ -125,7 +125,8 @@ defmodule Kmxgit.UserManager do
   end
 
   def authenticate_user(login, password) do
-    query = from u in User, where: u.login == ^login
+    query = from u in User,
+      where: fragment("lower(?)", u.login) == ^String.downcase(login) or fragment("lower(?)", u.email) == ^String.downcase(login)
     case Repo.one(query) do
       nil ->
         Bcrypt.no_user_verify()

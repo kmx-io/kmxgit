@@ -34,6 +34,8 @@ defmodule Kmxgit.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 2.0"},
+      {:dart_sass, "~> 0.2", runtime: Mix.env() == :dev},
+      {:earmark, "~> 1.4.5"},
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:floki, ">= 0.30.0", only: :test},
@@ -66,7 +68,11 @@ defmodule Kmxgit.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      "assets.deploy": [
+        "esbuild default --minify",
+	"sass default --no-source-map --style=compressed",
+        "phx.digest"
+      ]
     ]
   end
 end

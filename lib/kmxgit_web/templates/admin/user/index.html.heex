@@ -1,0 +1,20 @@
+<h1>Users</h1>
+
+<table class="table admin-index">
+  <tr>
+    <th><%= gettext "Id" %></th>
+    <th><%= gettext "Name" %></th>
+    <th><%= gettext "Email" %></th>
+    <th><%= gettext "Login" %></th>
+    <th><%= gettext "Admin" %></th>
+  </tr>
+  <%= Enum.map @users, fn(user) -> %>
+    <tr>
+      <td><%= link user.id, to: Routes.admin_user_path(@conn, :show, user) %></td>
+      <td><%= user.name %></td>
+      <td><%= link user.email, to: "mailto:#{user.email}" %></td>
+      <td><%= link user.login, to: Routes.admin_user_path(@conn, :show, user) %></td>
+      <td><%= user.is_admin %></td>
+    </tr>
+  <% end %>
+</table>

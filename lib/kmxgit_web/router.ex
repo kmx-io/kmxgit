@@ -31,31 +31,52 @@ defmodule KmxgitWeb.Router do
 
   # maybe logged in
   scope "/", KmxgitWeb do
-    pipe_through :browser
+    pipe_through [:browser, :auth]
 
-    get "/", PageController, :index
+    get "/",           PageController, :index
+    get  "/new_admin", PageController, :new_admin
+    post "/new_admin", PageController, :new_admin_post
+
+    scope "/sessions" do
+      get  "/new",    SessionController, :new
+      post "/new",    SessionController, :login
+      get  "/logout", SessionController, :logout
+    end
+
+    get "/register",  RegistrationController, :new
+    post "/register", RegistrationController, :register
+  end
+
+  # definitely logged in, will redirect to login page
+  scope "/", KmxgitWeb do
+    pipe_through [:browser, :auth, :ensure_auth]
+
+    scope "/org" do
+      get "/",      OrganisationController, :index
+      get "/:slug", OrganisationController, :show
+    end
+
+    scope "/u" do
+      get "/:login",      UserController, :show
+      get "/:login/edit", UserController, :edit
+      put "/:login",      UserController, :update
+    end
+
+    scope "/admin", Admin, as: "admin" do
+      pipe_through :admin
+      get "/", DashboardController, :index
+      resources "/org", OrganisationController
+      resources "/u", UserController
+
+      import Phoenix.LiveDashboard.Router
+      live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry
+    end
   end
 
   # Other scopes may use custom stacks.
   # scope "/api", KmxgitWeb do
   #   pipe_through :api
   # end
-
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
-  if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
-
-    scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry
-    end
-  end
 
   # Enables the Swoosh mailbox preview in development.
   #
