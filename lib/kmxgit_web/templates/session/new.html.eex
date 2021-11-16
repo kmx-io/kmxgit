@@ -5,19 +5,19 @@
     </h1>
     <%= form_for @changeset, @action, fn f -> %>
 
-      <div class="form-group">
-        <%= label f, :login, class: "control-label" %>
+      <div class="mb-3">
+        <%= label f, :login, class: "form-label" %>
         <%= text_input f, :login, class: "form-control" %>
         <%= error_tag f, :login %>
       </div>
 
-      <div class="form-group">
-        <%= label f, :password, class: "control-label" %>
+      <div class="mb-3">
+        <%= label f, :password, class: "form-label" %>
         <%= password_input f, :password, class: "form-control" %>
         <%= error_tag f, :password %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= submit "Submit", class: "btn btn-primary" %>
       </div>
 

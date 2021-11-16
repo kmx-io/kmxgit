@@ -65,8 +65,8 @@ defmodule KmxgitWeb.Router do
     scope "/admin", Admin, as: "admin" do
       pipe_through :admin
       get "/", DashboardController, :index
-      resources "/org", OrganisationController
-      resources "/u", UserController
+      resources "/organisations", OrganisationController
+      resources "/users", UserController
 
       import Phoenix.LiveDashboard.Router
       live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry

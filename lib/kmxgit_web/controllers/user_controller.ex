@@ -14,6 +14,7 @@ defmodule KmxgitWeb.UserController do
     end
     if user do
       conn
+      |> assign(:page_title, gettext("User %{login}", login: user.login))
       |> render("show.html", user: user)
     else
       conn
@@ -33,6 +34,7 @@ defmodule KmxgitWeb.UserController do
     if params["login"] == current_user.login do
       changeset = User.changeset(current_user)
       conn
+      |> assign(:page_title, gettext("Edit user %{login}", login: current_user.login))
       |> render("edit.html", changeset: changeset)
     else
       not_found(conn)

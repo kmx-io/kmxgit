@@ -7,6 +7,7 @@ defmodule KmxgitWeb.Admin.UserController do
   def index(conn, _params) do
     users = UserManager.list_users
     conn
+    |> assign(:page_title, gettext("Users"))
     |> assign(:users, users)
     |> render("index.html")
   end
@@ -29,6 +30,7 @@ defmodule KmxgitWeb.Admin.UserController do
 
   defp show_user(conn, user) do
     conn
+    |> assign(:page_title, gettext("User %{login}", login: user.login))
     |> assign(:user, user)
     |> render("show.html")
   end

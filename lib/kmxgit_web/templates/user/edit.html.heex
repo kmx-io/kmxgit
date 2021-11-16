@@ -1,0 +1,50 @@
+<div class="container-fluid center">
+  <h1>Edit user</h1>
+  <%= form_for @changeset, Routes.user_path(@conn, :update, @current_user.login), fn f -> %>
+
+    <div class="mb-3">
+      <%= label f, :name, class: "form-label" %>
+      <%= text_input f, :name, class: "form-control" %>
+      <%= error_tag f, :name %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :email, class: "form-label" %>
+      <%= text_input f, :email, class: "form-control" %>
+      <%= error_tag f, :email %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :login, class: "form-label" %>
+      <%= text_input f, :login, class: "form-control" %>
+      <%= error_tag f, :login %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :password, class: "form-label" %>
+      <%= password_input f, :password, class: "form-control" %>
+      <%= error_tag f, :password %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :password_confirmation, class: "form-label" %>
+      <%= password_input f, :password_confirmation, class: "form-control" %>
+      <%= error_tag f, :password_confirmation %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :description, class: "form-label" %>
+      <%= textarea f, :description, class: "form-control" %>
+      <%= error_tag f, :description %>
+    </div>
+
+    <div class="mb-3">
+      <%= link gettext("Cancel"),
+               to: Routes.user_path(@conn, :show, @current_user.login),
+               class: "btn btn-secondary" %>
+      &nbsp;
+      <%= submit gettext("Submit"), class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
+</div>

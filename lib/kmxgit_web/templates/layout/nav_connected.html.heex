@@ -6,7 +6,7 @@
   </li>
 <% end %>
 <li class="nav-item">
-  <%= link User.display_name(@current_user), to: Routes.user_path(@conn, :show, @current_user.login), class: "nav-link" %>
+  <%= link @current_user.login, to: Routes.user_path(@conn, :show, @current_user.login), class: "nav-link" %>
 </li>
 <%= if @current_user.is_admin do %>
   <li class="nav-item">

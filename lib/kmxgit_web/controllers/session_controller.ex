@@ -15,7 +15,11 @@ defmodule KmxgitWeb.SessionController do
       else
         Routes.session_path(conn, :login)
       end
-      render(conn, "new.html", changeset: changeset, action: action)
+      conn
+      |> assign(:action, action)
+      |> assign(:changeset, changeset)
+      |> assign(:page_title, gettext "Login")
+      |> render("new.html")
     end
   end
 

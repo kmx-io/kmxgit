@@ -1,0 +1,41 @@
+<div class="container-fluid">
+  <h1><%= gettext "Register" %></h1>
+
+  <%= form_for @changeset, @action, fn f -> %>
+
+    <div class="mb-3">
+      <%= label f, :name, class: "form-label" %>
+      <%= text_input f, :name, class: "form-control" %>
+      <%= error_tag f, :name %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :email, class: "form-label" %>
+      <%= text_input f, :email, class: "form-control" %>
+      <%= error_tag f, :email %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :login, class: "form-label" %>
+      <%= text_input f, :login, class: "form-control" %>
+      <%= error_tag f, :login %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :password, class: "form-label" %>
+      <%= password_input f, :password, class: "form-control" %>
+      <%= error_tag f, :password %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :password_confirmation, class: "form-label" %>
+      <%= password_input f, :password_confirmation, class: "form-control" %>
+      <%= error_tag f, :password_confirmation %>
+    </div>
+
+    <div class="mb-3">
+      <%= submit "Submit", class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
+</div>

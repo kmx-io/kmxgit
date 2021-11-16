@@ -26,7 +26,8 @@ defmodule Kmxgit.UserManager.User do
     |> validate_required([:email, :login, :encrypted_password])
     |> validate_format(:email, ~r/^[-_.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
     |> validate_format(:login, ~r/^[A-Za-z][-_0-9A-Za-z]{1,64}$/)
-    |> unique_constraint(:login)
+    |> unique_constraint(:_lower_email)
+    |> unique_constraint(:_lower_login)
     |> Markdown.validate_markdown(:description)
   end
 

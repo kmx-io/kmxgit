@@ -3,6 +3,7 @@ defmodule KmxgitWeb.Admin.DashboardController do
 
   def index(conn, _params) do
     conn
+    |> assign(:page_title, gettext "Dashboard")
     |> render("index.html")
   end
 end

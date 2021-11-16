@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-12 col-sm-8">
+      <h1><%= @user.login %></h1>
+    </div>
+    <div class="col col-12 col-sm-4">
+      <%= link gettext("Edit"),
+               to: Routes.user_path(@conn, :edit, @user.login),
+               class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col col-12 col-md-8">
+      <hr/>
+      <h2><%= gettext "Repositories" %></h2>
+    </div>
+    <div class="col col-12 col-md-4">
+      <hr/>
+      <h2><%= gettext "Properties" %></h2>
+      <table class="table admin-properties">
+        <tr>
+          <th><%= gettext "Name" %></th>
+          <td><%= @user.name %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Email" %></th>
+          <td><%= link @user.email, to: "mailto:#{@user.email}" %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Login" %></th>
+          <td><%= @user.login %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Description" %></th>
+          <td>
+            <%= if @user.description do %>
+              <%= raw Earmark.as_html!(@user.description) %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "Organisations" %></th>
+          <td>
+            
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "SSH keys" %></th>
+          <td>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <p>
+  </p>
+
+</div>
