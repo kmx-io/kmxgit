@@ -2,7 +2,26 @@
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../node_modules/font-awesome/scss/font-awesome.scss";
 
-@import "flash.scss";
+@import "./flash.scss";
+
+/* users */
+textarea#user_description {
+    min-height: 10em;
+}
+textarea#user_ssh_keys {
+    font-family: monospace;
+    min-height: 20em;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+pre.ssh_keys {
+    max-width: 20em;
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
 
 /* LiveView specific classes for your customization */
 .phx-no-feedback.invalid-feedback,

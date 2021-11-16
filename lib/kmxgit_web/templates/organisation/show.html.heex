@@ -1,0 +1,9 @@
+<div class="container-fluid">
+  <h1><%= @organisation.name %></h1>
+
+  <%= @organisation.address %>
+
+  <%= if @organisation.description do %>
+    <%= raw Earmark.as_html!(@organisation.description) %>
+  <% end %>
+</div>

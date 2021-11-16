@@ -41,13 +41,4 @@ defmodule Kmxgit.OrganisationManager do
   def delete_organisation(%Organisation{} = organisation) do
     Repo.delete(organisation)
   end
-
-  def organisation_present? do
-    if Repo.one(from organisation in Organisation,
-          limit: 1) do
-      true
-    else
-      false
-    end
-  end
 end

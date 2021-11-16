@@ -47,7 +47,10 @@
         </tr>
         <tr>
           <th><%= gettext "SSH keys" %></th>
-          <td>
+          <td class="scroll-x">
+            <pre class="ssh_keys">
+              <%= @user.ssh_keys %>
+            </pre>
           </td>
         </tr>
       </table>

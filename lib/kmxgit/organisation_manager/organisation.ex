@@ -4,20 +4,19 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   import Ecto.Changeset
 
   schema "organisations" do
-    field :slug, :string
-    field :address, :string
     field :description, :string
-    field :name, :string, null: false
+    field :name, :string
+    field :slug, :string, null: false
     timestamps()
   end
 
   @doc false
   def changeset(organisation, attrs \\ %{}) do
     organisation
-    |> cast(attrs, [:slug, :address, :description, :name])
-    |> validate_required([:slug, :name])
-    |> validate_format(:slug, ~r/^[A-Za-z][-_0-9A-Za-z]{1,64}$/)
-    |> unique_constraint(:slug)
+    |> cast(attrs, [:slug, :description, :name])
+    |> validate_required([:slug])
+    |> validate_format(:slug, ~r/^[A-Za-z][-_+0-9A-Za-z]{1,64}$/)
+    |> unique_constraint(:_lower_slug)
     |> Markdown.validate_markdown(:description)
   end
 

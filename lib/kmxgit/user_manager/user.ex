@@ -2,7 +2,7 @@ defmodule Kmxgit.UserManager.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Kmxgit.UserManager.UserOrganisation
+  alias Kmxgit.OrganisationManager.Organisation
   alias KmxgitWeb.Router.Helpers, as: Routes
   alias BCrypt
 
@@ -13,10 +13,11 @@ defmodule Kmxgit.UserManager.User do
     field :is_admin, :boolean, null: false
     field :login, :string, unique: true
     field :name, :string
-    timestamps()
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
-    has_many :organisations, UserOrganisation
+    field :ssh_keys, :string
+    many_to_many :organisations, Organisation, join_through: "users_organisations"
+    timestamps()
   end
 
   defp common_changeset(user) do
@@ -24,7 +25,7 @@ defmodule Kmxgit.UserManager.User do
     |> check_password_confirmation()
     |> put_password_hash()
     |> validate_required([:email, :login, :encrypted_password])
-    |> validate_format(:email, ~r/^[-_.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
+    |> validate_format(:email, ~r/^[-_+.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
     |> validate_format(:login, ~r/^[A-Za-z][-_0-9A-Za-z]{1,64}$/)
     |> unique_constraint(:_lower_email)
     |> unique_constraint(:_lower_login)
@@ -34,34 +35,38 @@ defmodule Kmxgit.UserManager.User do
   @doc false
   def changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :email, :login, :name, :password, :password_confirmation])
+    |> cast(attrs, [:description, :email, :login, :name, :password, :password_confirmation, :ssh_keys])
     |> common_changeset()
   end
 
   @doc false
   def admin_changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :email, :is_admin, :login, :name, :password, :password_confirmation])
+    |> cast(attrs, [:description, :email, :is_admin, :login, :name, :password, :password_confirmation, :ssh_keys])
     |> common_changeset()
   end
 
   defp check_password_confirmation(%Ecto.Changeset{changes: %{password: password,
                                                               password_confirmation: password_confirmation}} = changeset) do
     if password != password_confirmation do
-      Ecto.Changeset.add_error(changeset,
-        :password_confirmation,
-        "Passwords do not match.")
+      passwords_do_not_match(changeset)
     else
       changeset
     end
   end
 
   defp check_password_confirmation(%Ecto.Changeset{changes: %{password: _}} = changeset) do
-    changeset
+    passwords_do_not_match(changeset)
   end
 
   defp check_password_confirmation(%Ecto.Changeset{changes: %{password_confirmation: _}} = changeset) do
-    changeset
+    passwords_do_not_match(changeset)
+  end
+
+  defp passwords_do_not_match(changeset) do
+    Ecto.Changeset.add_error(changeset,
+      :password_confirmation,
+      "Passwords do not match.")
   end
 
   defp check_password_confirmation(changeset) do

@@ -50,6 +50,7 @@ defmodule KmxgitWeb.UserController do
           |> redirect(to: Routes.user_path(conn, :show, user.login))
         {:error, changeset} ->
           conn
+          |> assign(:page_title, gettext("Edit user %{login}", login: current_user.login))
           |> render("edit.html", changeset: changeset)
       end
     else
