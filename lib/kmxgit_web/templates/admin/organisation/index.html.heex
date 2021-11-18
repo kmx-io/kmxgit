@@ -1,0 +1,18 @@
+<div class="container-fluid">
+  <h1>Organisations</h1>
+
+  <table class="table admin-index">
+    <tr>
+      <th><%= gettext "Id" %></th>
+      <th><%= gettext "Name" %></th>
+      <th><%= gettext "Slug" %></th>
+    </tr>
+    <%= Enum.map @organisations, fn(org) -> %>
+      <tr>
+        <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
+        <td><%= org.name %></td>
+        <td><%= link org.slug.slug, to: Routes.organisation_path(@conn, :show, org.slug.slug) %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

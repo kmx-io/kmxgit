@@ -1,8 +1,3 @@
-<li class="nav-item">
-  <%= link gettext("New organisation"),
-           to: Routes.organisation_path(@conn, :new),
-           class: "nav-link" %>
-</li>
 <%= if @conn.assigns[:current_organisation] do %>
   <li class="nav-item">
     <%= link @current_organisation.name || @current_organisation.slug.slug,

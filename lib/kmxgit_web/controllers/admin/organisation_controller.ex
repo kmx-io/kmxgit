@@ -53,22 +53,25 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   end
 
   def show(conn, params) do
-    organisation = OrganisationManager.get_organisation(params["id"])
-    if organisation do
+    org = OrganisationManager.get_organisation(params["id"])
+    if org do
       conn
-      |> render("show.html", organisation: organisation)
+      |> assign(:org, org)
+      |> render("show.html")
     else
       not_found(conn)
     end
   end
 
   def edit(conn, params) do
-    organisation = OrganisationManager.get_organisation(params["id"])
-    if organisation do
-      changeset = OrganisationManager.change_organisation(organisation)
+    org = OrganisationManager.get_organisation(params["id"])
+    if org do
+      changeset = OrganisationManager.change_organisation(org)
       conn
-      |> render("edit.html", changeset: changeset,
-      action: Routes.admin_organisation_path(conn, :update, organisation))
+      |> assign(:action, Routes.admin_organisation_path(conn, :update, org))
+      |> assign(:changeset, changeset)
+      |> assign(:org, org)
+      |> render("edit.html")
     else
       not_found(conn)
     end

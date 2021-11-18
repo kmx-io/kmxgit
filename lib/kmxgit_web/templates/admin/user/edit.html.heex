@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1><%= gettext "Edit user" %> <%= @user.login %></h1>
+  <h1><%= gettext "Edit user" %> <%= @user.slug.slug %></h1>
 
   <%= render("form.html", assigns) %>
 </div>

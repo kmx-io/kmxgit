@@ -1,0 +1,44 @@
+<div class="container-fluid">
+  <h1>Organisation <%= @org.name || @org.slug.slug %></h1>
+
+  <table class="table admin-properties">
+    <tr>
+      <th><%= gettext "Id" %></th>
+      <td><%= @org.id %></td>
+    </tr>
+    <tr>
+      <th><%= gettext "Name" %></th>
+      <td><%= link @org.name, to: Routes.organisation_path(@conn, :show, @org.slug.slug) %></td>
+    </tr>
+    <tr>
+      <th><%= gettext "Slug" %></th>
+      <td><%= link @org.slug.slug, to: Routes.organisation_path(@conn, :show, @org.slug.slug) %></td>
+    </tr>
+    <tr>
+      <th><%= gettext "Description" %></th>
+      <td>
+        <%= if @org.description do %>
+          <%= raw Earmark.as_html!(@org.description) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= gettext "Users" %></th>
+      <td>
+        <%= for user <- @org.users do %>
+            <%= link(user.slug.slug, to: Routes.admin_user_path(@conn, :show, user), class: "user") %>
+          <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <%= link gettext("Delete org"),
+      to: Routes.admin_organisation_path(@conn, :delete, @org),
+      class: "btn btn-danger",
+      data: [confirm: gettext("Are you sure you want to delete this org ?")],
+      method: :delete %>
+
+  <%= link gettext("Edit org"),
+      to: Routes.admin_organisation_path(@conn, :edit, @org),
+      class: "btn btn-primary" %>
+</div>

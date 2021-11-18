@@ -9,8 +9,8 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   schema "organisations" do
     field :description, :string
     field :name, :string
-    many_to_many :users, User, join_through: "users_organisations"
-    has_one :slug, Slug
+    many_to_many :users, User, join_through: "users_organisations", on_delete: :delete_all
+    has_one :slug, Slug, on_delete: :delete_all
     timestamps()
   end
 
@@ -18,7 +18,6 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   def changeset(organisation, attrs \\ %{}) do
     organisation
     |> cast(attrs, [:description, :name])
-    |> cast_assoc(:users)
     |> cast_assoc(:slug)
     |> validate_required([:slug])
     |> Markdown.validate_markdown(:description)

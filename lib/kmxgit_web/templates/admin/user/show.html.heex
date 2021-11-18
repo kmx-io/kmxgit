@@ -1,4 +1,4 @@
-<h1>User <%= @user.login %></h1>
+<h1>User <%= @user.slug.slug %></h1>
 
 <table class="table admin-properties">
   <tr>
@@ -15,7 +15,25 @@
   </tr>
   <tr>
     <th><%= gettext "Login" %></th>
-    <td><%= link @user.login, to: Routes.user_path(@conn, :show, @user.login) %></td>
+    <td><%= link @user.slug.slug, to: Routes.user_path(@conn, :show, @user.slug.slug) %></td>
+  </tr>
+  <tr>
+    <th><%= gettext "Description" %></th>
+    <td>
+      <%= if @user.description do %>
+      <%= raw Earmark.as_html!(@user.description) %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      <%= gettext "Organisations" %>
+    </th>
+    <td>
+      <%= for org <- @user.organisations do %>
+        <%= link(org.name || org.slug.slug, to: Routes.admin_organisation_path(@conn, :show, org), class: "org") %>
+      <% end %>
+    </td>
   </tr>
   <tr>
     <th><%= gettext "Admin" %></th>

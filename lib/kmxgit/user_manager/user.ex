@@ -15,7 +15,7 @@ defmodule Kmxgit.UserManager.User do
     field :name, :string
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
-    has_one :slug, Slug
+    has_one :slug, Slug, on_delete: :delete_all
     field :ssh_keys, :string
     many_to_many :organisations, Organisation, join_through: "users_organisations"
     timestamps()

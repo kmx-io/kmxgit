@@ -6,11 +6,13 @@
     <%= error_tag f, :name %>
   </div>
 
-  <div class="mb-3">
-    <%= label f, :login, class: "form-label" %>
-    <%= text_input f, :login, class: "form-control" %>
-    <%= error_tag f, :login %>
-  </div>
+  <%= inputs_for f, :slug, fn ff -> %>
+    <div class="mb-3">
+      <%= label ff, :slug, gettext("Login"), class: "form-label" %>
+      <%= text_input ff, :slug, class: "form-control" %>
+      <%= error_tag ff, :slug %>
+    </div>
+  <% end %>
 
   <div class="mb-3">
     <%= label f, :email, class: "form-label" %>

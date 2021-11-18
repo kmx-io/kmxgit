@@ -40,10 +40,15 @@
           </td>
         </tr>
         <tr>
-          <th><%= gettext "Organisations" %></th>
+          <th>
+            <%= gettext "Organisations" %>
+          </th>
           <td>
             <%= for org <- @user.organisations do %>
               <%= link(org.name || org.slug.slug, to: Routes.organisation_path(@conn, :show, org.slug.slug), class: "org") %>
+            <% end %>
+            <%= if @user == @current_user do %>
+              <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary") %>
             <% end %>
           </td>
         </tr>

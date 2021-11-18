@@ -30,7 +30,7 @@ defmodule KmxgitWeb.Admin.UserController do
 
   defp show_user(conn, user) do
     conn
-    |> assign(:page_title, gettext("User %{login}", login: user.login))
+    |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
     |> assign(:user, user)
     |> render("show.html")
   end

@@ -31,6 +31,7 @@ defmodule Kmxgit.OrganisationManager do
     Repo.one from organisation in Organisation,
       where: [id: ^id],
       preload: :slug,
+      preload: [users: :slug],
       limit: 1
   end
 
