@@ -44,25 +44,27 @@ defmodule KmxgitWeb.Router do
     end
 
     get  "/_register", RegistrationController, :new
-    post "/",          RegistrationController, :register
+    post "/_register", RegistrationController, :register
   end
 
   # definitely logged in, will redirect to login page
   scope "/", KmxgitWeb do
     pipe_through [:browser, :auth, :ensure_auth]
 
-    scope "/_o" do
-      get  "/_new",        OrganisationController, :new
-      post "/",            OrganisationController, :create
-      get  "/:slug",       OrganisationController, :show
-      get  "/:slug/_edit", OrganisationController, :edit
-      put  "/:slug",       OrganisationController, :update
+    scope "/_new" do
+      get  "/organisation", OrganisationController, :new
+      post "/organisation", OrganisationController, :create
+      get  "/:owner", RepositoryController, :new
+      post "/:owner", RepositoryController, :create
     end
 
-    scope "/_u" do
-      get "/:login",       UserController, :show
-      get "/:login/_edit", UserController, :edit
-      put "/:login",       UserController, :update
+    scope "/_edit/" do
+      get "/organisation/:slug", OrganisationController, :edit
+      put "/organisation/:slug", OrganisationController, :update
+      get "/user/:login", UserController, :edit
+      put "/user/:login", UserController, :update
+      get "/:owner/*slug", RepositoryController, :edit
+      put "/:owner/*slug", RepositoryController, :update
     end
 
     scope "/admin", Admin, as: "admin" do
@@ -81,6 +83,7 @@ defmodule KmxgitWeb.Router do
     pipe_through [:browser, :auth]
 
     get "/:slug", SlugController, :show
+    get "/:owner/*slug", RepositoryController, :show
   end
 
   # Other scopes may use custom stacks.

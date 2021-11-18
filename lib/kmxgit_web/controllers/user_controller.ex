@@ -48,7 +48,7 @@ defmodule KmxgitWeb.UserController do
       case UserManager.update_user(current_user, params["user"]) do
         {:ok, user} ->
           conn
-          |> redirect(to: Routes.user_path(conn, :show, user.slug.slug))
+          |> redirect(to: Routes.slug_path(conn, :show, user.slug.slug))
         {:error, changeset} ->
           conn
           |> assign(:page_title, gettext("Edit user %{login}", login: current_user.slug.slug))

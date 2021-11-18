@@ -7,7 +7,7 @@ defmodule KmxgitWeb.SessionController do
     changeset = UserManager.change_user(%User{})
     user = UserManager.Guardian.Plug.current_resource(conn)
     if user do
-      redirect(conn, to: params["redirect"] || User.after_login_path(user))
+      redirect(conn, to: params["redirect"] || Routes.user_path(KmxgitWeb.Endpoint, :show, user.slug.slug))
     else
       redirect = params["redirect"]
       action = if redirect do
@@ -39,7 +39,7 @@ defmodule KmxgitWeb.SessionController do
   defp login_reply(conn, {:ok, user}, redirect) do
     conn
     |> UserManager.Guardian.Plug.sign_in(user)
-    |> redirect(to: redirect || User.after_login_path(user))
+    |> redirect(to: redirect || Routes.user_path(KmxgitWeb.Endpoint, :show, user.slug.slug))
   end
 
   defp login_reply(conn, {:error, reason}, _redirect) do

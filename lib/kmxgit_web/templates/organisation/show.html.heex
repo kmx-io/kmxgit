@@ -40,7 +40,7 @@
           <th><%= gettext "Users" %></th>
           <td>
             <%= for user <- @org.users do %>
-              <%= link(user.slug.slug, to: Routes.user_path(@conn, :show, user.slug.slug), class: "user") %>
+              <%= link(user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug), class: "user") %>
             <% end %>
           </td>
         </tr>

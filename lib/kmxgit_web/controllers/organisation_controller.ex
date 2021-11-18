@@ -17,7 +17,7 @@ defmodule KmxgitWeb.OrganisationController do
     case OrganisationManager.create_organisation(current_user, params["organisation"]) do
       {:ok, organisation} ->
         conn
-        |> redirect(to: Routes.organisation_path(conn, :show, organisation.slug.slug))
+        |> redirect(to: Routes.slug_path(conn, :show, organisation.slug.slug))
       {:error, changeset} ->
         IO.inspect(changeset)
         conn
@@ -66,7 +66,7 @@ defmodule KmxgitWeb.OrganisationController do
       case OrganisationManager.update_organisation(organisation, params["organisation"]) do
         {:ok, org} ->
           conn
-          |> redirect(to: Routes.organisation_path(conn, :show, org.slug.slug))
+          |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
         {:error, changeset} ->
           IO.inspect(changeset)
           conn

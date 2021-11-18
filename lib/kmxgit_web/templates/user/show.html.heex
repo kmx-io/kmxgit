@@ -4,6 +4,9 @@
       <h1><%= @user.slug.slug %></h1>
     </div>
     <div class="col col-12 col-sm-4">
+      <%= link gettext("New repository"),
+               to: Routes.repository_path(@conn, :new, @user.slug.slug),
+               class: "btn btn-primary" %>
       <%= link gettext("Edit"),
                to: Routes.user_path(@conn, :edit, @user.slug.slug),
                class: "btn btn-primary" %>
@@ -14,6 +17,9 @@
     <div class="col col-12 col-md-7">
       <hr/>
       <h2><%= gettext "Repositories" %></h2>
+      <%= for repo <- @user.repositories do %>
+        <%= link repo.slug, to: Routes.repository_path(@conn, :show, @user.slug.slug, String.split(repo.slug, "/")) %>
+      <% end %>
     </div>
     <div class="col col-12 col-md-4">
       <hr/>
@@ -45,7 +51,7 @@
           </th>
           <td>
             <%= for org <- @user.organisations do %>
-              <%= link(org.name || org.slug.slug, to: Routes.organisation_path(@conn, :show, org.slug.slug), class: "org") %>
+              <%= link(org.name || org.slug.slug, to: Routes.slug_path(@conn, :show, org.slug.slug), class: "org") %>
             <% end %>
             <%= if @user == @current_user do %>
               <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary") %>

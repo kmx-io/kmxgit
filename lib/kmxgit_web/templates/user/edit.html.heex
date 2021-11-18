@@ -41,7 +41,7 @@
 
     <div class="mb-3">
       <%= link gettext("Cancel"),
-               to: Routes.user_path(@conn, :show, @current_user.slug.slug),
+               to: Routes.slug_path(@conn, :show, @current_user.slug.slug),
                class: "btn btn-secondary" %>
       &nbsp;
       <%= submit gettext("Submit"), class: "btn btn-primary" %>

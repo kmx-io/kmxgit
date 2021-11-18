@@ -15,7 +15,7 @@
   </tr>
   <tr>
     <th><%= gettext "Login" %></th>
-    <td><%= link @user.slug.slug, to: Routes.user_path(@conn, :show, @user.slug.slug) %></td>
+    <td><%= link @user.slug.slug, to: Routes.slug_path(@conn, :show, @user.slug.slug) %></td>
   </tr>
   <tr>
     <th><%= gettext "Description" %></th>

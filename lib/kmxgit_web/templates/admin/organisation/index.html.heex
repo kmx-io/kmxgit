@@ -11,7 +11,7 @@
       <tr>
         <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
         <td><%= org.name %></td>
-        <td><%= link org.slug.slug, to: Routes.organisation_path(@conn, :show, org.slug.slug) %></td>
+        <td><%= link org.slug.slug, to: Routes.slug_path(@conn, :show, org.slug.slug) %></td>
       </tr>
     <% end %>
   </table>

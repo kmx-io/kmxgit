@@ -5,8 +5,10 @@ defmodule KmxgitWeb.RegistrationController do
 
   def new(conn, _) do
     changeset = UserManager.change_user(%User{})
-    render(conn, "new.html", changeset: changeset,
-      action: Routes.registration_path(conn, :register))
+    conn
+    |> assign(:action, Routes.registration_path(conn, :register))
+    |> assign(:changeset, changeset)
+    |> render("new.html")
   end
 
   def register(conn, params) do
@@ -14,11 +16,13 @@ defmodule KmxgitWeb.RegistrationController do
       {:ok, user} ->
         conn
         |> Guardian.Plug.sign_in(user)
-        |> redirect(to: User.after_register_path(user))
+        |> redirect(to: Routes.slug_path(conn, :show, user.slug.slug))
       {:error, changeset} ->
         conn
-        |> render("new.html", changeset: changeset,
-                  action: Routes.registration_path(conn, :register))
+        |> assign(:action, Routes.registration_path(conn, :register))
+        |> assign(:changeset, changeset)
+        |> render("new.html")
+                  
     end
   end
 end

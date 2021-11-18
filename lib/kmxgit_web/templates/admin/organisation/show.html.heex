@@ -8,11 +8,11 @@
     </tr>
     <tr>
       <th><%= gettext "Name" %></th>
-      <td><%= link @org.name, to: Routes.organisation_path(@conn, :show, @org.slug.slug) %></td>
+      <td><%= link @org.name, to: Routes.slug_path(@conn, :show, @org.slug.slug) %></td>
     </tr>
     <tr>
       <th><%= gettext "Slug" %></th>
-      <td><%= link @org.slug.slug, to: Routes.organisation_path(@conn, :show, @org.slug.slug) %></td>
+      <td><%= link @org.slug.slug, to: Routes.slug_path(@conn, :show, @org.slug.slug) %></td>
     </tr>
     <tr>
       <th><%= gettext "Description" %></th>

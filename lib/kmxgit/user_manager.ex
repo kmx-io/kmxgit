@@ -19,6 +19,7 @@ defmodule Kmxgit.UserManager do
     user = Repo.one(from user in User,
       where: [id: ^id],
       preload: [organisations: :slug],
+      preload: :repositories,
       preload: :slug
     )
     user || raise Ecto.NoResultsError
@@ -28,6 +29,7 @@ defmodule Kmxgit.UserManager do
     Repo.one from user in User,
       where: [id: ^id],
       preload: [organisations: :slug],
+      preload: :repositories,
       preload: :slug
   end
 
@@ -35,34 +37,22 @@ defmodule Kmxgit.UserManager do
     Repo.one from u in User,
       join: s in Slug,
       on: s.id == u.slug_id,
-      where: s.slug == ^slug,
+      where: fragment("lower(?)", s.slug) == ^String.downcase(slug),
       limit: 1
   end
 
-  def create_user(slug, attrs \\ %{}) do
-    %User{slug: slug}
+  def create_user(attrs \\ %{}) do
+    %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
   end
 
-  def admin_create_user(slug, attrs \\ %{}) do
-    %User{slug: slug}
+  def admin_create_user(attrs \\ %{}) do
+    %User{}
     |> User.admin_changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a user.
-
-  ## Examples
-
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
@@ -75,38 +65,20 @@ defmodule Kmxgit.UserManager do
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a user.
-
-  ## Examples
-
-      iex> delete_user(user)
-      {:ok, %User{}}
-
-      iex> delete_user(user)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_user(%User{} = user) do
     Repo.delete(user)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
 
   def authenticate_user(login, password) do
     query = from u in User,
-      where: fragment("lower(?)", u.login) == ^String.downcase(login) or fragment("lower(?)", u.email) == ^String.downcase(login)
+      join: s in Slug,
+      on: s.user_id == u.id,
+      where: fragment("lower(?)", s.slug) == ^String.downcase(login) or fragment("lower(?)", u.email) == ^String.downcase(login),
+      limit: 1
     case Repo.one(query) do
       nil ->
         Bcrypt.no_user_verify()

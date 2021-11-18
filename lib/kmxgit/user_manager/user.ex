@@ -3,8 +3,8 @@ defmodule Kmxgit.UserManager.User do
   import Ecto.Changeset
 
   alias Kmxgit.OrganisationManager.Organisation
+  alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager.Slug
-  alias KmxgitWeb.Router.Helpers, as: Routes
   alias BCrypt
 
   schema "users" do
@@ -15,14 +15,15 @@ defmodule Kmxgit.UserManager.User do
     field :name, :string
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
+    has_many :repositories, Repository
     has_one :slug, Slug, on_delete: :delete_all
     field :ssh_keys, :string
-    many_to_many :organisations, Organisation, join_through: "users_organisations"
+    many_to_many :organisations, Organisation, join_through: "users_organisations", on_delete: :delete_all
     timestamps()
   end
 
-  defp common_changeset(user) do
-    user
+  defp common_changeset(changeset) do
+    changeset
     |> check_password_confirmation()
     |> put_password_hash()
     |> cast_assoc(:slug)
@@ -32,14 +33,12 @@ defmodule Kmxgit.UserManager.User do
     |> Markdown.validate_markdown(:description)
   end
 
-  @doc false
   def changeset(user, attrs \\ %{}) do
     user
     |> cast(attrs, [:description, :email, :name, :password, :password_confirmation, :ssh_keys])
     |> common_changeset()
   end
 
-  @doc false
   def admin_changeset(user, attrs \\ %{}) do
     user
     |> cast(attrs, [:description, :email, :is_admin, :name, :password, :password_confirmation, :ssh_keys])
@@ -82,14 +81,6 @@ defmodule Kmxgit.UserManager.User do
 
   defp put_password_hash(changeset) do
     changeset
-  end
-
-  def after_login_path(user) do
-    Routes.user_path(KmxgitWeb.Endpoint, :show, user.login)
-  end
-
-  def after_register_path(user) do
-    Routes.user_path(KmxgitWeb.Endpoint, :show, user.login)
   end
 
   def display_name(user) do

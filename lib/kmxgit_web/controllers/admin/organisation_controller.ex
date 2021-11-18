@@ -27,9 +27,9 @@ defmodule KmxgitWeb.Admin.OrganisationController do
       case SlugManager.create_slug(org_params["slug"]["slug"]) do
         {:ok, slug} ->
           case OrganisationManager.create_organisation(Map.merge(org_params, %{slug: slug, user: current_user})) do
-            {:ok, organisation} ->
+            {:ok, org} ->
               conn
-              |> redirect(to: Routes.organisation_path(conn, :show, organisation.slug))
+              |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
             {:error, changeset} ->
               conn
               |> assign(:action, Routes.admin_organisation_path(conn, :create))

@@ -1,0 +1,19 @@
+<%= form_for @changeset, @action, fn f -> %>
+
+  <div class="mb-3">
+    <%= label f, :slug, class: "form-label" %>
+    <%= text_input f, :slug, class: "form-control" %>
+    <%= error_tag f, :slug %>
+  </div>
+
+  <div class="mb-3">
+    <%= label f, :description, class: "form-label" %>
+    <%= textarea f, :description, class: "form-control" %>
+    <%= error_tag f, :description %>
+  </div>
+
+  <div class="mb-3">
+    <%= submit gettext("Submit"), class: "btn btn-primary" %>
+  </div>
+
+<% end %>
