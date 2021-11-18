@@ -4,19 +4,21 @@ defmodule Kmxgit.OrganisationManager do
 
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.Repo
+  alias Kmxgit.UserManager.User
 
   def list_organisations do
     Organisation
     |> Repo.all
   end
 
-  def change_organisation(organisation) do
+  def change_organisation(organisation \\ %Organisation{}) do
     Organisation.changeset(organisation, %{})
   end
 
-  def create_organisation(attrs \\ %{}) do
+  def create_organisation(user = %User{id: _}, attrs \\ %{}) do
     %Organisation{}
     |> Organisation.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:users, [user])
     |> Repo.insert()
   end
 

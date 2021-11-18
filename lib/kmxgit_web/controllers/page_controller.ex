@@ -1,7 +1,6 @@
 defmodule KmxgitWeb.PageController do
   use KmxgitWeb, :controller
 
-  alias Kmxgit.OrganisationManager
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.{Guardian, User}
 

@@ -2,7 +2,6 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.OrganisationManager
-  alias Kmxgit.OrganisationManager.Organisation
   alias KmxgitWeb.ErrorView
 
   def index(conn, _params) do
@@ -12,7 +11,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   end
 
   def new(conn, _params) do
-    changeset = OrganisationManager.change_organisation(%Organisation{})
+    changeset = OrganisationManager.change_organisation
     conn
     |> assign(:action, Routes.admin_organisation_path(conn, :create))
     |> assign(:changeset, changeset)
@@ -25,10 +24,11 @@ defmodule KmxgitWeb.Admin.OrganisationController do
         conn
         |> redirect(to: Routes.organisation_path(conn, :show, organisation.slug))
       {:error, changeset} ->
-          IO.inspect(changeset)
-          conn
-          |> render("new.html", changeset: changeset,
-                    action: Routes.admin_organisation_path(conn, :create))
+        IO.inspect(changeset)
+        conn
+        |> assign(:action, Routes.admin_organisation_path(conn, :create))
+        |> assign(:changeset, changeset)
+        |> render("new.html")
     end
   end
 

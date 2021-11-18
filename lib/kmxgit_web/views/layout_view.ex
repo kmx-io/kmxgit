@@ -1,8 +1,6 @@
 defmodule KmxgitWeb.LayoutView do
   use KmxgitWeb, :view
 
-  alias Kmxgit.UserManager.User
-
   def flash_json(conn) do
     {:ok, result} = Jason.encode(get_flash(conn))
     %{"data-flash": result}

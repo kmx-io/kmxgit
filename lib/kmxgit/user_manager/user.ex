@@ -13,8 +13,8 @@ defmodule Kmxgit.UserManager.User do
     field :is_admin, :boolean, null: false
     field :login, :string, unique: true
     field :name, :string
-    field :password, :string, virtual: true
-    field :password_confirmation, :string, virtual: true
+    field :password, :string, virtual: true, redact: true
+    field :password_confirmation, :string, virtual: true, redact: true
     field :ssh_keys, :string
     many_to_many :organisations, Organisation, join_through: "users_organisations"
     timestamps()
@@ -63,14 +63,14 @@ defmodule Kmxgit.UserManager.User do
     passwords_do_not_match(changeset)
   end
 
+  defp check_password_confirmation(changeset) do
+    changeset
+  end
+
   defp passwords_do_not_match(changeset) do
     Ecto.Changeset.add_error(changeset,
       :password_confirmation,
       "Passwords do not match.")
-  end
-
-  defp check_password_confirmation(changeset) do
-    changeset
   end
 
   defp put_password_hash(%Ecto.Changeset{valid?: true,

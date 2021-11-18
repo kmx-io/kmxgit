@@ -1,9 +1,42 @@
 <div class="container-fluid">
-  <h1><%= @organisation.name %></h1>
+  <div class="row">
+    <div class="col col-12 col-sm-7">
+      <h1><%= @org.name || @org.slug %></h1>
+    </div>
+    <div class="col col-12 col-sm-4">
+      <%= link gettext("Edit"),
+               to: Routes.organisation_path(@conn, :edit, @org.slug),
+               class: "btn btn-primary" %>
+    </div>
 
-  <%= @organisation.address %>
+  </div>
 
-  <%= if @organisation.description do %>
-    <%= raw Earmark.as_html!(@organisation.description) %>
-  <% end %>
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <hr/>
+      <h2><%= gettext "Repositories" %></h2>
+    </div>
+    <div class="col col-12 col-md-4">
+      <hr/>
+      <h2><%= gettext "Properties" %></h2>
+      <table class="table admin-properties">
+        <tr>
+          <th><%= gettext "Slug" %></th>
+          <td><%= @org.slug %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Name" %></th>
+          <td><%= @org.name %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Description" %></th>
+          <td>
+            <%= if @org.description do %>
+              <%= raw Earmark.as_html!(@org.description) %>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>

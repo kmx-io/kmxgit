@@ -51,15 +51,18 @@ defmodule KmxgitWeb.Router do
   scope "/", KmxgitWeb do
     pipe_through [:browser, :auth, :ensure_auth]
 
-    scope "/org" do
-      get "/",      OrganisationController, :index
-      get "/:slug", OrganisationController, :show
+    scope "/_o" do
+      get  "/_new",        OrganisationController, :new
+      post "/",            OrganisationController, :create
+      get  "/:slug",       OrganisationController, :show
+      get  "/:slug/_edit", OrganisationController, :edit
+      put  "/:slug",       OrganisationController, :update
     end
 
-    scope "/u" do
-      get "/:login",      UserController, :show
-      get "/:login/edit", UserController, :edit
-      put "/:login",      UserController, :update
+    scope "/_u" do
+      get "/:login",       UserController, :show
+      get "/:login/_edit", UserController, :edit
+      put "/:login",       UserController, :update
     end
 
     scope "/admin", Admin, as: "admin" do

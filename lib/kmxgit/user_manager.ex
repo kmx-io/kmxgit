@@ -37,14 +37,22 @@ defmodule Kmxgit.UserManager do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.one(from user in User,
+      where: [id: ^id],
+      preload: :organisations) || raise "user #{id} not found"
+  end
 
-  def get_user(id), do: Repo.get(User, id)
+  def get_user(id) do
+    Repo.one from user in User,
+      where: [id: ^id],
+      preload: :organisations
+  end
 
   def get_user_by_login(login) do
     Repo.one from user in User,
       where: [login: ^login],
-      preload: [organisations: [:organisation]]
+      preload: :organisations
   end
 
   @doc """

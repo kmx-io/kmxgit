@@ -42,7 +42,9 @@
         <tr>
           <th><%= gettext "Organisations" %></th>
           <td>
-            
+            <%= for org <- @user.organisations do %>
+              <%= link(org.name || org.slug, to: Routes.organisation_path(@conn, :show, org.slug), class: "org") %>
+            <% end %>
           </td>
         </tr>
         <tr>
