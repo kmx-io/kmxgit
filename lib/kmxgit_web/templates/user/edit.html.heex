@@ -1,6 +1,6 @@
 <div class="container-fluid center">
-  <h1>Edit user <%= @current_user.login %></h1>
-  <%= form_for @changeset, Routes.user_path(@conn, :update, @current_user.login), fn f -> %>
+  <h1>Edit user <%= @current_user.slug.slug %></h1>
+  <%= form_for @changeset, Routes.user_path(@conn, :update, @current_user.slug.slug), fn f -> %>
 
     <div class="mb-3">
       <%= label f, :name, class: "form-label" %>
@@ -12,10 +12,12 @@
       <%= text_input f, :email, class: "form-control" %>
     </div>
 
-    <div class="mb-3">
-      <%= label f, :login, class: "form-label" %>
-      <%= text_input f, :login, class: "form-control" %>
-    </div>
+    <%= inputs_for f, :slug, fn ff -> %>
+      <div class="mb-3">
+        <%= label ff, :slug, gettext("Login"), class: "form-label" %>
+        <%= text_input ff, :slug, class: "form-control" %>
+      </div>
+    <% end %>
 
     <div class="mb-3">
       <%= label f, :description, class: "form-label" %>
@@ -39,7 +41,7 @@
 
     <div class="mb-3">
       <%= link gettext("Cancel"),
-               to: Routes.user_path(@conn, :show, @current_user.login),
+               to: Routes.user_path(@conn, :show, @current_user.slug.slug),
                class: "btn btn-secondary" %>
       &nbsp;
       <%= submit gettext("Submit"), class: "btn btn-primary" %>

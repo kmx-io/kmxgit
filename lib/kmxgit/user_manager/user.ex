@@ -3,6 +3,7 @@ defmodule Kmxgit.UserManager.User do
   import Ecto.Changeset
 
   alias Kmxgit.OrganisationManager.Organisation
+  alias Kmxgit.SlugManager.Slug
   alias KmxgitWeb.Router.Helpers, as: Routes
   alias BCrypt
 
@@ -11,10 +12,10 @@ defmodule Kmxgit.UserManager.User do
     field :email, :string, unique: true
     field :encrypted_password, :string
     field :is_admin, :boolean, null: false
-    field :login, :string, unique: true
     field :name, :string
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
+    has_one :slug, Slug
     field :ssh_keys, :string
     many_to_many :organisations, Organisation, join_through: "users_organisations"
     timestamps()
@@ -24,25 +25,24 @@ defmodule Kmxgit.UserManager.User do
     user
     |> check_password_confirmation()
     |> put_password_hash()
-    |> validate_required([:email, :login, :encrypted_password])
+    |> cast_assoc(:slug)
+    |> validate_required([:email, :slug, :encrypted_password])
     |> validate_format(:email, ~r/^[-_+.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
-    |> validate_format(:login, ~r/^[A-Za-z][-_0-9A-Za-z]{1,64}$/)
     |> unique_constraint(:_lower_email)
-    |> unique_constraint(:_lower_login)
     |> Markdown.validate_markdown(:description)
   end
 
   @doc false
   def changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :email, :login, :name, :password, :password_confirmation, :ssh_keys])
+    |> cast(attrs, [:description, :email, :name, :password, :password_confirmation, :ssh_keys])
     |> common_changeset()
   end
 
   @doc false
   def admin_changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :email, :is_admin, :login, :name, :password, :password_confirmation, :ssh_keys])
+    |> cast(attrs, [:description, :email, :is_admin, :name, :password, :password_confirmation, :ssh_keys])
     |> common_changeset()
   end
 
@@ -95,5 +95,4 @@ defmodule Kmxgit.UserManager.User do
   def display_name(user) do
     user.name || user.login
   end
-
 end

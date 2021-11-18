@@ -1,11 +1,11 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col col-12 col-sm-7">
-      <h1><%= @org.name || @org.slug %></h1>
+      <h1><%= @org.name || @org.slug.slug %></h1>
     </div>
     <div class="col col-12 col-sm-4">
       <%= link gettext("Edit"),
-               to: Routes.organisation_path(@conn, :edit, @org.slug),
+               to: Routes.organisation_path(@conn, :edit, @org.slug.slug),
                class: "btn btn-primary" %>
     </div>
 
@@ -22,7 +22,7 @@
       <table class="table admin-properties">
         <tr>
           <th><%= gettext "Slug" %></th>
-          <td><%= @org.slug %></td>
+          <td><%= @org.slug.slug %></td>
         </tr>
         <tr>
           <th><%= gettext "Name" %></th>
@@ -33,6 +33,14 @@
           <td>
             <%= if @org.description do %>
               <%= raw Earmark.as_html!(@org.description) %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "Users" %></th>
+          <td>
+            <%= for user <- @org.users do %>
+              <%= link(user.slug.slug, to: Routes.user_path(@conn, :show, user.slug.slug), class: "user") %>
             <% end %>
           </td>
         </tr>

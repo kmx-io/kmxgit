@@ -2,6 +2,8 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.OrganisationManager
+  alias Kmxgit.Repo
+  alias Kmxgit.SlugManager
   alias KmxgitWeb.ErrorView
 
   def index(conn, _params) do
@@ -19,16 +21,27 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   end
 
   def create(conn, params) do
-    case OrganisationManager.create_organisation(params["organisation"]) do
-      {:ok, organisation} ->
-        conn
-        |> redirect(to: Routes.organisation_path(conn, :show, organisation.slug))
-      {:error, changeset} ->
-        IO.inspect(changeset)
-        conn
-        |> assign(:action, Routes.admin_organisation_path(conn, :create))
-        |> assign(:changeset, changeset)
-        |> render("new.html")
+    current_user = conn.assigns.current_user
+    org_params = params["organisation"]
+    Repo.transaction fn ->
+      case SlugManager.create_slug(org_params["slug"]["slug"]) do
+        {:ok, slug} ->
+          case OrganisationManager.create_organisation(Map.merge(org_params, %{slug: slug, user: current_user})) do
+            {:ok, organisation} ->
+              conn
+              |> redirect(to: Routes.organisation_path(conn, :show, organisation.slug))
+            {:error, changeset} ->
+              conn
+              |> assign(:action, Routes.admin_organisation_path(conn, :create))
+              |> assign(:changeset, changeset)
+              |> render("new.html")
+          end
+        {:error, changeset} ->
+          conn
+          |> assign(:action, Routes.admin_organisation_path(conn, :create))
+          |> assign(:changeset, changeset)
+          |> render("new.html")
+      end
     end
   end
 

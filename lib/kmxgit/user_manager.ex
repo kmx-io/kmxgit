@@ -6,75 +6,47 @@ defmodule Kmxgit.UserManager do
   import Ecto.Query, warn: false
 
   alias Kmxgit.Repo
+  alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.User
 
   alias Bcrypt
 
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
-
-  """
   def list_users do
-    Repo.all(User)
+    Repo.all from user in User, preload: :slug
   end
 
-  @doc """
-  Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_user!(id) do
-    Repo.one(from user in User,
+    user = Repo.one(from user in User,
       where: [id: ^id],
-      preload: :organisations) || raise "user #{id} not found"
+      preload: [organisations: :slug],
+      preload: :slug
+    )
+    user || raise Ecto.NoResultsError
   end
 
   def get_user(id) do
     Repo.one from user in User,
       where: [id: ^id],
-      preload: :organisations
+      preload: [organisations: :slug],
+      preload: :slug
   end
 
-  def get_user_by_login(login) do
-    Repo.one from user in User,
-      where: [login: ^login],
-      preload: :organisations
+  def get_user_by_slug(slug) do
+    Repo.one from u in User,
+      join: s in Slug,
+      on: s.id == u.slug_id,
+      where: s.slug == ^slug,
+      limit: 1
   end
 
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_user(attrs \\ %{}) do
-    %User{}
+  def create_user(slug, attrs \\ %{}) do
+    %User{slug: slug}
     |> User.changeset(attrs)
     |> Repo.insert()
   end
 
-  def admin_create_user(attrs \\ %{}) do
-    %User{}
+  def admin_create_user(slug, attrs \\ %{}) do
+    %User{slug: slug}
     |> User.admin_changeset(attrs)
     |> Repo.insert()
   end

@@ -5,13 +5,13 @@
 </li>
 <%= if @conn.assigns[:current_organisation] do %>
   <li class="nav-item">
-    <%= link @current_organisation.name,
+    <%= link @current_organisation.name || @current_organisation.slug.slug,
              to: Routes.organisation_path(@conn, :show, @current_organisation.slug),
              class: "nav-link" %>
   </li>
 <% end %>
 <li class="nav-item">
-  <%= link @current_user.login, to: Routes.user_path(@conn, :show, @current_user.login), class: "nav-link" %>
+  <%= link @current_user.slug.slug, to: Routes.user_path(@conn, :show, @current_user.slug.slug), class: "nav-link" %>
 </li>
 <%= if @current_user.is_admin do %>
   <li class="nav-item">

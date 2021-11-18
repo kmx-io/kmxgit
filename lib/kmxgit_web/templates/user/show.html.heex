@@ -1,11 +1,11 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col col-12 col-sm-7">
-      <h1><%= @user.login %></h1>
+      <h1><%= @user.slug.slug %></h1>
     </div>
     <div class="col col-12 col-sm-4">
       <%= link gettext("Edit"),
-               to: Routes.user_path(@conn, :edit, @user.login),
+               to: Routes.user_path(@conn, :edit, @user.slug.slug),
                class: "btn btn-primary" %>
     </div>
   </div>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
           <th><%= gettext "Login" %></th>
-          <td><%= @user.login %></td>
+          <td><%= @user.slug.slug %></td>
         </tr>
         <tr>
           <th><%= gettext "Description" %></th>
@@ -43,7 +43,7 @@
           <th><%= gettext "Organisations" %></th>
           <td>
             <%= for org <- @user.organisations do %>
-              <%= link(org.name || org.slug, to: Routes.organisation_path(@conn, :show, org.slug), class: "org") %>
+              <%= link(org.name || org.slug.slug, to: Routes.organisation_path(@conn, :show, org.slug.slug), class: "org") %>
             <% end %>
           </td>
         </tr>

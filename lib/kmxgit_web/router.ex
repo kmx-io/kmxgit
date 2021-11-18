@@ -33,18 +33,18 @@ defmodule KmxgitWeb.Router do
   scope "/", KmxgitWeb do
     pipe_through [:browser, :auth]
 
-    get "/",           PageController, :index
-    get  "/new_admin", PageController, :new_admin
-    post "/new_admin", PageController, :new_admin_post
+    get "/",            PageController, :index
+    get  "/_new_admin", PageController, :new_admin
+    post "/_new_admin", PageController, :new_admin_post
 
-    scope "/sessions" do
+    scope "/_sessions" do
       get  "/new",    SessionController, :new
       post "/new",    SessionController, :login
       get  "/logout", SessionController, :logout
     end
 
-    get "/register",  RegistrationController, :new
-    post "/register", RegistrationController, :register
+    get  "/_register", RegistrationController, :new
+    post "/",          RegistrationController, :register
   end
 
   # definitely logged in, will redirect to login page
@@ -74,6 +74,13 @@ defmodule KmxgitWeb.Router do
       import Phoenix.LiveDashboard.Router
       live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry
     end
+  end
+
+    # maybe logged in
+  scope "/", KmxgitWeb do
+    pipe_through [:browser, :auth]
+
+    get "/:slug", SlugController, :show
   end
 
   # Other scopes may use custom stacks.

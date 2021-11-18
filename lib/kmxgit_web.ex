@@ -23,6 +23,7 @@ defmodule KmxgitWeb do
 
       import Plug.Conn
       import KmxgitWeb.Gettext
+      alias KmxgitWeb.ErrorView
       alias KmxgitWeb.Router.Helpers, as: Routes
     end
   end
