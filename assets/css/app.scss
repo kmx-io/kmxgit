@@ -5,7 +5,9 @@
 @import "./flash.scss";
 
 /* user */
-textarea#user_description {
+textarea#user_description,
+textarea#organisation_description,
+textarea#repository_description {
     min-height: 10em;
 }
 textarea#user_ssh_keys {
@@ -13,9 +15,6 @@ textarea#user_ssh_keys {
     min-height: 20em;
     overflow-x: scroll;
     overflow-y: scroll;
-}
-textarea#organisation_description {
-    min-height: 10em;
 }
 pre.ssh_keys {
     max-width: 20em;

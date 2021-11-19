@@ -19,7 +19,7 @@ defmodule Kmxgit.UserManager do
     user = Repo.one(from user in User,
       where: [id: ^id],
       preload: [organisations: :slug],
-      preload: [repositories: [organisation: :slug, user: :slug]],
+      preload: [owned_repositories: [organisation: :slug, user: :slug]],
       preload: :slug
     )
     user || raise Ecto.NoResultsError
@@ -29,7 +29,7 @@ defmodule Kmxgit.UserManager do
     Repo.one from user in User,
       where: [id: ^id],
       preload: [organisations: :slug],
-      preload: [repositories: [organisation: :slug, user: :slug]],
+      preload: [owned_repositories: [organisation: :slug, user: :slug]],
       preload: :slug
   end
 
@@ -41,7 +41,7 @@ defmodule Kmxgit.UserManager do
       limit: 1,
       preload: [:slug,
                 organisations: :slug,
-                repositories: [organisation: :slug, user: :slug]]
+                owned_repositories: [organisation: :slug, user: :slug]]
   end
 
   def create_user(attrs \\ %{}) do

@@ -11,6 +11,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     belongs_to :organisation, Organisation
     field :slug, :string, unique: true
     belongs_to :user, User
+    many_to_many :members, User, join_through: "users_repositories"
     timestamps()
   end
 
@@ -40,5 +41,16 @@ defmodule Kmxgit.RepositoryManager.Repository do
 
   def splat(repo) do
     String.split(repo.slug, "/")
+  end
+
+  def members(repo) do
+    if repo.user do
+      Enum.concat [repo.user], repo.members
+    else
+      if repo.organisation do
+        Enum.concat repo.organisation.users, repo.members
+      end
+    end
+    |> Enum.uniq
   end
 end

@@ -10,7 +10,7 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   schema "organisations" do
     field :description, :string
     field :name, :string
-    has_many :repositories, Repository
+    has_many :owned_repositories, Repository
     many_to_many :users, User, join_through: "users_organisations", on_delete: :delete_all
     has_one :slug, Slug, on_delete: :delete_all
     timestamps()

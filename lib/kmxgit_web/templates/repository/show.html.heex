@@ -11,4 +11,31 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <hr/>
+    </div>
+    <div class="col col-12 col-md-4">
+      <hr/>
+      <h2><%= gettext "Properties" %></h2>
+      <table class="table admin-properties">
+        <tr>
+          <th><%= gettext "Description" %></th>
+          <td>
+            <%= if @repo.description do %>
+              <%= raw Earmark.as_html!(@repo.description) %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "Users" %></th>
+          <td>
+            <%= for user <- @members do %>
+              <%= link user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug) %>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>

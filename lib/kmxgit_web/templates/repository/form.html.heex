@@ -19,6 +19,9 @@
 
   <div class="mb-3">
     <%= if @conn.assigns[:current_repository] do %>
+      <%= link gettext("Cancel"),
+          to: Routes.repository_path(@conn, :show, Repository.owner_slug(@current_repository), Repository.splat(@current_repository)),
+          class: "btn btn-secondary" %>
       <%= link gettext("Delete repository"),
           to: Routes.repository_path(@conn, :delete, Repository.owner_slug(@current_repository), Repository.splat(@current_repository)),
           method: :delete,

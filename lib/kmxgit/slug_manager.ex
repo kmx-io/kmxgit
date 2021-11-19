@@ -26,13 +26,13 @@ defmodule Kmxgit.SlugManager do
     Repo.one from s in Slug,
       where: fragment("lower(?)", s.slug) == ^String.downcase(slug),
       preload: [organisation: [:slug,
-                               repositories: [organisation: :slug,
-                                              user: :slug],
+                               owned_repositories: [organisation: :slug,
+                                                    user: :slug],
                                users: :slug],
                 user: [:slug,
                        organisations: :slug,
-                       repositories: [organisation: :slug,
-                                      user: :slug]]],
+                       owned_repositories: [organisation: :slug,
+                                            user: :slug]]],
       limit: 1
   end
 

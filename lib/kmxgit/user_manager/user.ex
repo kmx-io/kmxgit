@@ -13,9 +13,10 @@ defmodule Kmxgit.UserManager.User do
     field :encrypted_password, :string
     field :is_admin, :boolean, null: false
     field :name, :string
+    has_many :owned_repositories, Repository
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
-    has_many :repositories, Repository
+    #many_to_many :repositories, Repository, join_through: "users_repositories"
     has_one :slug, Slug, on_delete: :delete_all
     field :ssh_keys, :string
     many_to_many :organisations, Organisation, join_through: "users_organisations", on_delete: :delete_all

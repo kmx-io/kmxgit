@@ -41,8 +41,8 @@ defmodule Kmxgit.OrganisationManager do
       on: s.organisation_id == o.id,
       where: fragment("lower(?)", s.slug) == ^String.downcase(slug),
       preload: [:slug,
-                repositories: [organisation: :slug,
-                               user: :slug],
+                owned_repositories: [organisation: :slug,
+                                     user: :slug],
                 users: :slug],
       limit: 1
   end

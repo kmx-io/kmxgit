@@ -31,6 +31,7 @@ defmodule KmxgitWeb.RepositoryController do
           |> assign(:action, action)
           |> assign(:changeset, changeset)
           |> assign(:current_organisation, org)
+          |> assign(:owner, org)
           |> render("new.html")
         else
           not_found(conn)
@@ -95,6 +96,7 @@ defmodule KmxgitWeb.RepositoryController do
       |> assign_current_organisation(org)
       |> assign(:current_repository, repo)
       |> assign(:repo, repo)
+      |> assign(:members, Repository.members(repo))
       |> render("show.html")
     else
       not_found(conn)

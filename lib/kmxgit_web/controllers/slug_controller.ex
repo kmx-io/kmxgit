@@ -1,6 +1,7 @@
 defmodule KmxgitWeb.SlugController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.OrganisationManager
   alias Kmxgit.SlugManager
   alias KmxgitWeb.ErrorView
   alias KmxgitWeb.OrganisationView
@@ -38,6 +39,23 @@ defmodule KmxgitWeb.SlugController do
           not_found(conn)
         end
       end
+    end
+  end
+
+  def delete(conn, params) do
+    current_user = conn.assigns.current_user
+    slug = SlugManager.get_slug(params["slug"])
+    if slug do
+      org = slug.organisation
+      if org && Enum.find(org.users, &(&1.id == current_user.id)) do
+        {:ok, _} = OrganisationManager.delete_organisation(org)
+        conn
+        |> redirect(to: Routes.slug_path(conn, :show, current_user.slug.slug))
+      else
+        not_found(conn)
+      end
+    else
+      not_found(conn)
     end
   end
 end

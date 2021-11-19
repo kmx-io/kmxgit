@@ -83,6 +83,7 @@ defmodule KmxgitWeb.Router do
     pipe_through [:browser, :auth]
 
     get    "/:slug", SlugController, :show
+    delete "/:slug", SlugController, :delete
     get    "/:owner/*slug", RepositoryController, :show
     delete "/:owner/*slug", RepositoryController, :delete
   end
