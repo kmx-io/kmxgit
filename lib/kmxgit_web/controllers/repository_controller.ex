@@ -21,6 +21,7 @@ defmodule KmxgitWeb.RepositoryController do
           conn
           |> assign(:action, action)
           |> assign(:changeset, changeset)
+          |> assign(:owner, user)
           |> render("new.html")
         end
       else
@@ -61,19 +62,20 @@ defmodule KmxgitWeb.RepositoryController do
       end
     end
   end
-    # TODO: check the owner part of path
 
   defp create_repo(conn, owner, params) do
-    case RepositoryManager.create_repository(owner, params) do
-      {:ok, repo} ->
-        conn
-        |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
-      {:error, changeset} ->
-        IO.inspect(changeset)
-        conn
-        |> assign(:action, Routes.repository_path(conn, :create, owner.slug))
-        |> assign(:changeset, changeset)
-        |> render("new.html")
+    Repo.transaction do
+      case RepositoryManager.create_repository(owner, params) do
+        {:ok, repo} ->
+          conn
+          |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
+        {:error, changeset} ->
+          IO.inspect(changeset)
+          conn
+          |> assign(:action, Routes.repository_path(conn, :create, owner.slug.slug))
+          |> assign(:changeset, changeset)
+          |> render("new.html")
+      end
     end
   end
 
@@ -143,6 +145,24 @@ defmodule KmxgitWeb.RepositoryController do
             |> assign(:repo, repo)
             |> render("edit.html")
         end
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def delete(conn, params) do
+    current_user = conn.assigns.current_user
+    slug = Enum.join(params["slug"], "/")
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo do
+      org = repo.organisation
+      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
+        {:ok, _} = RepositoryManager.delete_repository(repo)
+        conn
+        |> redirect(to: Routes.slug_path(conn, :show, params["owner"]))
+      else
+        not_found(conn)
       end
     else
       not_found(conn)

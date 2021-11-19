@@ -82,8 +82,9 @@ defmodule KmxgitWeb.Router do
   scope "/", KmxgitWeb do
     pipe_through [:browser, :auth]
 
-    get "/:slug", SlugController, :show
-    get "/:owner/*slug", RepositoryController, :show
+    get    "/:slug", SlugController, :show
+    get    "/:owner/*slug", RepositoryController, :show
+    delete "/:owner/*slug", RepositoryController, :delete
   end
 
   # Other scopes may use custom stacks.

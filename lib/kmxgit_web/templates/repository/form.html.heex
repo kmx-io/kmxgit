@@ -1,4 +1,9 @@
-<%= form_for @changeset, @action, fn f -> %>
+<.form let={f} for={@changeset} action={@action}>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Invalid parameters</p>
+    </div>
+  <% end %>
 
   <div class="mb-3">
     <%= label f, :slug, class: "form-label" %>
@@ -13,7 +18,18 @@
   </div>
 
   <div class="mb-3">
+    <%= if @conn.assigns[:current_repository] do %>
+      <%= link gettext("Delete repository"),
+          to: Routes.repository_path(@conn, :delete, Repository.owner_slug(@current_repository), Repository.splat(@current_repository)),
+          method: :delete,
+          class: "btn btn-danger",
+          data: [confirm: gettext("Are you sure you want to delete the repository %{repo} ?", repo: Repository.full_slug(@current_repository))] %>
+    <% else %>
+      <%= link gettext("Cancel"),
+          to: Routes.slug_path(@conn, :show, @owner.slug.slug),
+          class: "btn btn-secondary" %>
+    <% end %>
     <%= submit gettext("Submit"), class: "btn btn-primary" %>
   </div>
 
-<% end %>
+</.form>
