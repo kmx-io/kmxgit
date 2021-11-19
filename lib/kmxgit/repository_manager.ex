@@ -61,7 +61,7 @@ defmodule Kmxgit.RepositoryManager do
       full_join: us in Slug,
       on: us.user_id == u.id,
       where: (fragment("lower(?)", os.slug) == ^downcase_owner or fragment("lower(?)", us.slug) == ^downcase_owner) and fragment("lower(?)", r.slug) == ^downcase_slug,
-      preload: [organisation: :slug],
+      preload: [organisation: [:slug, :users]],
       preload: [user: :slug]
   end
 

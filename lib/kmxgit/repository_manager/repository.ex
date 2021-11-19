@@ -23,10 +23,10 @@ defmodule Kmxgit.RepositoryManager.Repository do
     |> Markdown.validate_markdown(:description)
   end
 
-  def owner(repo = %__MODULE__{organisation: org = %Organisation{}}) do
+  def owner(%__MODULE__{organisation: org = %Organisation{}}) do
     org
   end
-  def owner(repo = %__MODULE__{user: user = %User{}}) do
+  def owner(%__MODULE__{user: user = %User{}}) do
     user
   end
 

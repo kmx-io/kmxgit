@@ -23,14 +23,17 @@ defmodule KmxgitWeb.SlugController do
         conn
         |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
         |> assign(:user, user)
-        |> render(UserView, "show.html")
+        |> put_view(UserView)
+        |> render("show.html")
       else
         org = slug.organisation
         if org do
           conn
           |> assign(:current_organisation, org)
           |> assign(:org, org)
-          |> render(OrganisationView, "show.html")
+          |> assign(:page_title, org.name || org.slug.slug)
+          |> put_view(OrganisationView)
+          |> render("show.html")
         else
           not_found(conn)
         end

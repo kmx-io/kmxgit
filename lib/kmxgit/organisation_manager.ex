@@ -39,9 +39,12 @@ defmodule Kmxgit.OrganisationManager do
     Repo.one from o in Organisation,
       join: s in Slug,
       on: s.organisation_id == o.id,
-      where: s.slug == ^slug,
-      preload: :slug,
-      preload: [users: :slug]
+      where: fragment("lower(?)", s.slug) == ^String.downcase(slug),
+      preload: [:slug,
+                repositories: [organisation: :slug,
+                               user: :slug],
+                users: :slug],
+      limit: 1
   end
 
   def delete_organisation(%Organisation{} = organisation) do

@@ -1,0 +1,7 @@
+<div class="container-fluid">
+  <h1>
+    <%= gettext "Edit repository" %>
+    <%= Repository.full_slug(@repo) %>
+  </h1>
+  <%= render "form.html", assigns %>
+</div>

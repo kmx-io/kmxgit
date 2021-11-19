@@ -4,6 +4,9 @@
       <h1><%= @org.name || @org.slug.slug %></h1>
     </div>
     <div class="col col-12 col-sm-4">
+      <%= link gettext("New repository"),
+               to: Routes.repository_path(@conn, :new, @org.slug.slug),
+               class: "btn btn-primary" %>
       <%= link gettext("Edit"),
                to: Routes.organisation_path(@conn, :edit, @org.slug.slug),
                class: "btn btn-primary" %>
@@ -15,6 +18,9 @@
     <div class="col col-12 col-md-7">
       <hr/>
       <h2><%= gettext "Repositories" %></h2>
+      <%= for repo <- @org.repositories do %>
+        <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @org.slug.slug, Repository.splat(repo)) %>
+      <% end %>
     </div>
     <div class="col col-12 col-md-4">
       <hr/>
