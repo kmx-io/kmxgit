@@ -52,15 +52,17 @@ defmodule Kmxgit.RepositoryManager do
     downcase_owner = String.downcase(owner)
     downcase_slug = String.downcase(slug)
     Repo.one from r in Repository,
-      join: o in Organisation,
+      full_join: o in Organisation,
       on: o.id == r.organisation_id,
-      join: os in Slug,
+      full_join: os in Slug,
       on: os.organisation_id == o.id,
-      join: u in User,
+      full_join: u in User,
       on: u.id == r.user_id,
-      join: us in Slug,
+      full_join: us in Slug,
       on: us.user_id == u.id,
-      where: (fragment("lower(?)", os.slug) == ^downcase_owner or fragment("lower(?)", us.slug) == ^downcase_owner) and fragment("lower(?)", r.slug) == ^downcase_slug
+      where: (fragment("lower(?)", os.slug) == ^downcase_owner or fragment("lower(?)", us.slug) == ^downcase_owner) and fragment("lower(?)", r.slug) == ^downcase_slug,
+      preload: [organisation: :slug],
+      preload: [user: :slug]
   end
 
   def delete_repository(%Repository{} = repository) do

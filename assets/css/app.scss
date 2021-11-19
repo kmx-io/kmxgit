@@ -4,7 +4,7 @@
 
 @import "./flash.scss";
 
-/* users */
+/* user */
 textarea#user_description {
     min-height: 10em;
 }
@@ -24,6 +24,17 @@ pre.ssh_keys {
     white-space: -pre-wrap;      /* Opera 4-6 */
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+/* repository */
+#repo_title {
+    a {
+        text-decoration: none;
+        color: black;
+    }
+    a:hover {
+        color: blue;
+    }
 }
 
 /* LiveView specific classes for your customization */

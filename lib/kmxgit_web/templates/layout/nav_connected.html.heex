@@ -1,3 +1,10 @@
+<%= if @conn.assigns[:current_repository] do %>
+  <li class="nav-item">
+    <%= link Repository.full_slug(@repo),
+             to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo)),
+             class: "nav-link" %>
+  </li>
+<% end %>
 <%= if @conn.assigns[:current_organisation] do %>
   <li class="nav-item">
     <%= link @current_organisation.name || @current_organisation.slug.slug,

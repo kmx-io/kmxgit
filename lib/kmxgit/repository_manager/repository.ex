@@ -23,4 +23,22 @@ defmodule Kmxgit.RepositoryManager.Repository do
     |> Markdown.validate_markdown(:description)
   end
 
+  def owner(repo = %__MODULE__{organisation: org = %Organisation{}}) do
+    org
+  end
+  def owner(repo = %__MODULE__{user: user = %User{}}) do
+    user
+  end
+
+  def owner_slug(repo) do
+    owner(repo).slug.slug
+  end
+
+  def full_slug(repo) do
+    "#{owner_slug(repo)}/#{repo.slug}"
+  end
+
+  def splat(repo) do
+    String.split(repo.slug, "/")
+  end
 end

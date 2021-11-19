@@ -45,28 +45,28 @@ defmodule KmxgitWeb.RepositoryController do
       org = repo.organisation
       user = repo.user
       conn
-      |> assign(:current_repository, repo)
       |> assign_current_organisation(org)
-      |> assign(:owner, org || user)
+      |> assign(:current_repository, repo)
+      |> assign(:repo, repo)
       |> render("show.html")
     else
       not_found(conn)
     end
   end
 
-  defp assign_current_organisation(conn, nil), do: conn
-  defp assign_current_organisation(conn, org) do
-    assign(conn, :current_organisation, org)
-  end
-  
   def edit(conn, params) do
-    org =  RepositoryManager.get_repository_by_slug(params["slug"])
-    changeset = RepositoryManager.change_repository(org)
-    if org do
+    slug = Enum.join(params["slug"], "/")
+    repo =  RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    changeset = RepositoryManager.change_repository(repo)
+    if repo do
+      org = repo.organisation
+      user = repo.user
       conn
       |> assign(:action, Routes.repository_path(conn, :update, org.slug.slug))
       |> assign(:changeset, changeset)
-      |> assign(:current_repository, org)
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:repo, repo)
       |> render("edit.html")
     else
       not_found(conn)
@@ -90,4 +90,11 @@ defmodule KmxgitWeb.RepositoryController do
       not_found(conn)
     end
   end
+
+  defp assign_current_organisation(conn, nil), do: conn
+  defp assign_current_organisation(conn, %Ecto.Association.NotLoaded{}), do: conn
+  defp assign_current_organisation(conn, org) do
+    assign(conn, :current_organisation, org)
+  end
+  
 end

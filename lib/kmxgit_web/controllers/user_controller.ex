@@ -6,12 +6,12 @@ defmodule KmxgitWeb.UserController do
   alias KmxgitWeb.ErrorView
 
   def show(conn, params) do
-    current_user = conn.assigns[:current_user]
-    user = if current_user && params["login"] == current_user.slug.slug do
-      current_user
-    else
-      UserManager.get_user_by_slug(params["login"])
-    end
+    #current_user = conn.assigns[:current_user]
+    #user = if current_user && params["login"] == current_user.slug.slug do
+    #  current_user
+    #else
+     user = UserManager.get_user_by_slug(params["login"])
+    #end
     if user do
       conn
       |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))

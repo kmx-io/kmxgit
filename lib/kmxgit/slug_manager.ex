@@ -25,8 +25,12 @@ defmodule Kmxgit.SlugManager do
   def get_slug(slug) do
     Repo.one from s in Slug,
       where: fragment("lower(slug)") == ^String.downcase(slug),
-      preload: [organisation: [:slug, [users: :slug]]],
-      preload: [user: [[organisations: :slug], :repositories, :slug]],
+      preload: [organisation: [:slug,
+                               users: :slug],
+                user: [:slug,
+                       organisations: :slug,
+                       repositories: [organisation: :slug,
+                                      user: :slug]]],
       limit: 1
   end
 

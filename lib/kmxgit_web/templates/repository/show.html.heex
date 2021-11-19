@@ -1,0 +1,14 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col col-12 col-sm-7">
+      <h1 id="repo_title"><%= link Repository.owner_slug(@repo), to: Routes.slug_path(@conn, :show, Repository.owner_slug(@repo)) %>/<%= link @repo.slug, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), String.split(@repo.slug, "/")) %></h1>
+    </div>
+    <div class="col col-12 col-sm-4">
+      <%= link gettext("Edit"),
+               to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), String.split(@repo.slug, "/")),
+               class: "btn btn-primary" %>
+    </div>
+  </div>
+
+</div>
