@@ -4,6 +4,7 @@ defmodule KmxgitWeb.RepositoryController do
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
+  alias Kmxgit.Repo
 
   def new(conn, params) do
     action = Routes.repository_path(conn, :create, params["owner"])
@@ -65,18 +66,22 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp create_repo(conn, owner, params) do
-    Repo.transaction do
-      case RepositoryManager.create_repository(owner, params) do
-        {:ok, repo} ->
-          conn
-          |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
-        {:error, changeset} ->
-          IO.inspect(changeset)
-          conn
-          |> assign(:action, Routes.repository_path(conn, :create, owner.slug.slug))
-          |> assign(:changeset, changeset)
-          |> render("new.html")
-      end
+    case Repo.transaction(fn ->
+          case RepositoryManager.create_repository(owner, params) do
+            {:ok, repo} -> {:ok, repo}
+            {:error, changeset} -> Repo.rollback changeset
+          end
+        end) do
+      {:ok, repo} ->
+        conn
+        |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
+      {:error, changeset} ->
+        IO.inspect(changeset)
+        conn
+        |> assign(:action, Routes.repository_path(conn, :create, owner.slug.slug))
+        |> assign(:changeset, changeset)
+        |> assign(:owner, owner)
+        |> render("new.html")
     end
   end
 
