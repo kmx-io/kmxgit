@@ -167,10 +167,8 @@ defmodule KmxgitWeb.RepositoryController do
     if repo do
       org = repo.organisation
       if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        changeset = RepositoryManager.change_repository(repo)
         conn
         |> assign(:action, Routes.repository_path(conn, :add_user_post, params["owner"], Repository.splat(repo)))
-        |> assign(:changeset, changeset)
         |> assign_current_organisation(org)
         |> assign(:current_repository, repo)
         |> assign(:repo, repo)
@@ -216,10 +214,8 @@ defmodule KmxgitWeb.RepositoryController do
     if repo do
       org = repo.organisation
       if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        changeset = RepositoryManager.change_repository(repo)
         conn
         |> assign(:action, Routes.repository_path(conn, :remove_user_post, params["owner"], Repository.splat(repo)))
-        |> assign(:changeset, changeset)
         |> assign_current_organisation(org)
         |> assign(:current_repository, repo)
         |> assign(:repo, repo)

@@ -68,11 +68,15 @@ defmodule KmxgitWeb.Router do
     end
 
     scope "/_add_user/" do
+      get  "/:slug", OrganisationController, :add_user
+      post "/:slug", OrganisationController, :add_user_post
       get  "/:owner/*slug", RepositoryController, :add_user
       post "/:owner/*slug", RepositoryController, :add_user_post
     end
 
     scope "/_remove_user/" do
+      get  "/:slug", OrganisationController, :remove_user
+      post "/:slug", OrganisationController, :remove_user_post
       get  "/:owner/*slug", RepositoryController, :remove_user
       post "/:owner/*slug", RepositoryController, :remove_user_post
     end

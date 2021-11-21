@@ -5,6 +5,7 @@ defmodule Kmxgit.OrganisationManager do
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.Repo
   alias Kmxgit.SlugManager.Slug
+  alias Kmxgit.UserManager
 
   def list_organisations do
     Repo.all from org in Organisation, preload: :slug
@@ -45,6 +46,32 @@ defmodule Kmxgit.OrganisationManager do
                                      user: :slug],
                 users: :slug],
       limit: 1
+  end
+
+  def add_user(%Organisation{} = org, login) do
+    user = UserManager.get_user_by_slug(login)
+    if user do
+      users = [user | org.users]
+      org
+      |> Organisation.changeset(%{})
+      |> Ecto.Changeset.put_assoc(:users, users)
+      |> Repo.update()
+    else
+      {:error, :not_found}
+    end
+  end
+
+  def remove_user(%Organisation{} = org, login) do
+    user = UserManager.get_user_by_slug(login)
+    if user do
+      users = Enum.reject(org.users, &(&1.id == user.id))
+      org
+      |> Organisation.changeset(%{})
+      |> Ecto.Changeset.put_assoc(:users, users)
+      |> Repo.update()
+    else
+      {:error, :not_found}
+    end
   end
 
   def delete_organisation(%Organisation{} = organisation) do

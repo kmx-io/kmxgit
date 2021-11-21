@@ -77,4 +77,70 @@ defmodule KmxgitWeb.OrganisationController do
       not_found(conn)
     end
   end
+
+  def add_user(conn, params) do
+    current_user = conn.assigns.current_user
+    org = OrganisationManager.get_organisation_by_slug(params["slug"])
+    if org && Enum.find(org.users, &(&1.id == current_user.id)) do
+      conn
+      |> assign(:action, Routes.organisation_path(conn, :add_user_post, params["slug"]))
+      |> assign(:current_organisation, org)
+      |> render("add_user.html")
+    else
+      not_found(conn)
+    end
+  end
+
+  def add_user_post(conn, params) do
+    current_user = conn.assigns.current_user
+    login = params["organisation"]["login"]
+    org = OrganisationManager.get_organisation_by_slug(params["slug"])
+    if org && Enum.find(org.users, &(&1.id == current_user.id)) do
+      case OrganisationManager.add_user(org, login) do
+        {:ok, org} ->
+          conn
+          |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
+        {:error, _} ->
+          conn
+          |> assign(:action, Routes.organisation_path(conn, :add_user_post, params["slug"]))
+          |> assign(:current_organisation, org)
+          |> render("add_user.html")
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def remove_user(conn, params) do
+    current_user = conn.assigns.current_user
+    org = OrganisationManager.get_organisation_by_slug(params["slug"])
+    if org && Enum.find(org.users, &(&1.id == current_user.id)) do
+      conn
+      |> assign(:action, Routes.organisation_path(conn, :remove_user_post, params["slug"]))
+      |> assign(:current_organisation, org)
+      |> render("remove_user.html")
+    else
+      not_found(conn)
+    end
+  end
+
+  def remove_user_post(conn, params) do
+    current_user = conn.assigns.current_user
+    login = params["organisation"]["login"]
+    org = OrganisationManager.get_organisation_by_slug(params["slug"])
+    if org && Enum.find(org.users, &(&1.id == current_user.id)) do
+      case OrganisationManager.remove_user(org, login) do
+        {:ok, org} ->
+          conn
+          |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
+        {:error, _} ->
+          conn
+          |> assign(:action, Routes.organisation_path(conn, :remove_user_post, params["slug"]))
+          |> assign(:current_organisation, org)
+          |> render("remove_user.html")
+      end
+    else
+      not_found(conn)
+    end
+  end
 end
