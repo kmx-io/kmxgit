@@ -6,6 +6,7 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager.Slug
+  alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
   def list_repositories do
@@ -66,7 +67,33 @@ defmodule Kmxgit.RepositoryManager do
                 user: :slug]
   end
 
-  def delete_repository(%Repository{} = repository) do
-    Repo.delete(repository)
+  def add_member(%Repository{} = repo, login) do
+    user = UserManager.get_user_by_slug(login)
+    if user do
+      members = [user | repo.members]
+      repo
+      |> Repository.changeset(%{})
+      |> Ecto.Changeset.put_assoc(:members, members)
+      |> Repo.update()
+    else
+      {:error, :not_found}
+    end
+  end
+
+  def remove_member(%Repository{} = repo, login) do
+    user = UserManager.get_user_by_slug(login)
+    if user do
+      members = Enum.reject(repo.members, &(&1.id == user.id))
+      repo
+      |> Repository.changeset(%{})
+      |> Ecto.Changeset.put_assoc(:members, members)
+      |> Repo.update()
+    else
+      {:error, :not_found}
+    end
+  end
+
+  def delete_repository(%Repository{} = repo) do
+    Repo.delete(repo)
   end
 end

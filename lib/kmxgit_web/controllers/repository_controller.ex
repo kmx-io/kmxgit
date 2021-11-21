@@ -97,11 +97,13 @@ defmodule KmxgitWeb.RepositoryController do
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
     if repo do
       org = repo.organisation
+      user = repo.user
       conn
       |> assign_current_organisation(org)
       |> assign(:current_repository, repo)
       |> assign(:repo, repo)
       |> assign(:members, Repository.members(repo))
+      |> assign(:owner, org || user)
       |> render("show.html")
     else
       not_found(conn)
@@ -151,6 +153,104 @@ defmodule KmxgitWeb.RepositoryController do
             |> assign(:current_repository, repo)
             |> assign(:repo, repo)
             |> render("edit.html")
+        end
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def add_user(conn, params) do
+    current_user = conn.assigns.current_user
+    slug = Enum.join(params["slug"], "/")
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo do
+      org = repo.organisation
+      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
+        changeset = RepositoryManager.change_repository(repo)
+        conn
+        |> assign(:action, Routes.repository_path(conn, :add_user_post, params["owner"], Repository.splat(repo)))
+        |> assign(:changeset, changeset)
+        |> assign_current_organisation(org)
+        |> assign(:current_repository, repo)
+        |> assign(:repo, repo)
+        |> render("add_user.html")
+      else
+        not_found(conn)
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def add_user_post(conn, params) do
+    current_user = conn.assigns.current_user
+    login = params["repository"]["login"]
+    slug = Enum.join(params["slug"], "/")
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo do
+      org = repo.organisation
+      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
+        case RepositoryManager.add_member(repo, login) do
+          {:ok, repo} ->
+            conn
+            |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
+          {:error, _} ->
+            conn
+            |> assign(:action, Routes.repository_path(conn, :add_user_post, params["owner"], Repository.splat(repo)))
+            |> assign_current_organisation(org)
+            |> assign(:current_repository, repo)
+            |> assign(:repo, repo)
+            |> render("add_user.html")
+        end
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def remove_user(conn, params) do
+    current_user = conn.assigns.current_user
+    slug = Enum.join(params["slug"], "/")
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo do
+      org = repo.organisation
+      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
+        changeset = RepositoryManager.change_repository(repo)
+        conn
+        |> assign(:action, Routes.repository_path(conn, :remove_user_post, params["owner"], Repository.splat(repo)))
+        |> assign(:changeset, changeset)
+        |> assign_current_organisation(org)
+        |> assign(:current_repository, repo)
+        |> assign(:repo, repo)
+        |> render("remove_user.html")
+      else
+        not_found(conn)
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def remove_user_post(conn, params) do
+    current_user = conn.assigns.current_user
+    login = params["repository"]["login"]
+    slug = Enum.join(params["slug"], "/")
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo do
+      org = repo.organisation
+      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
+        case RepositoryManager.remove_member(repo, login) do
+          {:ok, repo} ->
+            conn
+            |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
+          {:error, _} ->
+            conn
+            |> assign(:action, Routes.repository_path(conn, :remove_user_post, params["owner"], Repository.splat(repo)))
+            |> assign_current_organisation(org)
+            |> assign(:current_repository, repo)
+            |> assign(:repo, repo)
+            |> render("remove_user.html")
         end
       end
     else

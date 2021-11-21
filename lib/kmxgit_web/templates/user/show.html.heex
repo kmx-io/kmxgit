@@ -54,7 +54,7 @@
               <%= link(org.name || org.slug.slug, to: Routes.slug_path(@conn, :show, org.slug.slug), class: "org") %>
             <% end %>
             <%= if @user == @current_user do %>
-              <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary") %>
+              <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary btn-sm") %>
             <% end %>
           </td>
         </tr>

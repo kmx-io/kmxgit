@@ -67,6 +67,16 @@ defmodule KmxgitWeb.Router do
       put "/:owner/*slug", RepositoryController, :update
     end
 
+    scope "/_add_user/" do
+      get  "/:owner/*slug", RepositoryController, :add_user
+      post "/:owner/*slug", RepositoryController, :add_user_post
+    end
+
+    scope "/_remove_user/" do
+      get  "/:owner/*slug", RepositoryController, :remove_user
+      post "/:owner/*slug", RepositoryController, :remove_user_post
+    end
+
     scope "/admin", Admin, as: "admin" do
       pipe_through :admin
       get "/", DashboardController, :index

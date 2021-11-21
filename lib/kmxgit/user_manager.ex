@@ -36,12 +36,13 @@ defmodule Kmxgit.UserManager do
   def get_user_by_slug(slug) do
     Repo.one from u in User,
       join: s in Slug,
-      on: s.id == u.slug_id,
+      on: s.user_id == u.id,
       where: fragment("lower(?)", s.slug) == ^String.downcase(slug),
       limit: 1,
       preload: [:slug,
                 organisations: :slug,
-                owned_repositories: [organisation: :slug, user: :slug]]
+                owned_repositories: [organisation: :slug,
+                                     user: :slug]]
   end
 
   def create_user(attrs \\ %{}) do
