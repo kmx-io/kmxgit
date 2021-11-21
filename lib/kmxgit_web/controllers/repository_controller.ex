@@ -68,7 +68,7 @@ defmodule KmxgitWeb.RepositoryController do
   defp create_repo(conn, owner, params) do
     case Repo.transaction(fn ->
           case RepositoryManager.create_repository(owner, params) do
-            {:ok, repo} -> {:ok, repo}
+            {:ok, repo} -> repo
             {:error, changeset} -> Repo.rollback changeset
           end
         end) do
