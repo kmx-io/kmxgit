@@ -10,6 +10,9 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="navbar-item">
+          <%= link gettext("Repositories"), to: Routes.admin_repository_path(@conn, :index), class: "nav-link" %>
+        </li>
+        <li class="navbar-item">
           <%= link gettext("Organisations"), to: Routes.admin_organisation_path(@conn, :index), class: "nav-link" %>
         </li>
         <li class="navbar-item">

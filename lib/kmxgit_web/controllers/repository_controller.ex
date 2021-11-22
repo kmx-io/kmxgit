@@ -16,7 +16,7 @@ defmodule KmxgitWeb.RepositoryController do
     else
       user = slug.user
       if user do
-        if user != current_user && !current_user.is_admin do
+        if user != current_user do
           not_found(conn)
         else
           conn
@@ -49,7 +49,7 @@ defmodule KmxgitWeb.RepositoryController do
     else
       user = slug.user
       if user do
-        if user != current_user && !current_user.is_admin do
+        if user != current_user do
           not_found(conn)
         else
           create_repo(conn, user, params["repository"])

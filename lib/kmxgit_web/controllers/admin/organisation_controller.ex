@@ -9,7 +9,8 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   def index(conn, _params) do
     organisations = OrganisationManager.list_organisations
     conn
-    |> render("index.html", organisations: organisations)
+    |> assign(:organisations, organisations)
+    |> render("index.html")
   end
 
   def new(conn, _params) do
@@ -87,8 +88,10 @@ defmodule KmxgitWeb.Admin.OrganisationController do
         {:error, changeset} ->
           IO.inspect(changeset)
           conn
-          |> render("edit.html", changeset: changeset,
-                    action: Routes.admin_organisation__path(conn, :update, organisation))
+          |> assign(:action, Routes.admin_organisation_path(conn, :update, organisation))
+          |> assign(:changeset, changeset)
+          |> render("edit.html")
+                    
       end
     else
       not_found(conn)
