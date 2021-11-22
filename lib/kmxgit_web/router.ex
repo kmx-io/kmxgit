@@ -84,7 +84,18 @@ defmodule KmxgitWeb.Router do
     scope "/admin", Admin, as: "admin" do
       pipe_through :admin
       get "/", DashboardController, :index
-      resources "/organisations", OrganisationController
+      resources "/organisations", OrganisationController do
+        get  "/add_user/",   OrganisationController, :add_user, as: :""
+        post "/add_user",    OrganisationController, :add_user_post, as: :""
+        get  "/remove_user", OrganisationController, :remove_user, as: :""
+        post "/remove_user", OrganisationController, :remove_user_post, as: :""
+      end
+      resources "/repositories", RepositoryController do
+        get  "/add_user",    RepositoryController, :add_user, as: :""
+        post "/add_user",    RepositoryController, :add_user_post, as: :""
+        get  "/remove_user", RepositoryController, :remove_user, as: :""
+        post "/remove_user", RepositoryController, :remove_user_post, as: :""
+      end
       resources "/users", UserController
 
       import Phoenix.LiveDashboard.Router

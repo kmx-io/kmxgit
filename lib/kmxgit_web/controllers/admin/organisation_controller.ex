@@ -88,10 +88,56 @@ defmodule KmxgitWeb.Admin.OrganisationController do
           IO.inspect(changeset)
           conn
           |> render("edit.html", changeset: changeset,
-                    action: Routes.admin_organisation_path(conn, :update, organisation))
+                    action: Routes.admin_organisation__path(conn, :update, organisation))
       end
     else
       not_found(conn)
+    end
+  end
+
+  def add_user(conn, params) do
+    org = OrganisationManager.get_organisation!(params["organisation_id"])
+    conn
+    |> assign(:action, Routes.admin_organisation__path(conn, :add_user_post, org))
+    |> assign(:org, org)
+    |> render("add_user.html")
+  end
+
+  def add_user_post(conn, params) do
+    login = params["organisation"]["login"]
+    org = OrganisationManager.get_organisation!(params["organisation_id"])
+    case OrganisationManager.add_user(org, login) do
+      {:ok, org} ->
+        conn
+        |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
+      {:error, _} ->
+        conn
+        |> assign(:action, Routes.admin_organisation__path(conn, :add_user_post, org))
+        |> assign(:org, org)
+        |> render("add_user.html")
+    end
+  end
+
+  def remove_user(conn, params) do
+    org = OrganisationManager.get_organisation!(params["organisation_id"])
+    conn
+    |> assign(:action, Routes.admin_organisation__path(conn, :remove_user_post, org))
+    |> assign(:org, org)
+    |> render("remove_user.html")
+  end
+
+  def remove_user_post(conn, params) do
+    login = params["organisation"]["login"]
+    org = OrganisationManager.get_organisation!(params["organisation_id"])
+    case OrganisationManager.remove_user(org, login) do
+      {:ok, org} ->
+        conn
+        |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
+      {:error, _} ->
+        conn
+        |> assign(:action, Routes.admin_organisation__path(conn, :remove_user_post, org))
+        |> assign(:org, org)
+        |> render("remove_user.html")
     end
   end
 

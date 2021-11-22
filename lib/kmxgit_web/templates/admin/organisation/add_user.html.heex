@@ -1,0 +1,17 @@
+<div class="container-fluid">
+
+  <h1><%= gettext "Add user to %{org}", org: @org.name || @org.slug.slug %></h1>
+
+  <%= form_for :organisation, @action, fn f -> %>
+
+    <div class="mb-3">
+      <%= label f, :login, class: "form-label" %>
+      <%= text_input f, :login, class: "form=control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= submit gettext("Submit"), class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
+</div>

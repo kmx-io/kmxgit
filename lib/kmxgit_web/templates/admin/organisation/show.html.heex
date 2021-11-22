@@ -26,8 +26,14 @@
       <th><%= gettext "Users" %></th>
       <td>
         <%= for user <- @org.users do %>
-            <%= link(user.slug.slug, to: Routes.admin_user_path(@conn, :show, user), class: "user") %>
-          <% end %>
+          <%= link(user.slug.slug, to: Routes.admin_user_path(@conn, :show, user), class: "user") %>
+        <% end %>
+        <%= link "-",
+            to: Routes.admin_organisation__path(@conn, :remove_user, @org),
+            class: "btn btn-danger btn-sm" %>
+        <%= link "+",
+            to: Routes.admin_organisation__path(@conn, :add_user, @org),
+            class: "btn btn-primary btn-sm" %>
       </td>
     </tr>
   </table>

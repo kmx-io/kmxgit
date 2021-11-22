@@ -11,6 +11,13 @@ defmodule Kmxgit.OrganisationManager do
     Repo.all from org in Organisation, preload: :slug
   end
 
+  def get_organisation!(id) do
+    org = Repo.one from org in Organisation,
+      where: org.id == ^id,
+      preload: [:slug, :users]
+    org || raise Ecto.NoResultsError
+  end
+
   def change_organisation(organisation \\ %Organisation{}) do
     Organisation.changeset(organisation, %{})
   end
