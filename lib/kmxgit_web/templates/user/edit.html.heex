@@ -39,6 +39,12 @@
       <%= password_input f, :password_confirmation, class: "form-control" %>
     </div>
 
+    <div class="mb-3 form-check">
+      <%= checkbox f, :deploy_only, class: "form-check-input" %>
+      <%= label f, :deploy_only, class: "form-check-label" %>
+      <%= error_tag f, :deploy_only %>
+    </div>
+
     <div class="mb-3">
       <%= link gettext("Cancel"),
                to: Routes.slug_path(@conn, :show, @current_user.slug.slug),

@@ -36,7 +36,6 @@ defmodule KmxgitWeb.PageController do
             |> Guardian.Plug.sign_in(user)
             |> redirect(to: "/")
           {:error, changeset} ->
-            IO.inspect(changeset)
             conn
             |> assign(:no_navbar_links, true)
             |> assign(:changeset, changeset)

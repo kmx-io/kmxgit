@@ -38,6 +38,12 @@
     <%= error_tag f, :is_admin %>
   </div>
 
+  <div class="mb-3 form-check">
+    <%= checkbox f, :deploy_only, class: "form-check-input" %>
+    <%= label f, :deploy_only, class: "form-check-label" %>
+    <%= error_tag f, :deploy_only %>
+  </div>
+
   <div class="form-group">
     <%= if @conn.assigns[:user] do %>
       <%= link gettext("Cancel"),

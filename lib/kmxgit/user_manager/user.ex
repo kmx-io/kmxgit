@@ -8,6 +8,7 @@ defmodule Kmxgit.UserManager.User do
   alias BCrypt
 
   schema "users" do
+    field :deploy_only, :boolean, null: false, default: false
     field :description, :string, null: true
     field :email, :string, unique: true
     field :encrypted_password, :string
@@ -28,7 +29,7 @@ defmodule Kmxgit.UserManager.User do
     |> check_password_confirmation()
     |> put_password_hash()
     |> cast_assoc(:slug)
-    |> validate_required([:email, :slug, :encrypted_password])
+    |> validate_required([:deploy_only, :email, :encrypted_password, :is_admin, :slug])
     |> validate_format(:email, ~r/^[-_+.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
     |> unique_constraint(:_lower_email)
     |> Markdown.validate_markdown(:description)
@@ -36,13 +37,13 @@ defmodule Kmxgit.UserManager.User do
 
   def changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :email, :name, :password, :password_confirmation, :ssh_keys])
+    |> cast(attrs, [:deploy_only, :description, :email, :name, :password, :password_confirmation, :ssh_keys])
     |> common_changeset()
   end
 
   def admin_changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:description, :email, :is_admin, :name, :password, :password_confirmation, :ssh_keys])
+    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :password_confirmation, :ssh_keys])
     |> common_changeset()
   end
 

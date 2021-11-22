@@ -76,7 +76,6 @@ defmodule KmxgitWeb.RepositoryController do
         conn
         |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
       {:error, changeset} ->
-        IO.inspect(changeset)
         conn
         |> assign(:action, Routes.repository_path(conn, :create, owner.slug.slug))
         |> assign(:changeset, changeset)
@@ -145,7 +144,6 @@ defmodule KmxgitWeb.RepositoryController do
             conn
             |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
           {:error, changeset} ->
-            IO.inspect(changeset)
             conn
             |> assign(:action, Routes.repository_path(conn, :update, params["owner"], Repository.splat(repo)))
             |> assign(:changeset, changeset)

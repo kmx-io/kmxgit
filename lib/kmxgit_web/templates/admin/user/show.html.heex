@@ -40,6 +40,10 @@
       <th><%= gettext "Admin" %></th>
       <td><%= @user.is_admin %></td>
     </tr>
+    <tr>
+      <th><%= gettext "Deploy only" %></th>
+      <td><%= @user.deploy_only %></td>
+    </tr>
   </table>
 
   <%= link gettext("Delete user"),

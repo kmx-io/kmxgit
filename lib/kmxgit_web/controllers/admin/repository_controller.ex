@@ -57,7 +57,6 @@ defmodule KmxgitWeb.Admin.RepositoryController do
         conn
         |> redirect(to: Routes.admin_repository_path(conn, :show, repo))
       {:error, changeset} ->
-        IO.inspect(changeset)
         conn
         |> assign(:action, Routes.admin_repository_path(conn, :create))
         |> assign(:changeset, changeset)
@@ -98,7 +97,6 @@ defmodule KmxgitWeb.Admin.RepositoryController do
         conn
         |> redirect(to: Routes.admin_repository_path(conn, :show, repo))
       {:error, changeset} ->
-        IO.inspect(changeset)
         conn
         |> assign(:action, Routes.admin_repository__path(conn, :update, repo))
         |> assign(:changeset, changeset)

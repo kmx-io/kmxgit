@@ -76,7 +76,6 @@ defmodule Kmxgit.RepositoryManager do
     user = UserManager.get_user_by_slug(login)
     if user do
       members = [user | repo.members]
-      IO.inspect(members)
       repo
       |> Repository.changeset(%{})
       |> Ecto.Changeset.put_assoc(:members, members)

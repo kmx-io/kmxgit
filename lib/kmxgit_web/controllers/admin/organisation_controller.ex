@@ -86,7 +86,6 @@ defmodule KmxgitWeb.Admin.OrganisationController do
           conn
           |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
         {:error, changeset} ->
-          IO.inspect(changeset)
           conn
           |> assign(:action, Routes.admin_organisation_path(conn, :update, organisation))
           |> assign(:changeset, changeset)

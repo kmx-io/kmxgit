@@ -19,7 +19,6 @@ defmodule KmxgitWeb.OrganisationController do
         conn
         |> redirect(to: Routes.slug_path(conn, :show, organisation.slug.slug))
       {:error, changeset} ->
-        IO.inspect(changeset)
         conn
         |> assign(:action, Routes.organisation_path(conn, :create))
         |> assign(:changeset, changeset)
@@ -68,7 +67,6 @@ defmodule KmxgitWeb.OrganisationController do
           conn
           |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
         {:error, changeset} ->
-          IO.inspect(changeset)
           conn
           |> render("edit.html", changeset: changeset,
                     action: Routes.organisation_path(conn, :update, organisation.slug.slug))
@@ -100,7 +98,7 @@ defmodule KmxgitWeb.OrganisationController do
         {:ok, org} ->
           conn
           |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
-        {:error, _} ->
+        {:error, e} ->
           conn
           |> assign(:action, Routes.organisation_path(conn, :add_user_post, params["slug"]))
           |> assign(:current_organisation, org)
