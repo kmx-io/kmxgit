@@ -1,0 +1,33 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Invalid parameters</p>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= label f, :slug, class: "form-label" %>
+    <%= text_input f, :slug, class: "form-control" %>
+    <%= error_tag f, :slug %>
+  </div>
+
+  <div class="mb-3">
+    <%= label f, :description, class: "form-label" %>
+    <%= textarea f, :description, class: "form-control" %>
+    <%= error_tag f, :description %>
+  </div>
+
+  <div class="mb-3">
+    <%= if @conn.assigns[:repo] do %>
+      <%= link gettext("Cancel"),
+          to: Routes.admin_repository_path(@conn, :show, @repo),
+          class: "btn btn-secondary" %>
+    <% else %>
+      <%= link gettext("Cancel"),
+          to: Routes.admin_repository_path(@conn, :index),
+          class: "btn btn-secondary" %>
+    <% end %>
+    <%= submit gettext("Submit"), class: "btn btn-primary" %>
+  </div>
+
+<% end %>
