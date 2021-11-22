@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1>Organisation <%= @org.name || @org.slug.slug %></h1>
+  <h1><%= gettext("Organisation %{org}", org: @org.name || @org.slug.slug) %></h1>
 
   <table class="table admin-properties">
     <tr>

@@ -10,13 +10,15 @@
     <%= Enum.map @repos, fn(repo) -> %>
       <tr>
         <td><%= link repo.id, to: Routes.admin_repository_path(@conn, :show, repo) %></td>
-        <%= case owner = Repository.owner(repo) do %>
-          <% %Organisation{} -> %>
-            <td><%= link owner.name || owner.slug.slug, to: Routes.admin_organisation_path(@conn, :show, owner) %></td>
-          <% %User{} -> %>
-            <td><%= link owner.slug.slug, to: Routes.admin_user_path(@conn, :show, owner) %></td>
-        <% end %>
-        <td><%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)) %></td>
+        <td>
+          <%= case owner = Repository.owner(repo) do %>
+            <% %Organisation{} -> %>
+              <%= link owner.name || owner.slug.slug, to: Routes.admin_organisation_path(@conn, :show, owner) %>
+            <% %User{} -> %>
+              <%= link owner.slug.slug, to: Routes.admin_user_path(@conn, :show, owner) %>
+          <% end %>
+        </td>
+        <td><%= link Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo) %></td>
       </tr>
     <% end %>
   </table>
