@@ -42,11 +42,16 @@ defmodule Kmxgit.RepositoryManager do
   end
 
   def get_repository(id) do
-    Repo.one from repository in Repository,
-      where: [id: ^id],
-      preload: :slug,
-      preload: [users: :slug],
-      limit: 1
+    Repo.one(from repo in Repository,
+      where: repo.id == ^id,
+      limit: 1,
+      preload: [members: :slug,
+                organisation: [:slug, [users: :slug]],
+                user: :slug])
+  end
+
+  def get_repository!(id) do
+    get_repository(id) || raise Ecto.NoResultsError
   end
 
   def get_repository_by_owner_and_slug(owner, slug) do
@@ -63,7 +68,7 @@ defmodule Kmxgit.RepositoryManager do
       on: us.user_id == u.id,
       where: (fragment("lower(?)", os.slug) == ^downcase_owner or fragment("lower(?)", us.slug) == ^downcase_owner) and fragment("lower(?)", r.slug) == ^downcase_slug,
       preload: [members: :slug,
-                organisation: [:slug, :users],
+                organisation: [:slug, [users: :slug]],
                 user: :slug]
   end
 
@@ -71,6 +76,7 @@ defmodule Kmxgit.RepositoryManager do
     user = UserManager.get_user_by_slug(login)
     if user do
       members = [user | repo.members]
+      IO.inspect(members)
       repo
       |> Repository.changeset(%{})
       |> Ecto.Changeset.put_assoc(:members, members)

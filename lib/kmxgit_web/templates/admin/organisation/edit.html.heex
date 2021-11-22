@@ -24,6 +24,9 @@
     </div>
 
     <div class="mb-3">
+      <%= link gettext("Cancel"),
+          to: Routes.admin_organisation_path(@conn, :show, @org),
+          class: "btn btn-secondary" %>
       <%= submit gettext("Submit"), class: "btn btn-primary" %>
     </div>
 
