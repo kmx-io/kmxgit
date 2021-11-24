@@ -131,7 +131,7 @@ defmodule KmxgitWeb.RepositoryController do
       {path1 |> Enum.at(1),
        path2 ++ rest1 |> Enum.reject(&(!&1 || &1 == "")) |> Enum.join("/")}
     else
-      {"master", ""}
+      {nil, ""}
     end
     IO.inspect([path: path, slug: slug, branch: branch, path1: path1])
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
@@ -140,23 +140,29 @@ defmodule KmxgitWeb.RepositoryController do
       user = repo.user
       git = %{branches: [], content: nil, files: [], status: "", valid: true}
       |> git_put_branches(repo, conn)
-      |> git_put_files(repo, branch, path1, conn)
-      |> git_put_content(repo, branch, path1)
+      |> git_put_files(repo, branch || "master", path1, conn)
+      |> git_put_content(repo, branch || "master", path1)
       IO.inspect(git)
-      if git.valid do
+      if !branch do
+        {b, _} = Enum.at(git.branches, 0)
         conn
-        |> assign(:branch, branch)
-        |> assign(:branch_url, branch_url(git.branches, branch))
-        |> assign_current_organisation(org)
-        |> assign(:current_repository, repo)
-        |> assign(:git, git)
-        |> assign(:repo, repo)
-        |> assign(:members, Repository.members(repo))
-        |> assign(:owner, org || user)
-        |> assign(:path, path1)
-        |> render("show.html")
+        |> redirect(to: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", b]))
       else
-        not_found(conn)
+        if git.valid do
+          conn
+          |> assign(:branch, branch)
+          |> assign(:branch_url, branch_url(git.branches, branch))
+          |> assign_current_organisation(org)
+          |> assign(:current_repository, repo)
+          |> assign(:git, git)
+          |> assign(:repo, repo)
+          |> assign(:members, Repository.members(repo))
+          |> assign(:owner, org || user)
+          |> assign(:path, path1)
+          |> render("show.html")
+        else
+          not_found(conn)
+        end
       end
     else
       not_found(conn)
@@ -200,7 +206,7 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_put_files(git = %{valid: true}, repo, branch, subdir, conn) do
     case GitManager.files(Repository.full_slug(repo), branch, subdir) do
-      {:ok, []} -> %{git | valid: false}
+      {:ok, []} -> git
       {:ok, files} ->
         files = files
         |> Enum.map(fn f = %{url: url} ->

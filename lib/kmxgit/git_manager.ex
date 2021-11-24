@@ -8,7 +8,7 @@ defmodule Kmxgit.GitManager do
 
   def status(repo) do
     dir = git_dir(repo)
-    {out, status} = System.cmd("git", ["-C", dir, "status"])
+    {out, status} = System.cmd("git", ["-C", dir, "status"], stderr_to_stdout: true)
     case status do
       0 -> {:ok, out}
       _ -> {:error, out}
@@ -17,8 +17,7 @@ defmodule Kmxgit.GitManager do
 
   def branches(repo) do
     dir = git_dir(repo)
-    {out, status} = System.cmd("git", ["branch", "-a"])
-    IO.inspect {out, status}
+    {out, status} = System.cmd("git", ["branch", "--list"], stderr_to_stdout: true)
     case status do
       0 ->
         b = out
@@ -51,8 +50,7 @@ defmodule Kmxgit.GitManager do
   def content(repo, branch, path) do
     dir = git_dir(repo)
     path = if path == "" do "." else path end
-    {out, status} = System.cmd("git", ["-C", dir, "cat-file", "blob", path])
-    IO.inspect {out, status}
+    {out, status} = System.cmd("git", ["-C", dir, "cat-file", "blob", path], stderr_to_stdout: true)
     case status do
       0 -> {:ok, out}
       _ -> {:error, out}
@@ -62,7 +60,8 @@ defmodule Kmxgit.GitManager do
   def files(repo, tree, path, parent \\ ".") do
     dir = git_dir(repo)
     path1 = if path == "" do "." else path end
-    {out, status} = System.cmd("git", ["-C", dir, "ls-tree", tree, path1])
+    {out, status} = System.cmd("git", ["-C", dir, "ls-tree", tree, path1], stderr_to_stdout: true)
+    IO.inspect {out, status}
     case status do
       0 ->
         list = out
@@ -79,7 +78,12 @@ defmodule Kmxgit.GitManager do
             files(repo, sha1, "", "#{parent}/#{path1}")
           _ -> {:ok, list}
         end
-      _ -> {:error, String.split(out, "\n")}
+      _ ->
+        if Regex.match?(~r(^fatal: Not a valid object name ), out) do
+          {:ok, []}
+        else
+          {:error, String.split(out, "\n")}
+        end
     end
   end
 
