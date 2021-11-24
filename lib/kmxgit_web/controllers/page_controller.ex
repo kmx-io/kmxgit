@@ -47,4 +47,13 @@ defmodule KmxgitWeb.PageController do
       redirect(conn, to: "/")
     end
   end
+
+  def keys(conn, params) do
+    k = UserManager.list_users
+    |> Enum.map(fn user -> User.ssh_keys_with_env(user) end)
+    |> Enum.join("\n")
+    conn
+    |> put_resp_content_type("text/text")
+    |> resp(200, k)
+  end
 end

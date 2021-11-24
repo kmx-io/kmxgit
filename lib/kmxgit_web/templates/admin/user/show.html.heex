@@ -44,6 +44,14 @@
       <th><%= gettext "Deploy only" %></th>
       <td><%= @user.deploy_only %></td>
     </tr>
+    <tr>
+      <th><%= gettext "SSH keys" %></th>
+      <td class="scroll-x">
+        <pre class="ssh_keys">
+          <%= @user.ssh_keys %>
+        </pre>
+      </td>
+    </tr>
   </table>
 
   <%= link gettext("Delete user"),

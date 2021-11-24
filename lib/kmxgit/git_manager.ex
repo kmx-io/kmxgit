@@ -87,14 +87,34 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  def rename(from, to) do
+    dir_from = git_dir(from)
+    dir_to = git_dir(to)
+    dir = Path.dirname(dir_to)
+    :ok = File.mkdir_p(dir)
+    {out, status} = System.cmd("mv", [dir_from, dir_to], stderr_to_stdout: true)
+    case status do
+      0 -> {:ok, out}
+      _ -> {:error, out}
+    end
+  end
+
   def create(repo) do
     dir = "#{@git_root}/#{Path.dirname(repo)}"
     name = "#{Path.basename(repo)}.git"
     :ok = File.mkdir_p(dir)
-    {out, status} = System.cmd("git", ["-C", dir, "init", "--bare", name])
+    {out, status} = System.cmd("git", ["-C", dir, "init", "--bare", name], stderr_to_stdout: true)
     case status do
       0 -> {:ok, out}
       _ -> {:error, out}
+    end
+  end
+
+  def delete(repo) do
+    dir = git_dir(repo)
+    case System.cmd("rm", ["-rf", dir], stderr_to_stdout: true) do
+      {"", 0} -> :ok
+      {err, _} -> {:error, err}
     end
   end
 end

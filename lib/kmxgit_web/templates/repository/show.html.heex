@@ -32,6 +32,8 @@
                   <%= link file.name, to: file.url %>
                 <% "tree" -> %>
                   <%= link "#{file.name}/", to: file.url %>
+                <% _ -> %>
+                  <%= "#{file.type} #{file.name}" %>
               <% end %>
             </li>
           <% end %>

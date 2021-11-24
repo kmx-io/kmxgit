@@ -1,6 +1,7 @@
 defmodule KmxgitWeb.Admin.RepositoryController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.Repo
@@ -92,10 +93,21 @@ defmodule KmxgitWeb.Admin.RepositoryController do
 
   def update(conn, params) do
     repo = RepositoryManager.get_repository!(params["id"])
-    case RepositoryManager.update_repository(repo, params["repository"]) do
-      {:ok, repo} ->
+    case Repo.transaction(fn ->
+          case RepositoryManager.update_repository(repo, params["repository"]) do
+            {:ok, repo1} ->
+              s = Repository.full_slug(repo)
+              s1 = Repository.full_slug(repo1)
+              if s != s1 do
+                GitManager.rename(s, s1)
+              end
+              repo1
+            {:error, changeset} -> Repo.rollback changeset
+          end
+        end) do
+      {:ok, repo1} ->
         conn
-        |> redirect(to: Routes.admin_repository_path(conn, :show, repo))
+        |> redirect(to: Routes.admin_repository_path(conn, :show, repo1))
       {:error, changeset} ->
         conn
         |> assign(:action, Routes.admin_repository__path(conn, :update, repo))
@@ -151,11 +163,24 @@ defmodule KmxgitWeb.Admin.RepositoryController do
   end
 
   def delete(conn, params) do
-    repository = RepositoryManager.get_repository(params["id"])
-    if repository do
-      {:ok, _} = RepositoryManager.delete_repository(repository)
-      conn
-      |> redirect(to: Routes.admin_repository_path(conn, :index))
+    repo = RepositoryManager.get_repository(params["id"])
+    if repo do
+      case Repo.transaction(fn ->
+            case RepositoryManager.delete_repository(repo) do
+              {:ok, _} -> GitManager.delete(Repository.full_slug(repo))
+              {:error, changeset} -> Repo.rollback(changeset)
+            end
+          end) do
+        {:ok, _} ->
+          conn
+          |> redirect(to: Routes.admin_repository_path(conn, :index))
+        {:error, changeset} ->
+          conn
+          |> assign(:action, Routes.admin_repository_path(conn, :update, repo))
+          |> assign(:changeset, changeset)
+          |> assign(:repo, repo)
+          |> render("edit.html")
+      end
     else
       not_found(conn)
     end

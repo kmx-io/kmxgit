@@ -18,9 +18,13 @@
     <div class="col col-12 col-md-7">
       <hr/>
       <h2><%= gettext "Repositories" %></h2>
-      <%= for repo <- @org.owned_repositories do %>
-        <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @org.slug.slug, Repository.splat(repo)) %>
-      <% end %>
+      <ul>
+        <%= for repo <- @org.owned_repositories do %>
+          <li>
+            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @org.slug.slug, Repository.splat(repo)) %>
+          </li>
+        <% end %>
+      </ul>  
     </div>
     <div class="col col-12 col-md-4">
       <hr/>

@@ -11,7 +11,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     belongs_to :organisation, Organisation
     field :slug, :string, unique: true
     belongs_to :user, User
-    many_to_many :members, User, join_through: "users_repositories", on_replace: :delete
+    many_to_many :members, User, join_through: "users_repositories", on_replace: :delete, on_delete: :delete_all
     timestamps()
   end
 

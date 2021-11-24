@@ -112,7 +112,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> Enum.map(&Enum.reverse/1)
   end
   def chunk_path([first | rest], acc = [acc_first | acc_rest]) do
-    if Regex.match?(~r/_/, first) do
+    if Regex.match?(~r/^_/, first) do
       chunk_path(rest, [[first] | acc])
     else
       chunk_path(rest, [[first | acc_first] | acc_rest])
@@ -262,7 +262,18 @@ defmodule KmxgitWeb.RepositoryController do
     if repo do
       org = repo.organisation
       if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        case RepositoryManager.update_repository(repo, params["repository"]) do
+        case Repo.transaction(fn ->
+              case RepositoryManager.update_repository(repo, params["repository"]) do
+                {:ok, repo1} ->
+                  s = Repository.full_slug(repo)
+                  s1 = Repository.full_slug(repo1)
+                  if s != s1 do
+                    GitManager.rename(s, s1)
+                  end
+                  repo1
+                {:error, changeset} -> Repo.rollback(changeset)
+              end
+            end) do
           {:ok, repo} ->
             conn
             |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
@@ -382,9 +393,19 @@ defmodule KmxgitWeb.RepositoryController do
     if repo do
       org = repo.organisation
       if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        {:ok, _} = RepositoryManager.delete_repository(repo)
-        conn
-        |> redirect(to: Routes.slug_path(conn, :show, params["owner"]))
+        case Repo.transaction(fn ->
+              case RepositoryManager.delete_repository(repo) do
+                {:ok, _} -> :ok
+                {:error, changeset} -> Repo.rollback changeset
+              end
+            end) do
+          {:ok, _} ->
+            conn
+            |> redirect(to: Routes.slug_path(conn, :show, params["owner"]))
+          {:error, changeset} ->
+            conn
+            |> redirect(to: Routes.slug_path(conn, :edit, params["owner"]))
+        end
       else
         not_found(conn)
       end

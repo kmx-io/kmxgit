@@ -88,4 +88,17 @@ defmodule Kmxgit.UserManager.User do
   def display_name(user) do
     user.name || user.login
   end
+
+  def ssh_keys_with_env(user) do
+    (user.ssh_keys || "")
+    |> String.split("\n")
+    |> Enum.map(fn line ->
+      if Regex.match?(~r/^[ \t]*ssh-/, line) do
+        "environment=\"GIT_AUTH_ID=#{user.slug.slug}\" #{line}"
+      else
+        line
+      end
+    end)
+    |> Enum.join("\n")
+  end
 end

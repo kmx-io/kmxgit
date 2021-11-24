@@ -6,6 +6,12 @@
     <%= error_tag f, :name %>
   </div>
 
+  <div class="mb-3">
+    <%= label f, :email, class: "form-label" %>
+    <%= text_input f, :email, class: "form-control" %>
+    <%= error_tag f, :email %>
+  </div>
+
   <%= inputs_for f, :slug, fn ff -> %>
     <div class="mb-3">
       <%= label ff, :slug, gettext("Login"), class: "form-label" %>
@@ -15,9 +21,15 @@
   <% end %>
 
   <div class="mb-3">
-    <%= label f, :email, class: "form-label" %>
-    <%= text_input f, :email, class: "form-control" %>
-    <%= error_tag f, :email %>
+    <%= label f, :description, class: "form-label" %>
+    <%= textarea f, :description, class: "form-control" %>
+    <%= error_tag f, :description %>
+  </div>
+
+  <div class="mb-3">
+    <%= label f, :ssh_keys, gettext("SSH keys"), class: "form-label" %>
+    <%= textarea f, :ssh_keys, class: "form-control" %>
+    <%= error_tag f, :ssh_keys %>
   </div>
 
   <div class="mb-3">
