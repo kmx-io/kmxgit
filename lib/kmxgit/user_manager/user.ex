@@ -31,7 +31,7 @@ defmodule Kmxgit.UserManager.User do
     |> cast_assoc(:slug)
     |> validate_required([:deploy_only, :email, :encrypted_password, :is_admin, :slug])
     |> validate_format(:email, ~r/^[-_+.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
-    |> unique_constraint(:_lower_email)
+    |> unique_constraint(:email, name: "users__lower_email_index")
     |> Markdown.validate_markdown(:description)
   end
 

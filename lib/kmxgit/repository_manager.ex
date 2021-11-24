@@ -19,19 +19,19 @@ defmodule Kmxgit.RepositoryManager do
     Repository.changeset(repository, %{})
   end
 
-  def create_repository(owner), do: create_repository(owner, %{})
-
-  def create_repository(user = %User{}, attrs) do
-    %Repository{}
-    |> Repository.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:user, user)
-    |> Repo.insert()
+  defp put_owner(changeset, owner) do
+    case owner do
+      %User{} ->
+        Ecto.Changeset.put_assoc(changeset, :user, owner)
+      %Organisation{} ->
+        Ecto.Changeset.put_assoc(changeset, :organisation, owner)
+    end
   end
 
-  def create_repository(org = %Organisation{}, attrs) do
+  def create_repository(owner, attrs \\ %{}) do
     %Repository{}
     |> Repository.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:organisation, org)
+    |> put_owner(owner)
     |> Repo.insert()
   end
 
