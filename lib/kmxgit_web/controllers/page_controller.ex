@@ -2,6 +2,8 @@ defmodule KmxgitWeb.PageController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.Repo
+  alias Kmxgit.RepositoryManager
+  alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.{Guardian, User}
 
@@ -56,4 +58,16 @@ defmodule KmxgitWeb.PageController do
     |> put_resp_content_type("text/text")
     |> resp(200, k)
   end
+
+  def auth(conn, params) do
+    a = RepositoryManager.list_repositories
+    |> Enum.sort(fn a, b ->
+      Repository.full_slug(a) < Repository.full_slug(b)
+    end)
+    |> Enum.map(fn repo -> Repository.auth(repo) end)
+    |> Enum.join("\n")
+    conn
+    |> put_resp_content_type("text/text")
+    |> resp(200, a)
+  end    
 end

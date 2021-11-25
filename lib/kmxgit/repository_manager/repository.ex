@@ -53,4 +53,20 @@ defmodule Kmxgit.RepositoryManager.Repository do
     end
     |> Enum.uniq
   end
+
+  def auth(repo) do
+    repo
+    |> members()
+    |> Enum.sort(fn a, b ->
+      a.slug.slug < b.slug.slug
+    end)
+    |> Enum.map(fn user ->
+      mode = if user.deploy_only do
+          "r"
+        else
+          "rw"
+        end
+      "#{user.slug.slug} #{mode} \"#{full_slug(repo)}.git\"\n"
+    end)
+  end
 end

@@ -10,9 +10,10 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.UserManager.User
 
   def list_repositories do
-    Repo.all from org in Repository,
-      preload: [organisation: :slug],
-      preload: [user: :slug]
+    Repo.all from r in Repository,
+      preload: [members: :slug,
+                organisation: [:slug, users: :slug],
+                user: :slug]
   end
 
   def change_repository(repository \\ %Repository{}) do
