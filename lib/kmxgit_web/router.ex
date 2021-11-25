@@ -33,11 +33,11 @@ defmodule KmxgitWeb.Router do
   scope "/", KmxgitWeb do
     pipe_through [:browser, :auth]
 
-    get  "/",           PageController, :index
-    get  "/_auth",      PageController, :auth
-    get  "/_keys",      PageController, :keys
-    get  "/_new_admin", PageController, :new_admin
-    post "/_new_admin", PageController, :new_admin_post
+    get  "/",                     PageController, :index
+    get  "/_etc/auth.conf",       PageController, :auth
+    get  "/_etc/authorized_keys", PageController, :keys
+    get  "/_new_admin",           PageController, :new_admin
+    post "/_new_admin",           PageController, :new_admin_post
 
     scope "/_sessions" do
       get  "/new",    SessionController, :new

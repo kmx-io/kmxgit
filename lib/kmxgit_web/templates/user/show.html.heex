@@ -18,7 +18,7 @@
       <hr/>
       <h2><%= gettext "Repositories" %></h2>
       <ul>
-        <%= for repo <- @user.owned_repositories do %>
+        <%= for repo <- Enum.sort_by(@user.owned_repositories, &Repository.full_slug/1) do %>
           <li>
             <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @user.slug.slug, Repository.splat(repo)) %>
           </li>
@@ -56,14 +56,20 @@
         <tr>
           <th>
             <%= gettext "Organisations" %>
-          </th>
-          <td>
-            <%= for org <- @user.organisations do %>
-              <%= link(org.name || org.slug.slug, to: Routes.slug_path(@conn, :show, org.slug.slug), class: "org") %>
-            <% end %>
             <%= if @user == @current_user do %>
               <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary btn-sm") %>
             <% end %>
+          </th>
+          <td>
+            <ul>
+              <%= for org <- Enum.sort_by(@user.organisations, fn o -> o.slug.slug end) do %>
+                <li>
+                  <%= link(org.name || org.slug.slug,
+                      to: Routes.slug_path(@conn, :show, org.slug.slug),
+                      class: "org") %>
+                </li>
+              <% end %>
+            </ul>
           </td>
         </tr>
         <tr>

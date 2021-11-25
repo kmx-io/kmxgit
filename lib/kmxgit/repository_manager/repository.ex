@@ -19,7 +19,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     repository
     |> cast(attrs, [:description, :slug])
     |> validate_required([:slug])
-    |> validate_format(:slug, ~r|^[A-Za-z][-_+.0-9A-Za-z]{1,64}(/[A-Za-z][-_+.0-9A-Za-z]{1,64})*$|)
+    |> validate_format(:slug, ~r|^[A-Za-z][-_+.@0-9A-Za-z]{0,64}(/[A-Za-z][-_+.@0-9A-Za-z]{0,64})*$|)
     |> unique_constraint(:slug, name: "repositories__lower_slug_index")
     |> Markdown.validate_markdown(:description)
   end
