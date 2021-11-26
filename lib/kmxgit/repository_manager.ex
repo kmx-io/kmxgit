@@ -10,10 +10,11 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.UserManager.User
 
   def list_repositories do
-    Repo.all from r in Repository,
+    Repo.all(from r in Repository,
       preload: [members: :slug,
                 organisation: [:slug, users: :slug],
-                user: :slug]
+                user: :slug])
+    |> Enum.sort_by(fn x -> Repository.full_slug(x) end)
   end
 
   def change_repository(repository \\ %Repository{}) do

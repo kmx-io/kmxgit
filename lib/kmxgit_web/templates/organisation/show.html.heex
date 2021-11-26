@@ -47,11 +47,8 @@
           </td>
         </tr>
         <tr>
-          <th><%= gettext "Users" %></th>
-          <td>
-            <%= for user <- @org.users do %>
-              <%= link(user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug), class: "user") %>
-            <% end %>
+          <th>
+            <%= gettext "Users" %><br/>
             <%= if Enum.find(@org.users, &(&1.id == @current_user.id)) do %>
               <%= link "-",
                   to: Routes.organisation_path(@conn, :remove_user, @org.slug.slug),
@@ -60,6 +57,15 @@
                   to: Routes.organisation_path(@conn, :add_user, @org.slug.slug),
                   class: "btn btn-primary btn-sm" %>
             <% end %>
+          </th>
+          <td>
+            <ul>
+              <%= for user <- @org.users do %>
+                <li>
+                  <%= link(user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug), class: "user") %>
+                </li>
+              <% end %>
+            </ul>
           </td>
         </tr>
       </table>

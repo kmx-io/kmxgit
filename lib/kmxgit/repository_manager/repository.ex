@@ -39,6 +39,11 @@ defmodule Kmxgit.RepositoryManager.Repository do
     "#{owner_slug(repo)}/#{repo.slug}"
   end
 
+  def ssh_url(repo) do
+    ssh_root = Application.get_env(:kmxgit, :ssh_url)
+    "#{ssh_root}:#{full_slug(repo)}.git"
+  end
+
   def splat(repo) do
     String.split(repo.slug, "/")
   end

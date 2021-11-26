@@ -55,7 +55,7 @@
         </tr>
         <tr>
           <th>
-            <%= gettext "Organisations" %>
+            <%= gettext "Organisations" %><br/>
             <%= if @user == @current_user do %>
               <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary btn-sm") %>
             <% end %>

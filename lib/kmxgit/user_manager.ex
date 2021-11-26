@@ -18,10 +18,10 @@ defmodule Kmxgit.UserManager do
   def get_user!(id) do
     user = Repo.one(from user in User,
       where: [id: ^id],
-      preload: [organisations: :slug],
-      preload: [owned_repositories: [organisation: :slug, user: :slug]],
-      preload: :slug
-    )
+      preload: [:slug,
+                organisations: :slug,
+                owned_repositories: [organisation: :slug,
+                                     user: :slug]])
     user || raise Ecto.NoResultsError
   end
 

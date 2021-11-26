@@ -45,6 +45,10 @@
       <h2><%= gettext "Properties" %></h2>
       <table class="table admin-properties">
         <tr>
+          <th><%= gettext "SSH" %></th>
+          <td><%= Repository.ssh_url(@repo) %></td>
+        </tr>
+        <tr>
           <th><%= gettext "Description" %></th>
           <td>
             <%= if @repo.description do %>
@@ -53,17 +57,23 @@
           </td>
         </tr>
         <tr>
-          <th><%= gettext "Users" %></th>
-          <td>
-            <%= for user <- @members do %>
-              <%= link user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug) %>
-            <% end %>
+          <th>
+            <%= gettext "Users" %><br/>
             <%= link "-",
                 to: Routes.repository_path(@conn, :remove_user, @owner.slug.slug, Repository.splat(@repo)),
                 class: "btn btn-danger btn-sm" %>
             <%= link "+",
                 to: Routes.repository_path(@conn, :add_user, @owner.slug.slug, Repository.splat(@repo)),
                 class: "btn btn-primary btn-sm" %>
+          </th>
+          <td>
+            <ul>
+              <%= for user <- @members do %>
+                <li>
+                  <%= link user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug) %>
+                </li>
+              <% end %>
+            </ul>
           </td>
         </tr>
       </table>

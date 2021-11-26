@@ -8,7 +8,11 @@ defmodule Kmxgit.OrganisationManager do
   alias Kmxgit.UserManager
 
   def list_organisations do
-    Repo.all from org in Organisation, preload: :slug
+    Repo.all from org in Organisation,
+      join: s in Slug,
+      on: s.organisation_id == org.id,
+      preload: :slug,
+      order_by: s.slug
   end
 
   def get_organisation!(id) do

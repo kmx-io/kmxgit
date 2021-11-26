@@ -8,6 +8,7 @@
 import Config
 
 config :kmxgit,
+  ssh_url: "git@git.kmx.io",
   ecto_repos: [Kmxgit.Repo]
 
 # Configures the endpoint
