@@ -39,6 +39,15 @@
           <% end %>
         </ul>
       <% end %>
+      <%= Enum.map @git.readme, fn readme -> %>
+        <hr/>
+        <h2><%= readme.name %></h2>
+        <%= if readme.html do %>
+          <%= raw readme.html %>
+        <% else %>
+          <pre><%= readme.txt %></pre>
+        <% end %>
+      <% end %>
     </div>
     <div class="col col-12 col-md-4">
       <hr/>

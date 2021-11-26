@@ -47,7 +47,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  def content(repo, branch, path) do
+  def content(repo, path) do
     dir = git_dir(repo)
     path = if path == "" do "." else path end
     {out, status} = System.cmd("git", ["-C", dir, "cat-file", "blob", path], stderr_to_stdout: true)

@@ -136,12 +136,19 @@ defmodule KmxgitWeb.RepositoryController do
     IO.inspect([path: path, slug: slug, branch: branch, path1: path1])
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
     if repo do
+      branch = branch || "master"
       org = repo.organisation
       user = repo.user
-      git = %{branches: [], content: nil, files: [], status: "", valid: true}
+      git = %{branches: [],
+              content: nil,
+              files: [],
+              readme: [],
+              status: "",
+              valid: true}
       |> git_put_branches(repo, conn)
-      |> git_put_files(repo, branch || "master", path1, conn)
-      |> git_put_content(repo, branch || "master", path1)
+      |> git_put_files(repo, branch, path1, conn)
+      |> git_put_content(repo)
+      |> git_put_readme(repo)
       IO.inspect(git)
       if !branch do
         {b, _} = Enum.at(git.branches, 0)
@@ -220,15 +227,38 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_content(git = %{files: [%{name: name, type: _type, sha1: sha1}], valid: true}, repo, branch, path) do
+  defp git_put_content(git = %{files: [%{name: name, type: _type, sha1: sha1}], valid: true}, repo) do
     IO.inspect(git)
-    case GitManager.content(Repository.full_slug(repo), branch, sha1) do
+    case GitManager.content(Repository.full_slug(repo), sha1) do
       {:ok, content} -> %{git | content: content}
       {:error, error} -> %{git | status: error}
     end
   end
 
-  defp git_put_content(git, _, _, _) do
+  defp git_put_content(git, _) do
+    git
+  end
+
+  defp git_put_readme(git = %{files: files, valid: true}, repo) do
+    readme = Enum.map(files, fn f ->
+      if String.match?(f.name, ~r/^readme\.md$/i) do
+        {:ok, content} = GitManager.content(Repository.full_slug(repo), f.sha1)
+        %{html: Earmark.as_html!(content),
+          name: f.name,
+          txt: content}
+      else
+        if String.match?(f.name, ~r/^readme(.txt)?$/i) do
+          {:ok, content} = GitManager.content(Repository.full_slug(repo), f.sha1)
+          %{html: nil,
+            name: f.name,
+            txt: content}
+        end
+      end
+    end)
+    |> Enum.filter(& &1)
+    %{git | readme: readme}
+  end
+  defp git_put_readme(git) do
     git
   end
 
