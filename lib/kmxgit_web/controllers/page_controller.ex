@@ -50,7 +50,7 @@ defmodule KmxgitWeb.PageController do
     end
   end
 
-  def keys(conn, params) do
+  def keys(conn, _params) do
     k = UserManager.list_users
     |> Enum.map(fn user -> User.ssh_keys_with_env(user) end)
     |> Enum.join("\n")
@@ -59,7 +59,7 @@ defmodule KmxgitWeb.PageController do
     |> resp(200, k)
   end
 
-  def auth(conn, params) do
+  def auth(conn, _params) do
     a = RepositoryManager.list_repositories
     |> Enum.sort(fn a, b ->
       Repository.full_slug(a) < Repository.full_slug(b)

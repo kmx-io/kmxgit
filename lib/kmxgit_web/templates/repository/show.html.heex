@@ -5,9 +5,11 @@
       <h1 id="repo_title"><%= link Repository.owner_slug(@repo), to: Routes.slug_path(@conn, :show, Repository.owner_slug(@repo)) %>/<%= link @repo.slug, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), String.split(@repo.slug, "/")) %></h1>
     </div>
     <div class="col col-12 col-sm-4">
-      <%= link gettext("Edit"),
-               to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), String.split(@repo.slug, "/")),
-               class: "btn btn-primary" %>
+      <%= if Repository.owner?(@repo, @current_user) do %>
+        <%= link gettext("Edit"),
+            to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), String.split(@repo.slug, "/")),
+            class: "btn btn-primary" %>
+      <% end %>
     </div>
   </div>
 
@@ -42,11 +44,13 @@
       <%= Enum.map @git.readme, fn readme -> %>
         <hr/>
         <h2><%= readme.name %></h2>
-        <%= if readme.html do %>
-          <%= raw readme.html %>
-        <% else %>
-          <pre><%= readme.txt %></pre>
-        <% end %>
+        <div class="container-fluid file-content">
+          <%= if readme.html do %>
+            <%= raw readme.html %>
+          <% else %>
+            <pre><%= readme.txt %></pre>
+          <% end %>
+        </div>
       <% end %>
     </div>
     <div class="col col-12 col-md-4">
@@ -68,12 +72,14 @@
         <tr>
           <th>
             <%= gettext "Users" %><br/>
-            <%= link "-",
-                to: Routes.repository_path(@conn, :remove_user, @owner.slug.slug, Repository.splat(@repo)),
-                class: "btn btn-danger btn-sm" %>
-            <%= link "+",
-                to: Routes.repository_path(@conn, :add_user, @owner.slug.slug, Repository.splat(@repo)),
-                class: "btn btn-primary btn-sm" %>
+            <%= if Repository.owner?(@repo, @current_user) do %>
+              <%= link "-",
+                  to: Routes.repository_path(@conn, :remove_user, @owner.slug.slug, Repository.splat(@repo)),
+                  class: "btn btn-danger btn-sm" %>
+              <%= link "+",
+                  to: Routes.repository_path(@conn, :add_user, @owner.slug.slug, Repository.splat(@repo)),
+                  class: "btn btn-primary btn-sm" %>
+            <% end %>
           </th>
           <td>
             <ul>

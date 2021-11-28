@@ -15,20 +15,15 @@ defmodule KmxgitWeb.RepositoryController do
     if !slug do
       not_found(conn)
     else
-      user = slug.user
-      if user do
-        if user != current_user do
-          not_found(conn)
-        else
-          conn
-          |> assign(:action, action)
-          |> assign(:changeset, changeset)
-          |> assign(:owner, user)
-          |> render("new.html")
-        end
+      if slug.user && slug.user.id == current_user.id do
+        conn
+        |> assign(:action, action)
+        |> assign(:changeset, changeset)
+        |> assign(:owner, slug.user)
+        |> render("new.html")
       else
         org = slug.organisation
-        if org do
+        if org && org.users |> Enum.find(& &1.id == current_user.id) do
           conn
           |> assign(:action, action)
           |> assign(:changeset, changeset)
@@ -49,15 +44,11 @@ defmodule KmxgitWeb.RepositoryController do
       not_found(conn)
     else
       user = slug.user
-      if user do
-        if user != current_user do
-          not_found(conn)
-        else
-          create_repo(conn, user, params["repository"])
-        end
+      if user && user.id == current_user.id do
+        create_repo(conn, user, params["repository"])
       else
         org = slug.organisation
-        if org do
+        if org && org.users |> Enum.find(& &1.id == current_user.id) do
           create_repo(conn, org, params["repository"])
         else
           not_found(conn)
@@ -102,6 +93,43 @@ defmodule KmxgitWeb.RepositoryController do
     |> render(:"404")
   end
 
+  def show(conn, params) do
+    current_user = conn.assigns.current_user
+    chunks = params["slug"] |> chunk_path()
+    slug = chunks |> Enum.at(0) |> Enum.join("/")
+    {branch, path} = get_branch_and_path(chunks)
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo && Enum.find(Repository.members(repo), fn u -> u.id == current_user.id end) do
+      org = repo.organisation
+      user = repo.user
+      git = setup_git(repo, branch || "master", path, conn)
+      first_branch = Enum.at(git.branches, 0)
+      if !branch && first_branch do
+        {b, _} = first_branch
+        conn
+        |> redirect(to: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", b]))
+      else
+        if git.valid do
+          conn
+          |> assign(:branch, branch)
+          |> assign(:branch_url, if git.branches != [] do branch_url(git.branches, branch) end)
+          |> assign_current_organisation(org)
+          |> assign(:current_repository, repo)
+          |> assign(:git, git)
+          |> assign(:repo, repo)
+          |> assign(:members, Repository.members(repo))
+          |> assign(:owner, org || user)
+          |> assign(:path, path)
+          |> render("show.html")
+        else
+          not_found(conn)
+        end
+      end
+    else
+      not_found(conn)
+    end
+  end
+
   def chunk_path(path) do
     chunk_path(path, [[]])
   end
@@ -119,61 +147,31 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
-  def show(conn, params) do
-    path = params["slug"] |> chunk_path()
-    slug = path |> Enum.at(0) |> Enum.join("/")
-    {branch, path1} = if (path1 = path |> Enum.at(1)) && (path1 |> Enum.at(0)) == "_branch" do
-      {_, rest} = path |> Enum.split(2)
+  defp get_branch_and_path(chunks) do
+    if (path = chunks |> Enum.at(1)) && (path |> Enum.at(0)) == "_branch" do
+      {_, rest} = chunks |> Enum.split(2)
       rest1 = rest |> Enum.map(fn x ->
         Enum.join(x, "/")
       end)
-      {_, path2} = path1 |> Enum.split(2)
-      {path1 |> Enum.at(1),
-       path2 ++ rest1 |> Enum.reject(&(!&1 || &1 == "")) |> Enum.join("/")}
+      {["_branch", branch], path1} = path |> Enum.split(2)
+      {branch,
+       path1 ++ rest1 |> Enum.reject(&(!&1 || &1 == "")) |> Enum.join("/")}
     else
       {nil, ""}
     end
-    IO.inspect([path: path, slug: slug, branch: branch, path1: path1])
-    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
-      branch = branch || "master"
-      org = repo.organisation
-      user = repo.user
-      git = %{branches: [],
-              content: nil,
-              files: [],
-              readme: [],
-              status: "",
-              valid: true}
-      |> git_put_branches(repo, conn)
-      |> git_put_files(repo, branch, path1, conn)
-      |> git_put_content(repo)
-      |> git_put_readme(repo)
-      IO.inspect(git)
-      if !branch do
-        {b, _} = Enum.at(git.branches, 0)
-        conn
-        |> redirect(to: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", b]))
-      else
-        if git.valid do
-          conn
-          |> assign(:branch, branch)
-          |> assign(:branch_url, branch_url(git.branches, branch))
-          |> assign_current_organisation(org)
-          |> assign(:current_repository, repo)
-          |> assign(:git, git)
-          |> assign(:repo, repo)
-          |> assign(:members, Repository.members(repo))
-          |> assign(:owner, org || user)
-          |> assign(:path, path1)
-          |> render("show.html")
-        else
-          not_found(conn)
-        end
-      end
-    else
-      not_found(conn)
-    end
+  end
+
+  defp setup_git(repo, branch, path, conn) do
+    %{branches: [],
+      content: nil,
+      files: [],
+      readme: [],
+      status: "",
+      valid: true}
+    |> git_put_branches(repo, conn)
+    |> git_put_files(repo, branch, path, conn)
+    |> git_put_content(repo)
+    |> git_put_readme(repo)
   end
 
   defp branch_url([{b, url} | rest], branch) do
@@ -200,17 +198,6 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_status(git = %{content: nil, valid: true}, repo) do
-    case GitManager.status(Repository.full_slug(repo)) do
-      {:ok, status} -> %{git | status: status}
-      {:error, status} -> %{git | status: status, valid: false}
-    end
-  end
-
-  defp git_put_status(git, _) do
-    git
-  end
-
   defp git_put_files(git = %{valid: true}, repo, branch, subdir, conn) do
     case GitManager.files(Repository.full_slug(repo), branch, subdir) do
       {:ok, []} -> git
@@ -227,8 +214,7 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_content(git = %{files: [%{name: name, type: _type, sha1: sha1}], valid: true}, repo) do
-    IO.inspect(git)
+  defp git_put_content(git = %{files: [%{type: "blob", sha1: sha1}], valid: true}, repo) do
     case GitManager.content(Repository.full_slug(repo), sha1) do
       {:ok, content} -> %{git | content: content}
       {:error, error} -> %{git | status: error}
@@ -258,7 +244,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> Enum.filter(& &1)
     %{git | readme: readme}
   end
-  defp git_put_readme(git) do
+  defp git_put_readme(git, _) do
     git
   end
 
@@ -266,20 +252,16 @@ defmodule KmxgitWeb.RepositoryController do
     current_user = conn.assigns.current_user
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
+    if repo && Repository.owner?(repo, current_user) do
       org = repo.organisation
-      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        changeset = RepositoryManager.change_repository(repo)
-        conn
-        |> assign(:action, Routes.repository_path(conn, :update, params["owner"], Repository.splat(repo)))
-        |> assign(:changeset, changeset)
-        |> assign_current_organisation(org)
-        |> assign(:current_repository, repo)
-        |> assign(:repo, repo)
-        |> render("edit.html")
-      else
-        not_found(conn)
-      end
+      changeset = RepositoryManager.change_repository(repo)
+      conn
+      |> assign(:action, Routes.repository_path(conn, :update, params["owner"], Repository.splat(repo)))
+      |> assign(:changeset, changeset)
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:repo, repo)
+      |> render("edit.html")
     else
       not_found(conn)
     end
@@ -289,33 +271,35 @@ defmodule KmxgitWeb.RepositoryController do
     current_user = conn.assigns.current_user
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
+    if repo && Repository.owner?(repo, current_user) do
       org = repo.organisation
-      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        case Repo.transaction(fn ->
-              case RepositoryManager.update_repository(repo, params["repository"]) do
-                {:ok, repo1} ->
-                  s = Repository.full_slug(repo)
-                  s1 = Repository.full_slug(repo1)
-                  if s != s1 do
-                    GitManager.rename(s, s1)
+      case Repo.transaction(fn ->
+            case RepositoryManager.update_repository(repo, params["repository"]) do
+              {:ok, repo1} ->
+                s = Repository.full_slug(repo)
+                s1 = Repository.full_slug(repo1)
+                if s != s1 do
+                  case GitManager.rename(s, s1) do
+                    :ok -> repo1
+                    {:error, err} -> Repo.rollback(err)
                   end
+                else
                   repo1
-                {:error, changeset} -> Repo.rollback(changeset)
-              end
-            end) do
-          {:ok, repo} ->
-            conn
-            |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
-          {:error, changeset} ->
-            conn
-            |> assign(:action, Routes.repository_path(conn, :update, params["owner"], Repository.splat(repo)))
-            |> assign(:changeset, changeset)
-            |> assign_current_organisation(org)
-            |> assign(:current_repository, repo)
-            |> assign(:repo, repo)
-            |> render("edit.html")
-        end
+                end
+              {:error, changeset} -> Repo.rollback(changeset)
+            end
+          end) do
+        {:ok, repo} ->
+          conn
+          |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
+        {:error, changeset} ->
+          conn
+          |> assign(:action, Routes.repository_path(conn, :update, params["owner"], Repository.splat(repo)))
+          |> assign(:changeset, changeset)
+          |> assign_current_organisation(org)
+          |> assign(:current_repository, repo)
+          |> assign(:repo, repo)
+          |> render("edit.html")
       end
     else
       not_found(conn)
@@ -326,18 +310,14 @@ defmodule KmxgitWeb.RepositoryController do
     current_user = conn.assigns.current_user
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
+    if repo && Repository.owner?(repo, current_user) do
       org = repo.organisation
-      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        conn
-        |> assign(:action, Routes.repository_path(conn, :add_user_post, params["owner"], Repository.splat(repo)))
-        |> assign_current_organisation(org)
-        |> assign(:current_repository, repo)
-        |> assign(:repo, repo)
-        |> render("add_user.html")
-      else
-        not_found(conn)
-      end
+      conn
+      |> assign(:action, Routes.repository_path(conn, :add_user_post, params["owner"], Repository.splat(repo)))
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:repo, repo)
+      |> render("add_user.html")
     else
       not_found(conn)
     end
@@ -348,21 +328,19 @@ defmodule KmxgitWeb.RepositoryController do
     login = params["repository"]["login"]
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
+    if repo && Repository.owner?(repo, current_user) do
       org = repo.organisation
-      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        case RepositoryManager.add_member(repo, login) do
-          {:ok, repo} ->
-            conn
-            |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
-          {:error, _} ->
-            conn
-            |> assign(:action, Routes.repository_path(conn, :add_user_post, params["owner"], Repository.splat(repo)))
-            |> assign_current_organisation(org)
-            |> assign(:current_repository, repo)
-            |> assign(:repo, repo)
-            |> render("add_user.html")
-        end
+      case RepositoryManager.add_member(repo, login) do
+        {:ok, repo} ->
+          conn
+          |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
+        {:error, _} ->
+          conn
+          |> assign(:action, Routes.repository_path(conn, :add_user_post, params["owner"], Repository.splat(repo)))
+          |> assign_current_organisation(org)
+          |> assign(:current_repository, repo)
+          |> assign(:repo, repo)
+          |> render("add_user.html")
       end
     else
       not_found(conn)
@@ -373,18 +351,14 @@ defmodule KmxgitWeb.RepositoryController do
     current_user = conn.assigns.current_user
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
+    if repo && Repository.owner?(repo, current_user) do
       org = repo.organisation
-      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        conn
-        |> assign(:action, Routes.repository_path(conn, :remove_user_post, params["owner"], Repository.splat(repo)))
-        |> assign_current_organisation(org)
-        |> assign(:current_repository, repo)
-        |> assign(:repo, repo)
-        |> render("remove_user.html")
-      else
-        not_found(conn)
-      end
+      conn
+      |> assign(:action, Routes.repository_path(conn, :remove_user_post, params["owner"], Repository.splat(repo)))
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:repo, repo)
+      |> render("remove_user.html")
     else
       not_found(conn)
     end
@@ -395,21 +369,19 @@ defmodule KmxgitWeb.RepositoryController do
     login = params["repository"]["login"]
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
+    if repo && Repository.owner?(repo, current_user) do
       org = repo.organisation
-      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        case RepositoryManager.remove_member(repo, login) do
-          {:ok, repo} ->
-            conn
-            |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
-          {:error, _} ->
-            conn
-            |> assign(:action, Routes.repository_path(conn, :remove_user_post, params["owner"], Repository.splat(repo)))
-            |> assign_current_organisation(org)
-            |> assign(:current_repository, repo)
-            |> assign(:repo, repo)
-            |> render("remove_user.html")
-        end
+      case RepositoryManager.remove_member(repo, login) do
+        {:ok, repo} ->
+          conn
+          |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
+        {:error, _} ->
+          conn
+          |> assign(:action, Routes.repository_path(conn, :remove_user_post, params["owner"], Repository.splat(repo)))
+          |> assign_current_organisation(org)
+          |> assign(:current_repository, repo)
+          |> assign(:repo, repo)
+          |> render("remove_user.html")
       end
     else
       not_found(conn)
@@ -420,24 +392,19 @@ defmodule KmxgitWeb.RepositoryController do
     current_user = conn.assigns.current_user
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo do
-      org = repo.organisation
-      if org && Enum.find(org.users, &(&1.id == current_user.id)) || repo.user_id == current_user.id do
-        case Repo.transaction(fn ->
-              case RepositoryManager.delete_repository(repo) do
-                {:ok, _} -> :ok
-                {:error, changeset} -> Repo.rollback changeset
-              end
-            end) do
-          {:ok, _} ->
-            conn
-            |> redirect(to: Routes.slug_path(conn, :show, params["owner"]))
-          {:error, changeset} ->
-            conn
-            |> redirect(to: Routes.slug_path(conn, :edit, params["owner"]))
-        end
-      else
-        not_found(conn)
+    if repo && Repository.owner?(repo, current_user) do
+      case Repo.transaction(fn ->
+            case RepositoryManager.delete_repository(repo) do
+              {:ok, _} -> :ok = GitManager.delete(Repository.full_slug(repo))
+              {:error, changeset} -> Repo.rollback changeset
+            end
+          end) do
+        {:ok, _} ->
+          conn
+          |> redirect(to: Routes.slug_path(conn, :show, params["owner"]))
+        {:error, _changeset} ->
+          conn
+          |> redirect(to: Routes.slug_path(conn, :edit, params["owner"]))
       end
     else
       not_found(conn)

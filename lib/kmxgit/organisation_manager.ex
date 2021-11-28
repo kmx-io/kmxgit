@@ -86,6 +86,8 @@ defmodule Kmxgit.OrganisationManager do
   end
 
   def delete_organisation(%Organisation{} = organisation) do
-    Repo.delete(organisation)
+    organisation
+    |> Organisation.changeset(%{})
+    |> Repo.delete()
   end
 end

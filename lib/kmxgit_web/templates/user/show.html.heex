@@ -4,12 +4,14 @@
       <h1><%= @user.slug.slug %></h1>
     </div>
     <div class="col col-12 col-sm-4">
-      <%= link gettext("New repository"),
-               to: Routes.repository_path(@conn, :new, @user.slug.slug),
-               class: "btn btn-primary" %>
-      <%= link gettext("Edit"),
-               to: Routes.user_path(@conn, :edit, @user.slug.slug),
-               class: "btn btn-primary" %>
+      <%= if @user.id == @current_user.id do %>
+        <%= link gettext("New repository"),
+            to: Routes.repository_path(@conn, :new, @user.slug.slug),
+            class: "btn btn-primary" %>
+        <%= link gettext("Edit"),
+            to: Routes.user_path(@conn, :edit, @user.slug.slug),
+            class: "btn btn-primary" %>
+      <% end %>
     </div>
   </div>
 
@@ -18,9 +20,14 @@
       <hr/>
       <h2><%= gettext "Repositories" %></h2>
       <ul>
-        <%= for repo <- Enum.sort_by(@user.owned_repositories, &Repository.full_slug/1) do %>
+        <%= for repo <- @owned_repos do %>
           <li>
-            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @user.slug.slug, Repository.splat(repo)) %>
+            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)) %>
+          </li>
+        <% end %>
+        <%= for repo <- @contributor_repos do %>
+          <li>
+            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)) %>
           </li>
         <% end %>
       </ul>
@@ -56,7 +63,7 @@
         <tr>
           <th>
             <%= gettext "Organisations" %><br/>
-            <%= if @user == @current_user do %>
+            <%= if @user.id == @current_user.id do %>
               <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary btn-sm") %>
             <% end %>
           </th>

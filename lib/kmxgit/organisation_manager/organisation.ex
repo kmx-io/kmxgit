@@ -23,6 +23,13 @@ defmodule Kmxgit.OrganisationManager.Organisation do
     |> cast_assoc(:slug)
     |> validate_required([:slug])
     |> Markdown.validate_markdown(:description)
+    |> foreign_key_constraint(:owned_repositories, name: :repositories_organisation_id_fkey)
   end
 
+  def owner?(org, user) do
+    org.users
+    |> Enum.find(fn u ->
+      u.id == user.id
+    end)
+  end
 end

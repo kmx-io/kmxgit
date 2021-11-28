@@ -14,7 +14,16 @@ defmodule Kmxgit.RepositoryManager do
       preload: [members: :slug,
                 organisation: [:slug, users: :slug],
                 user: :slug])
-    |> Enum.sort_by(fn x -> Repository.full_slug(x) end)
+    |> Enum.sort_by(&Repository.full_slug/1)
+  end
+
+  def list_contributor_repositories(user) do
+    list_repositories()
+    |> Enum.filter(fn repo ->
+      (!repo.user || repo.user.id != user.id) &&
+      (Repository.members(repo)
+       |> Enum.find(fn u -> u.id == user.id end))
+    end)
   end
 
   def change_repository(repository \\ %Repository{}) do

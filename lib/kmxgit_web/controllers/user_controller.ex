@@ -1,27 +1,11 @@
 defmodule KmxgitWeb.UserController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.GitManager
+  alias Kmxgit.Repo
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
-
-  def show(conn, params) do
-    #current_user = conn.assigns[:current_user]
-    #user = if current_user && params["login"] == current_user.slug.slug do
-    #  current_user
-    #else
-     user = UserManager.get_user_by_slug(params["login"])
-    #end
-    if user do
-      conn
-      |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
-      |> assign(:user, user)
-      |> render("show.html")
-    else
-      conn
-      |> not_found()
-    end
-  end
 
   defp not_found(conn) do
     conn
@@ -31,7 +15,7 @@ defmodule KmxgitWeb.UserController do
   end
 
   def edit(conn, params) do
-    current_user = conn.assigns[:current_user]
+    current_user = conn.assigns.current_user
     if params["login"] == current_user.slug.slug do
       changeset = User.changeset(current_user)
       conn
@@ -43,9 +27,22 @@ defmodule KmxgitWeb.UserController do
   end
 
   def update(conn, params) do
-    current_user = conn.assigns[:current_user]
+    current_user = conn.assigns.current_user
     if params["login"] == current_user.slug.slug do
-      case UserManager.update_user(current_user, params["user"]) do
+      case Repo.transaction(fn ->
+            case UserManager.update_user(current_user, params["user"]) do
+              {:ok, user} ->
+                if user.slug.slug != current_user.slug.slug do
+                  case GitManager.rename_dir(current_user.slug.slug, user.slug.slug) do
+                    :ok -> user
+                    {:error, err} -> Repo.rollback(err)
+                  end
+                else
+                  user
+                end
+              {:error, changeset} -> Repo.rollback(changeset)
+            end
+          end) do
         {:ok, user} ->
           conn
           |> redirect(to: Routes.slug_path(conn, :show, user.slug.slug))
@@ -54,6 +51,31 @@ defmodule KmxgitWeb.UserController do
           |> assign(:page_title, gettext("Edit user %{login}", login: current_user.slug.slug))
           |> assign(:changeset, changeset)
           |> render("edit.html")
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def delete(conn, params) do
+    current_user = conn.assigns.current_user
+    if params["login"] == current_user.slug.slug do
+      case Repo.transaction(fn ->
+            case UserManager.delete_user(current_user) do
+              {:ok, _} ->
+                case GitManager.delete_dir(current_user.slug.slug) do
+                  :ok -> :ok
+                  {:error, out} -> Repo.rollback(status: out)
+                end
+              {:error, e} -> Repo.rollback(e)
+            end
+          end) do
+        {:ok, _} ->
+          conn
+          |> redirect(to: "/")
+        {:error, _} ->
+          conn
+          |> redirect(to: Routes.user_path(conn, :edit, current_user.slug.slug))
       end
     else
       not_found(conn)

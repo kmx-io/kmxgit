@@ -22,8 +22,11 @@
 
   <div class="mb-3">
     <%= if @conn.assigns[:current_organisation] do %>
+      <%= link gettext("Cancel"),
+          to: Routes.slug_path(@conn, :show, @current_organisation.slug.slug),
+          class: "btn btn-secondary" %>
       <%= link gettext("Delete organisation"),
-          to: Routes.slug_path(@conn, :delete, @current_organisation.slug.slug),
+          to: Routes.organisation_path(@conn, :delete, @current_organisation.slug.slug),
           method: :delete,
           class: "btn btn-danger",
           data: [confirm: gettext("Are you sure you want to delete the organisation %{org} ?", org: @current_organisation.name || @current_organisation.slug.slug)] %>

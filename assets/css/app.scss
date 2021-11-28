@@ -35,6 +35,10 @@ pre.ssh_keys {
         color: blue;
     }
 }
+.file-content {
+    border: solid 1px #ccc;
+    padding: 1.5em;
+}
 
 .invalid-feedback {
     display: inherit;

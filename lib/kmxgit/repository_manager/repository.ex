@@ -48,15 +48,33 @@ defmodule Kmxgit.RepositoryManager.Repository do
     String.split(repo.slug, "/")
   end
 
-  def members(repo) do
+  def owners(repo) do
     if repo.user do
-      Enum.concat [repo.user], repo.members
+      [repo.user]
     else
       if repo.organisation do
-        Enum.concat repo.organisation.users, repo.members
+        repo.organisation.users
       end
     end
+  end
+
+  def owner?(repo, user) do
+    repo
+    |> owners()
+    |> Enum.find(fn u -> u.id == user.id end)
+  end
+
+  def members(repo) do
+    repo
+    |> owners()
+    |> Enum.concat(repo.members)
     |> Enum.uniq
+  end
+
+  def member?(repo, user) do
+    repo
+    |> members()
+    |> Enum.find(fn u -> u.id == user.id end)
   end
 
   def auth(repo) do

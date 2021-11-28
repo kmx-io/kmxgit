@@ -6,18 +6,9 @@ defmodule Kmxgit.GitManager do
     "#{@git_root}/#{repo}.git"
   end
 
-  def status(repo) do
-    dir = git_dir(repo)
-    {out, status} = System.cmd("git", ["-C", dir, "status"], stderr_to_stdout: true)
-    case status do
-      0 -> {:ok, out}
-      _ -> {:error, out}
-    end
-  end
-
   def branches(repo) do
     dir = git_dir(repo)
-    {out, status} = System.cmd("git", ["branch", "--list"], stderr_to_stdout: true)
+    {out, status} = System.cmd("git", ["-C", dir, "branch", "--list"], stderr_to_stdout: true)
     case status do
       0 ->
         b = out
@@ -90,12 +81,30 @@ defmodule Kmxgit.GitManager do
   def rename(from, to) do
     dir_from = git_dir(from)
     dir_to = git_dir(to)
-    dir = Path.dirname(dir_to)
-    :ok = File.mkdir_p(dir)
-    {out, status} = System.cmd("mv", [dir_from, dir_to], stderr_to_stdout: true)
-    case status do
-      0 -> {:ok, out}
-      _ -> {:error, out}
+    if File.exists?(dir_to) do
+      {:error, "file exists"}
+    else
+      dir = Path.dirname(dir_to)
+      :ok = File.mkdir_p(dir)
+      {out, status} = System.cmd("mv", [dir_from, dir_to], stderr_to_stdout: true)
+      case status do
+        0 -> :ok
+        _ -> {:error, out}
+      end
+    end
+  end
+
+  def rename_dir(from, to) do
+    dir_from = "#{@git_root}/#{from}/"
+    dir_to   = "#{@git_root}/#{to}/"
+    if File.exists?(dir_to) do
+      {:error, "file exists"}
+    else
+      {out, status} = System.cmd("mv", [dir_from, dir_to], stderr_to_stdout: true)
+      case status do
+        0 -> :ok
+        _ -> {:error, out}
+      end
     end
   end
 
@@ -110,11 +119,19 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  def delete(repo) do
-    dir = git_dir(repo)
+  defp rm_rf(dir) do
     case System.cmd("rm", ["-rf", dir], stderr_to_stdout: true) do
       {"", 0} -> :ok
       {err, _} -> {:error, err}
     end
+  end
+
+  def delete(repo) do
+    repo |> git_dir() |> rm_rf()
+  end
+
+  def delete_dir(dir) do
+    "#{@git_root}/#{dir}/"
+    |> rm_rf()
   end
 end

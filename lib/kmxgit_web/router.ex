@@ -56,8 +56,8 @@ defmodule KmxgitWeb.Router do
     scope "/_new" do
       get  "/organisation", OrganisationController, :new
       post "/organisation", OrganisationController, :create
-      get  "/:owner", RepositoryController, :new
-      post "/:owner", RepositoryController, :create
+      get  "/repository/:owner", RepositoryController, :new
+      post "/repository/:owner", RepositoryController, :create
     end
 
     scope "/_edit/" do
@@ -65,8 +65,8 @@ defmodule KmxgitWeb.Router do
       put "/organisation/:slug", OrganisationController, :update
       get "/user/:login", UserController, :edit
       put "/user/:login", UserController, :update
-      get "/:owner/*slug", RepositoryController, :edit
-      put "/:owner/*slug", RepositoryController, :update
+      get "/repository/:owner/*slug", RepositoryController, :edit
+      put "/repository/:owner/*slug", RepositoryController, :update
     end
 
     scope "/_add_user/" do
@@ -83,7 +83,13 @@ defmodule KmxgitWeb.Router do
       post "/:owner/*slug", RepositoryController, :remove_user_post
     end
 
-    scope "/admin", Admin, as: "admin" do
+    scope "/_delete/" do
+      delete "/organisation/:slug",      OrganisationController, :delete
+      delete "/user/:login",             UserController, :delete
+      delete "/repository/:owner/*slug", RepositoryController, :delete
+    end
+
+    scope "/_admin", Admin, as: "admin" do
       pipe_through :admin
       get "/", DashboardController, :index
       resources "/organisations", OrganisationController do
@@ -103,16 +109,9 @@ defmodule KmxgitWeb.Router do
       import Phoenix.LiveDashboard.Router
       live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry
     end
-  end
 
-    # maybe logged in
-  scope "/", KmxgitWeb do
-    pipe_through [:browser, :auth]
-
-    get    "/:slug", SlugController, :show
-    delete "/:slug", SlugController, :delete
-    get    "/:owner/*slug", RepositoryController, :show
-    delete "/:owner/*slug", RepositoryController, :delete
+    get "/:slug", SlugController, :show
+    get "/:owner/*slug", RepositoryController, :show
   end
 
   # Other scopes may use custom stacks.

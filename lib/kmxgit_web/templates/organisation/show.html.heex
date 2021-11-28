@@ -4,12 +4,14 @@
       <h1><%= @org.name || @org.slug.slug %></h1>
     </div>
     <div class="col col-12 col-sm-4">
-      <%= link gettext("New repository"),
-               to: Routes.repository_path(@conn, :new, @org.slug.slug),
-               class: "btn btn-primary" %>
-      <%= link gettext("Edit"),
-               to: Routes.organisation_path(@conn, :edit, @org.slug.slug),
-               class: "btn btn-primary" %>
+      <%= if Organisation.owner?(@org, @current_user) do %>
+        <%= link gettext("New repository"),
+            to: Routes.repository_path(@conn, :new, @org.slug.slug),
+            class: "btn btn-primary" %>
+        <%= link gettext("Edit"),
+            to: Routes.organisation_path(@conn, :edit, @org.slug.slug),
+            class: "btn btn-primary" %>
+        <% end %>
     </div>
 
   </div>
@@ -49,7 +51,7 @@
         <tr>
           <th>
             <%= gettext "Users" %><br/>
-            <%= if Enum.find(@org.users, &(&1.id == @current_user.id)) do %>
+            <%= if Organisation.owner?(@org, @current_user) do %>
               <%= link "-",
                   to: Routes.organisation_path(@conn, :remove_user, @org.slug.slug),
                   class: "btn btn-danger btn-sm" %>
