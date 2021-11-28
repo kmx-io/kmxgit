@@ -12,7 +12,7 @@ defmodule Kmxgit.UserManager.User do
     field :description, :string, null: true
     field :email, :string, unique: true
     field :encrypted_password, :string
-    field :is_admin, :boolean, null: false
+    field :is_admin, :boolean, null: false, default: false
     field :name, :string
     has_many :owned_repositories, Repository
     field :password, :string, virtual: true, redact: true

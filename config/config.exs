@@ -8,6 +8,8 @@
 import Config
 
 config :kmxgit,
+  recaptcha_site_key: System.get_env("RECAPTCHA_SITE_KEY"),
+  recaptcha_secret: System.get_env("RECAPTCHA_SECRET"),
   ssh_url: "git@git.kmx.io",
   ecto_repos: [Kmxgit.Repo]
 

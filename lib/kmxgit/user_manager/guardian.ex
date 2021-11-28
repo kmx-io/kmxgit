@@ -8,9 +8,9 @@ defmodule Kmxgit.UserManager.Guardian do
   end
 
   def resource_from_claims(%{"sub" => id}) do
-    user = UserManager.get_user!(id)
-    {:ok, user}
-  rescue
-    Ecto.NoResultsError -> {:error, :resource_not_found}
+    case UserManager.get_user(id) do
+      nil -> {:error, :resource_not_found}
+      user -> {:ok, user}
+    end
   end
 end
