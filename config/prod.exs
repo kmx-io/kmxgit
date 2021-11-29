@@ -14,7 +14,7 @@ config :kmxgit, KmxgitWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 config :kmxgit, Phoenix.Endpoint.Cowboy2Adapter,
-  http: [ip: {127, 0, 0, 1}, port: 15008]
+  http: [net: :inet, ip: {127, 0, 0, 1}, port: 15008]
 
 # Do not print debug messages in production
 config :logger, level: :info
