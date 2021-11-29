@@ -9,7 +9,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   schema "repositories" do
     field :description, :string
     belongs_to :organisation, Organisation
-    field :slug, :string, unique: true
+    field :slug, :string
     belongs_to :user, User
     many_to_many :members, User, join_through: "users_repositories", on_replace: :delete, on_delete: :delete_all
     timestamps()
@@ -20,8 +20,18 @@ defmodule Kmxgit.RepositoryManager.Repository do
     |> cast(attrs, [:description, :slug])
     |> validate_required([:slug])
     |> validate_format(:slug, ~r|^[A-Za-z][-_+.@0-9A-Za-z]{0,64}(/[A-Za-z][-_+.@0-9A-Za-z]{0,64})*$|)
-    |> unique_constraint(:slug, name: "repositories__lower_slug_index")
+    |> validate_slug_uniqueness()
     |> Markdown.validate_markdown(:description)
+  end
+
+  def validate_slug_uniqueness(changeset = %Ecto.Changeset{changes: %{slug: slug}}) do
+    IO.inspect [changeset, slug]
+    changeset
+  end
+
+  def validate_slug_uniqueness(changeset) do
+    IO.inspect changeset
+    changeset
   end
 
   def owner(%__MODULE__{organisation: org = %Organisation{}}) do
