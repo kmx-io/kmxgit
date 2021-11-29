@@ -10,7 +10,7 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :kmxgit, KmxgitWeb.Endpoint,
-  http: [net: :inet, ip: {127, 0, 0, 1}, port: 15008]
+  http: [net: :inet, ip: {127, 0, 0, 1}, port: 15008],
   url: [scheme: "https", host: "git.kmx.io", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
