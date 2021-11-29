@@ -11,9 +11,7 @@ import Config
 # before starting your production server.
 config :kmxgit, KmxgitWeb.Endpoint,
   url: [scheme: "https", host: "git.kmx.io", port: 443],
-  cache_static_manifest: "priv/static/cache_manifest.json"
-
-config :kmxgit, Phoenix.Endpoint.Cowboy2Adapter,
+  cache_static_manifest: "priv/static/cache_manifest.json",
   http: [
     net: :inet,
     ip: {127, 0, 0, 1},
