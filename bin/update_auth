@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+cd /etc/git
+ftp -o auth.conf https://git.kmx.io/_etc/git/auth.conf

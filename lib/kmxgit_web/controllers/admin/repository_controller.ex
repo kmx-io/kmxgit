@@ -55,6 +55,10 @@ defmodule KmxgitWeb.Admin.RepositoryController do
           end
         end) do
       {:ok, repo} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
         conn
         |> redirect(to: Routes.admin_repository_path(conn, :show, repo))
       {:error, changeset} ->
@@ -106,6 +110,10 @@ defmodule KmxgitWeb.Admin.RepositoryController do
           end
         end) do
       {:ok, repo1} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
         conn
         |> redirect(to: Routes.admin_repository_path(conn, :show, repo1))
       {:error, changeset} ->
@@ -129,6 +137,10 @@ defmodule KmxgitWeb.Admin.RepositoryController do
     repo = RepositoryManager.get_repository!(params["repository_id"])
     case RepositoryManager.add_member(repo, login) do
       {:ok, repo} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
         conn
         |> redirect(to: Routes.admin_repository_path(conn, :show, repo))
       {:error, _} ->
@@ -152,6 +164,10 @@ defmodule KmxgitWeb.Admin.RepositoryController do
     repo = RepositoryManager.get_repository!(params["repository_id"])
     case RepositoryManager.remove_member(repo, login) do
       {:ok, repo} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
         conn
         |> redirect(to: Routes.admin_repository_path(conn, :show, repo))
       {:error, _} ->
@@ -172,6 +188,10 @@ defmodule KmxgitWeb.Admin.RepositoryController do
             end
           end) do
         {:ok, _} ->
+          case GitManager.update_auth() do
+            :ok -> nil
+            error -> IO.inspect(error)
+          end
           conn
           |> redirect(to: Routes.admin_repository_path(conn, :index))
         {:error, changeset} ->

@@ -60,7 +60,12 @@ defmodule KmxgitWeb.OrganisationController do
               {:ok, org1} ->
                 if org.slug.slug != org1.slug.slug do
                   case GitManager.rename_dir(org.slug.slug, org1.slug.slug) do
-                    :ok -> org1
+                    :ok ->
+                      case GitManager.update_auth() do
+                        :ok -> nil
+                        error -> IO.inspect(error)
+                      end
+                      org1
                     {:error, err} -> Repo.rollback(err)
                   end
                 else
@@ -103,6 +108,10 @@ defmodule KmxgitWeb.OrganisationController do
     if org && Organisation.owner?(org, current_user) do
       case OrganisationManager.add_user(org, login) do
         {:ok, org} ->
+          case GitManager.update_auth() do
+            :ok -> nil
+            error -> IO.inspect(error)
+          end
           conn
           |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
         {:error, _e} ->
@@ -136,6 +145,10 @@ defmodule KmxgitWeb.OrganisationController do
     if org && Organisation.owner?(org, current_user) do
       case OrganisationManager.remove_user(org, login) do
         {:ok, org} ->
+          case GitManager.update_auth() do
+            :ok -> nil
+            error -> IO.inspect(error)
+          end
           conn
           |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
         {:error, _} ->
@@ -157,7 +170,12 @@ defmodule KmxgitWeb.OrganisationController do
             case OrganisationManager.delete_organisation(org) do
               {:ok, _} ->
                 case GitManager.delete_dir(org.slug.slug) do
-                  :ok -> :ok
+                  :ok ->
+                    case GitManager.update_auth() do
+                      :ok -> nil
+                      error -> IO.inspect(error)
+                    end
+                    :ok
                   {:error, out} -> Repo.rollback(status: out)
                 end
               {:error, e} -> Repo.rollback(e)

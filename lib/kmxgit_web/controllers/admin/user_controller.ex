@@ -61,9 +61,13 @@ defmodule KmxgitWeb.Admin.UserController do
 
   defp update_user(conn, user, params) do
     case UserManager.admin_update_user(user, params["user"]) do
-      {:ok, _updated_user} ->
+      {:ok, user1} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
         conn
-        |> redirect(to: Routes.admin_user_path(conn, :show, user))
+        |> redirect(to: Routes.admin_user_path(conn, :show, user1))
       {:error, changeset} ->
         conn
         |> render("edit.html", changeset: changeset)
@@ -81,6 +85,10 @@ defmodule KmxgitWeb.Admin.UserController do
     
   defp delete_user(conn, user) do
     {:ok, _} = UserManager.delete_user(user)
+    case GitManager.update_auth() do
+      :ok -> nil
+      error -> IO.inspect(error)
+    end
     conn
     |> redirect(to: Routes.admin_user_path(conn, :index))
   end

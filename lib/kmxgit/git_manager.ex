@@ -78,6 +78,14 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  def update_auth do
+    {out, status} = System.cmd("./bin/update_auth", [], stderr_to_stdout: true)
+    case status do
+      0 -> :ok
+      _ -> {:error, out}
+    end
+  end
+
   def rename(from, to) do
     dir_from = git_dir(from)
     dir_to = git_dir(to)

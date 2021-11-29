@@ -79,10 +79,28 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   end
 
   def update(conn, params) do
-    organisation = OrganisationManager.get_organisation(params["id"])
-    if organisation do
-      case OrganisationManager.update_organisation(organisation, params["organisation"]) do
-        {:ok, org} ->
+    org = OrganisationManager.get_organisation(params["id"])
+    if org do
+      case Repo.transaction(fn ->
+            case OrganisationManager.update_organisation(org, params["organisation"]) do
+              {:ok, org1} ->
+                if org.slug.slug != org1.slug.slug do
+                  case GitManager.rename_dir(org.slug.slug, org1.slug.slug) do
+                    :ok ->
+                      case GitManager.update_auth() do
+                        :ok -> nil
+                        error -> IO.inspect(error)
+                      end
+                      org1
+                    {:error, err} -> Repo.rollback(err)
+                  end
+                else
+                  org1
+                end
+              {:error, changeset} -> Repo.rollback(changeset)
+            end
+          end) do
+        {:ok, org1} ->
           conn
           |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
         {:error, changeset} ->
@@ -109,9 +127,13 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     login = params["organisation"]["login"]
     org = OrganisationManager.get_organisation!(params["organisation_id"])
     case OrganisationManager.add_user(org, login) do
-      {:ok, org} ->
+      {:ok, org1} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
         conn
-        |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
+        |> redirect(to: Routes.admin_organisation_path(conn, :show, org1))
       {:error, _} ->
         conn
         |> assign(:action, Routes.admin_organisation__path(conn, :add_user_post, org))
@@ -133,6 +155,10 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     org = OrganisationManager.get_organisation!(params["organisation_id"])
     case OrganisationManager.remove_user(org, login) do
       {:ok, org} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
         conn
         |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
       {:error, _} ->
@@ -144,11 +170,20 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   end
 
   def delete(conn, params) do
-    organisation = OrganisationManager.get_organisation(params["id"])
-    if organisation do
-      {:ok, _} = OrganisationManager.delete_organisation(organisation)
-      conn
-      |> redirect(to: Routes.admin_organisation_path(conn, :index))
+    org = OrganisationManager.get_organisation(params["id"])
+    if org do
+      case OrganisationManager.delete_organisation(org) do
+        {:ok, _} ->
+          case GitManager.update_auth() do
+            :ok -> nil
+            error -> IO.inspect(error)
+          end
+          conn
+          |> redirect(to: Routes.admin_organisation_path(conn, :index))
+        {:error, _} ->
+          conn
+          |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
+      end
     else
       not_found(conn)
     end

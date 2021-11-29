@@ -45,6 +45,10 @@ defmodule KmxgitWeb.UserController do
             end
           end) do
         {:ok, user} ->
+          case GitManager.update_auth() do
+            :ok -> nil
+            error -> IO.inspect(error)
+          end
           conn
           |> redirect(to: Routes.slug_path(conn, :show, user.slug.slug))
         {:error, changeset} ->
@@ -72,6 +76,10 @@ defmodule KmxgitWeb.UserController do
             end
           end) do
         {:ok, _} ->
+          case GitManager.update_auth() do
+            :ok -> nil
+            error -> IO.inspect(error)
+          end
           conn
           |> redirect(to: "/")
         {:error, changeset} ->
