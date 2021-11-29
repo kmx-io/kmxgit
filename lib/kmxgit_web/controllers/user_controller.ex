@@ -19,8 +19,9 @@ defmodule KmxgitWeb.UserController do
     if params["login"] == current_user.slug.slug do
       changeset = User.changeset(current_user)
       conn
+      |> assign(:changeset, changeset)
       |> assign(:page_title, gettext("Edit user %{login}", login: current_user.slug.slug))
-      |> render("edit.html", changeset: changeset)
+      |> render("edit.html")
     else
       not_found(conn)
     end
@@ -73,9 +74,11 @@ defmodule KmxgitWeb.UserController do
         {:ok, _} ->
           conn
           |> redirect(to: "/")
-        {:error, _} ->
+        {:error, changeset} ->
           conn
-          |> redirect(to: Routes.user_path(conn, :edit, current_user.slug.slug))
+          |> assign(:changeset, changeset)
+          |> assign(:page_title, gettext("Edit user %{login}", login: current_user.slug.slug))
+          |> render("edit.html")
       end
     else
       not_found(conn)

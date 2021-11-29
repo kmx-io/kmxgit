@@ -52,6 +52,10 @@
       <%= error_tag f, :deploy_only %>
     </div>
 
+    <div>
+      <%= error_tag f, :owned_repositories %>
+    </div>
+
     <div class="mb-3">
       <%= link gettext("Cancel"),
                to: Routes.slug_path(@conn, :show, @current_user.slug.slug),

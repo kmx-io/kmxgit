@@ -70,7 +70,9 @@ defmodule Kmxgit.UserManager do
   end
 
   def delete_user(%User{} = user) do
-    Repo.delete(user)
+    user
+    |> change_user()
+    |> Repo.delete()
   end
 
   def change_user(%User{} = user) do

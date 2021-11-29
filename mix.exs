@@ -49,6 +49,7 @@ defmodule Kmxgit.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.16.0"},
       {:plug_cowboy, "~> 2.5"},
+      {:plug_recaptcha, git: "https://github.com/thodg/plug_recaptcha.git"},
       {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},

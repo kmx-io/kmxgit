@@ -1,3 +1,7 @@
+import $ from "jquery"
+window.$ = $
+window.jQuery = $
+
 import "bootstrap"
 
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`

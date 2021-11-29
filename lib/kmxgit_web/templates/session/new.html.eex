@@ -17,6 +17,8 @@
         <%= error_tag f, :password %>
       </div>
 
+      <%= render "recaptcha.html", assigns %>
+
       <div class="mb-3">
         <%= submit "Submit", class: "btn btn-primary" %>
       </div>

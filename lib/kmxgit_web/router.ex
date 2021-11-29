@@ -14,6 +14,10 @@ defmodule KmxgitWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :recaptcha do
+    plug PlugRecaptcha2, recaptcha_secret: Application.get_env(:kmxgit, :recaptcha_secret)
+  end
+
   # Our pipeline implements "maybe" authenticated. We'll use the `:ensure_auth` below for when we need to make sure someone is logged in.
   pipeline :auth do
     plug Kmxgit.UserManager.Pipeline
@@ -41,11 +45,15 @@ defmodule KmxgitWeb.Router do
 
     scope "/_sessions" do
       get  "/new",    SessionController, :new
-      post "/new",    SessionController, :login
       get  "/logout", SessionController, :logout
+
+      pipe_through :recaptcha
+      post "/new",    SessionController, :login
     end
 
     get  "/_register", RegistrationController, :new
+
+    pipe_through :recaptcha
     post "/_register", RegistrationController, :register
   end
 

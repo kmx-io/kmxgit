@@ -33,6 +33,7 @@ defmodule Kmxgit.UserManager.User do
     |> validate_format(:email, ~r/^[-_+.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
     |> Markdown.validate_markdown(:description)
     |> unique_constraint(:email, name: "users__lower_email_index")
+    |> foreign_key_constraint(:owned_repositories, name: :repositories_user_id_fkey)
   end
 
   def changeset(user, attrs \\ %{}) do
