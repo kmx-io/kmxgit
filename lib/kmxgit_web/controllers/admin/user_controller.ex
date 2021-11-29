@@ -1,6 +1,7 @@
 defmodule KmxgitWeb.Admin.UserController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.GitManager
   alias Kmxgit.UserManager
   alias KmxgitWeb.ErrorView
 

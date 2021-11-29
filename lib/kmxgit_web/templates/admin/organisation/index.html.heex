@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1>Organisations</h1>
+  <h1><%= gettext "Organisations" %></h1>
 
   <table class="table admin-index">
     <tr>
@@ -7,7 +7,7 @@
       <th><%= gettext "Name" %></th>
       <th><%= gettext "Slug" %></th>
     </tr>
-    <%= Enum.map @organisations, fn(org) -> %>
+    <%= Enum.map @orgs, fn org -> %>
       <tr>
         <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
         <td><%= org.name %></td>
