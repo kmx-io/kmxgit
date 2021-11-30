@@ -4,9 +4,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   import Ecto.Changeset
 
   alias Kmxgit.RepositoryManager
-  alias Kmxgit.OrganisationManager
   alias Kmxgit.OrganisationManager.Organisation
-  alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
   schema "repositories" do

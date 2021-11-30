@@ -10,7 +10,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   def index(conn, _params) do
     orgs = OrganisationManager.list_organisations
     conn
-    |> assign(:orgss, orgs)
+    |> assign(:orgs, orgs)
     |> render("index.html")
   end
 

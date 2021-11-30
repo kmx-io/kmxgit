@@ -8,11 +8,11 @@
     </tr>
     <tr>
       <th><%= gettext "Name" %></th>
-      <td><%= link @org.name, to: Routes.slug_path(@conn, :show, @org.slug.slug) %></td>
+      <td><%= @org.name %></td>
     </tr>
     <tr>
       <th><%= gettext "Slug" %></th>
-      <td><%= link @org.slug.slug, to: Routes.slug_path(@conn, :show, @org.slug.slug) %></td>
+      <td><%= @org.slug.slug %></td>
     </tr>
     <tr>
       <th><%= gettext "Description" %></th>
@@ -46,5 +46,9 @@
 
   <%= link gettext("Edit organisation"),
       to: Routes.admin_organisation_path(@conn, :edit, @org),
+      class: "btn btn-primary" %>
+
+  <%= link gettext("Show"),
+      to: Routes.slug_path(@conn, :show, @org.slug.slug),
       class: "btn btn-primary" %>
 </div>

@@ -6,6 +6,7 @@
       <th><%= gettext "Id" %></th>
       <th><%= gettext "Owner" %></th>
       <th><%= gettext "Slug" %></th>
+      <th><%= gettext "Actions" %></th>
     </tr>
     <%= Enum.map @repos, fn(repo) -> %>
       <tr>
@@ -19,6 +20,9 @@
           <% end %>
         </td>
         <td><%= link Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo) %></td>
+        <td>
+          <%= link gettext("Show"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)), class: "btn btn-sm btn-primary" %>
+        </td>
       </tr>
     <% end %>
   </table>

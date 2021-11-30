@@ -8,14 +8,18 @@
       <th><%= gettext "Email" %></th>
       <th><%= gettext "Login" %></th>
       <th><%= gettext "Admin" %></th>
+      <th><%= gettext "Deploy" %></th>
+      <th><%= gettext "Actions" %></th>
     </tr>
     <%= Enum.map @users, fn(user) -> %>
       <tr>
         <td><%= link user.id, to: Routes.admin_user_path(@conn, :show, user) %></td>
-        <td><%= user.name %></td>
+        <td><%= link user.name, to: Routes.admin_user_path(@conn, :show, user) %></td>
         <td><%= link user.email, to: "mailto:#{user.email}" %></td>
-        <td><%= link user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug) %></td>
+        <td><%= link user.slug.slug, to: Routes.admin_user_path(@conn, :show, user) %></td>
         <td><%= user.is_admin %></td>
+        <td><%= user.deploy_only %></td>
+        <td><%= link gettext("Show"), to: Routes.slug_path(@conn, :show, user.slug.slug), class: "btn btn-sm btn-primary" %></td>
       </tr>
     <% end %>
   </table>

@@ -6,12 +6,16 @@
       <th><%= gettext "Id" %></th>
       <th><%= gettext "Name" %></th>
       <th><%= gettext "Slug" %></th>
+      <th><%= gettext "Actions" %></th>
     </tr>
     <%= Enum.map @orgs, fn org -> %>
       <tr>
         <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
-        <td><%= org.name %></td>
-        <td><%= link org.slug.slug, to: Routes.slug_path(@conn, :show, org.slug.slug) %></td>
+        <td><%= link org.name, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
+        <td><%= link org.slug.slug, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
+        <td>
+          <%= link gettext("Show"), to: Routes.slug_path(@conn, :show, org.slug.slug), class: "btn btn-sm btn-primary" %>
+        </td>
       </tr>
     <% end %>
   </table>
