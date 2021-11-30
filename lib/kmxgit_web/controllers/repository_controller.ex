@@ -2,6 +2,7 @@ defmodule KmxgitWeb.RepositoryController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.GitManager
+  alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
