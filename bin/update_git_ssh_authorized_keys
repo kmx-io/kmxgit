@@ -1,4 +1,5 @@
 #!/bin/sh
 set -e
 cd /home/git/.ssh/
-curl > authorized_keys https://git.kmx.io/_etc/ssh/authorized_keys
+curl > authorized_keys.1 https://git.kmx.io/_etc/ssh/authorized_keys
+mv authorized_keys.1 authorized_keys
