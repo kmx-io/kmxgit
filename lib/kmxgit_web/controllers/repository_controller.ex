@@ -9,13 +9,13 @@ defmodule KmxgitWeb.RepositoryController do
 
   def new(conn, params) do
     action = Routes.repository_path(conn, :create, params["owner"])
-    changeset = RepositoryManager.change_repository
     current_user = conn.assigns.current_user
     slug = SlugManager.get_slug(params["owner"])
     if !slug do
       not_found(conn)
     else
       if slug.user && slug.user.id == current_user.id do
+        changeset = RepositoryManager.change_repository(slug.user)
         conn
         |> assign(:action, action)
         |> assign(:changeset, changeset)
@@ -23,7 +23,8 @@ defmodule KmxgitWeb.RepositoryController do
         |> render("new.html")
       else
         org = slug.organisation
-        if org && org.users |> Enum.find(& &1.id == current_user.id) do
+        if org && Organisation.owner?(org, current_user) do
+          changeset = RepositoryManager.change_repository(org)
           conn
           |> assign(:action, action)
           |> assign(:changeset, changeset)
@@ -45,11 +46,11 @@ defmodule KmxgitWeb.RepositoryController do
     else
       user = slug.user
       if user && user.id == current_user.id do
-        create_repo(conn, user, params["repository"])
+        create_repo(conn, params["repository"], user)
       else
         org = slug.organisation
         if org && org.users |> Enum.find(& &1.id == current_user.id) do
-          create_repo(conn, org, params["repository"])
+          create_repo(conn, params["repository"], org)
         else
           not_found(conn)
         end
@@ -57,9 +58,9 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
-  defp create_repo(conn, owner, params) do
+  defp create_repo(conn, params, owner) do
     case Repo.transaction(fn ->
-          case RepositoryManager.create_repository(owner, params) do
+          case RepositoryManager.create_repository(params, owner) do
             {:ok, repo} ->
               case GitManager.create(Repository.full_slug(repo)) do
                 {:ok, _} -> repo

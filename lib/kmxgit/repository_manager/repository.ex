@@ -3,7 +3,10 @@ defmodule Kmxgit.RepositoryManager.Repository do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Kmxgit.RepositoryManager
+  alias Kmxgit.OrganisationManager
   alias Kmxgit.OrganisationManager.Organisation
+  alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
   schema "repositories" do
@@ -15,22 +18,66 @@ defmodule Kmxgit.RepositoryManager.Repository do
     timestamps()
   end
 
-  def changeset(repository, attrs \\ %{}) do
+  def changeset(repository, attrs) do
     repository
     |> cast(attrs, [:description, :slug])
+    |> common_changeset()
+  end
+
+  def owner_changeset(repository, attrs, owner = %Organisation{}) do
+    repository
+    |> cast(attrs, [:description, :slug])
+    |> put_assoc(:organisation, owner)
+    |> put_assoc(:user, nil)
+    |> common_changeset()
+  end
+  def owner_changeset(repository, attrs, owner = %User{}) do
+    repository
+    |> cast(attrs, [:description, :slug])
+    |> put_assoc(:organisation, nil)
+    |> put_assoc(:user, owner)
+    |> common_changeset()
+  end
+
+  defp common_changeset(changeset) do
+    changeset
     |> validate_required([:slug])
     |> validate_format(:slug, ~r|^[A-Za-z][-_+.@0-9A-Za-z]{0,64}(/[A-Za-z][-_+.@0-9A-Za-z]{0,64})*$|)
-    |> validate_slug_uniqueness()
+    |> validate_required_owner()
+    |> validate_unique_slug()
     |> Markdown.validate_markdown(:description)
   end
 
-  def validate_slug_uniqueness(changeset = %Ecto.Changeset{changes: %{slug: slug}}) do
-    IO.inspect [changeset, slug]
-    changeset
+  defp validate_required_owner(changeset) do
+    org = get_field(changeset, :organisation)
+    user = get_field(changeset, :user)
+    owner = org || user
+    if owner do
+      changeset
+    else
+      changeset
+      |> add_error(:organisation, "can't be blank")
+      |> add_error(:user, "can't be blank")
+    end
   end
 
-  def validate_slug_uniqueness(changeset) do
-    IO.inspect changeset
+  defp validate_unique_slug(changeset = %Ecto.Changeset{valid?: true}) do
+    org = get_field(changeset, :organisation)
+    user = get_field(changeset, :user)
+    owner = org || user
+    slug = get_field(changeset, :slug)
+    if repo = RepositoryManager.get_repository_by_owner_and_slug(owner.slug.slug, slug) do
+      if repo.id != changeset.data.id do
+        changeset
+        |> add_error(:slug, "is already taken")
+      else
+        changeset
+      end
+    else
+      changeset
+    end
+  end
+  defp validate_unique_slug(changeset) do
     changeset
   end
 

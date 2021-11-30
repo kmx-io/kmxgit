@@ -26,23 +26,25 @@ defmodule Kmxgit.RepositoryManager do
     end)
   end
 
-  def change_repository(repository \\ %Repository{}) do
+  def change_repository() do
+    change_repository(%Repository{})
+  end
+  def change_repository(repository = %Repository{}) do
     Repository.changeset(repository, %{})
   end
-
-  defp put_owner(changeset, owner) do
-    case owner do
-      %User{} ->
-        Ecto.Changeset.put_assoc(changeset, :user, owner)
-      %Organisation{} ->
-        Ecto.Changeset.put_assoc(changeset, :organisation, owner)
-    end
+  def change_repository(owner) do
+    change_repository(%Repository{}, owner)
+  end
+  def change_repository(repository = %Repository{}, owner = %Organisation{}) do
+    Repository.owner_changeset(repository, %{}, owner)
+  end
+  def change_repository(repository = %Repository{}, owner = %User{}) do
+    Repository.owner_changeset(repository, %{}, owner)
   end
 
-  def create_repository(owner, attrs \\ %{}) do
+  def create_repository(attrs \\ %{}, owner) do
     %Repository{}
-    |> Repository.changeset(attrs)
-    |> put_owner(owner)
+    |> Repository.owner_changeset(attrs, owner)
     |> Repo.insert()
   end
 
@@ -65,6 +67,17 @@ defmodule Kmxgit.RepositoryManager do
     get_repository(id) || raise Ecto.NoResultsError
   end
 
+  def get_repository_by_owner_id_and_slug(org_id, nil, slug) do
+    Repo.one from r in Repository,
+      where: r.organisation_id == ^org_id and is_nil(r.user_id) and fragment("lower(?)", r.slug) == ^String.downcase(slug),
+      limit: 1
+  end
+  def get_repository_by_owner_id_and_slug(nil, user_id, slug) do
+    Repo.one from r in Repository,
+      where: is_nil(r.organisation_id) and r.user_id == ^user_id and fragment("lower(?)", r.slug) == ^String.downcase(slug),
+      limit: 1
+  end
+
   def get_repository_by_owner_and_slug(owner, slug) do
     downcase_owner = String.downcase(owner)
     downcase_slug = String.downcase(slug)
@@ -80,7 +93,8 @@ defmodule Kmxgit.RepositoryManager do
       where: (fragment("lower(?)", os.slug) == ^downcase_owner or fragment("lower(?)", us.slug) == ^downcase_owner) and fragment("lower(?)", r.slug) == ^downcase_slug,
       preload: [members: :slug,
                 organisation: [:slug, [users: :slug]],
-                user: :slug]
+                user: :slug],
+      limit: 1
   end
 
   def add_member(%Repository{} = repo, login) do
