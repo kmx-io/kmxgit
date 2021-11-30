@@ -156,7 +156,8 @@ defmodule Kmxgit.RepositoryManager.Repository do
   end
 
   def deploy_user(repo) do
-    "_deploy_#{full_slug(repo)}"
+    slug = repo |> full_slug() |> String.replace(~r(.+/), "__")
+    "_deploy_#{slug}"
   end
 
   def deploy_keys_with_env(repo) do
