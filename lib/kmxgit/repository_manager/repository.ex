@@ -10,6 +10,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   alias Kmxgit.UserManager.User
 
   schema "repositories" do
+    field :deploy_keys, :string
     field :description, :string
     belongs_to :organisation, Organisation
     field :slug, :string
@@ -20,20 +21,20 @@ defmodule Kmxgit.RepositoryManager.Repository do
 
   def changeset(repository, attrs) do
     repository
-    |> cast(attrs, [:description, :slug])
+    |> cast(attrs, [:deploy_keys, :description, :slug])
     |> common_changeset()
   end
 
   def owner_changeset(repository, attrs, owner = %Organisation{}) do
     repository
-    |> cast(attrs, [:description, :slug])
+    |> cast(attrs, [:deploy_keys, :description, :slug])
     |> put_assoc(:organisation, owner)
     |> put_assoc(:user, nil)
     |> common_changeset()
   end
   def owner_changeset(repository, attrs, owner = %User{}) do
     repository
-    |> cast(attrs, [:description, :slug])
+    |> cast(attrs, [:deploy_keys, :description, :slug])
     |> put_assoc(:organisation, nil)
     |> put_assoc(:user, owner)
     |> common_changeset()
@@ -135,7 +136,8 @@ defmodule Kmxgit.RepositoryManager.Repository do
   end
 
   def auth(repo) do
-    repo
+    full_slug = full_slug(repo)
+    auth = repo
     |> members()
     |> Enum.sort(fn a, b ->
       a.slug.slug < b.slug.slug
@@ -146,7 +148,29 @@ defmodule Kmxgit.RepositoryManager.Repository do
         else
           "rw"
         end
-      "#{user.slug.slug} #{mode} \"#{full_slug(repo)}.git\"\n"
+      auth_line(user.slug.slug, mode, full_slug)
     end)
+    auth ++ [auth_line(deploy_user(repo), "r", full_slug)]
+  end
+
+  defp auth_line(user, mode, slug) do
+    "#{user} #{mode} '#{slug}.git'\n"
+  end
+
+  def deploy_user(repo) do
+    "_deploy_#{full_slug(repo)}"
+  end
+
+  def deploy_keys_with_env(repo) do
+    (repo.deploy_keys || "")
+    |> String.split("\n")
+    |> Enum.map(fn line ->
+      if Regex.match?(~r/^[ \t]*ssh-/, line) do
+        "environment=\"GIT_AUTH_ID=#{deploy_user(repo)}\" #{line}"
+      else
+        line
+      end
+    end)
+    |> Enum.join("\n")
   end
 end

@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+cd /home/git/.ssh/
+curl > authorized_keys https://git.kmx.io/_etc/ssh/authorized_keys

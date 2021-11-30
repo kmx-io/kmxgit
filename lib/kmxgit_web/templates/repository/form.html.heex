@@ -18,6 +18,12 @@
   </div>
 
   <div class="mb-3">
+    <%= label f, :deploy_keys, class: "form-label" %>
+    <%= textarea f, :deploy_keys, class: "form-control" %>
+    <%= error_tag f, :deploy_keys %>
+  </div>
+
+  <div class="mb-3">
     <%= if @conn.assigns[:current_repository] do %>
       <%= link gettext("Cancel"),
           to: Routes.repository_path(@conn, :show, Repository.owner_slug(@current_repository), Repository.splat(@current_repository)),

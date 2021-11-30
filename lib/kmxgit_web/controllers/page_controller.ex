@@ -51,9 +51,11 @@ defmodule KmxgitWeb.PageController do
   end
 
   def keys(conn, _params) do
-    k = UserManager.list_users
-    |> Enum.map(fn user -> User.ssh_keys_with_env(user) end)
-    |> Enum.join("\n")
+    k1 = UserManager.list_users
+    |> Enum.map(&User.ssh_keys_with_env/1)
+    k2 = RepositoryManager.list_repositories
+    |> Enum.map(&Repository.deploy_keys_with_env/1)
+    k = (k1 ++ k2) |> Enum.join("\n")
     conn
     |> put_resp_content_type("text/text")
     |> resp(200, k)

@@ -10,7 +10,8 @@ textarea#organisation_description,
 textarea#repository_description {
     min-height: 10em;
 }
-textarea#user_ssh_keys {
+textarea#user_ssh_keys,
+textarea#repository_deploy_keys {
     font-family: monospace;
     min-height: 20em;
     overflow-x: scroll;
