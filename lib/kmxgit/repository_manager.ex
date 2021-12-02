@@ -5,6 +5,7 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager.Repository
+  alias Kmxgit.SlugManager
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
@@ -48,7 +49,27 @@ defmodule Kmxgit.RepositoryManager do
     |> Repo.insert()
   end
 
-  def update_repository(repository, attrs \\ %{}) do
+  def update_repository(repository, attrs = %{"owner_slug" => owner_slug}) do
+    if owner_slug && owner_slug != "" do
+      if slug = SlugManager.get_slug(owner_slug) do
+        owner = slug.organisation || slug.user
+        IO.inspect([owner_slug: owner_slug, slug: slug, owner: owner])
+        repository
+        |> Repository.owner_changeset(attrs, owner)
+        |> Repo.update()
+      else
+        changeset = repository
+        |> Repository.changeset(attrs)
+        |> Ecto.Changeset.add_error(:owner_slug, "not found")
+        {:error, %Ecto.Changeset{changeset | action: :update}}
+      end
+    else
+      repository
+      |> Repository.changeset(attrs)
+      |> Repo.update()
+    end
+  end
+  def update_repository(repository, attrs) do
     repository
     |> Repository.changeset(attrs)
     |> Repo.update()

@@ -278,7 +278,6 @@ defmodule KmxgitWeb.RepositoryController do
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
     if repo && Repository.owner?(repo, current_user) do
-      org = repo.organisation
       case Repo.transaction(fn ->
             case RepositoryManager.update_repository(repo, params["repository"]) do
               {:ok, repo1} ->
@@ -295,18 +294,18 @@ defmodule KmxgitWeb.RepositoryController do
               {:error, changeset} -> Repo.rollback(changeset)
             end
           end) do
-        {:ok, repo} ->
+        {:ok, repo1} ->
           case GitManager.update_auth() do
             :ok -> nil
             error -> IO.inspect(error)
           end
           conn
-          |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
+          |> redirect(to: Routes.repository_path(conn, :show, Repository.owner_slug(repo1), Repository.splat(repo1)))
         {:error, changeset} ->
           conn
           |> assign(:action, Routes.repository_path(conn, :update, params["owner"], Repository.splat(repo)))
           |> assign(:changeset, changeset)
-          |> assign_current_organisation(org)
+          |> assign_current_organisation(repo.organisation)
           |> assign(:current_repository, repo)
           |> assign(:repo, repo)
           |> render("edit.html")

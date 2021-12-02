@@ -118,8 +118,9 @@ defmodule KmxgitWeb.Admin.RepositoryController do
         |> redirect(to: Routes.admin_repository_path(conn, :show, repo1))
       {:error, changeset} ->
         conn
-        |> assign(:action, Routes.admin_repository__path(conn, :update, repo))
+        |> assign(:action, Routes.admin_repository_path(conn, :update, repo))
         |> assign(:changeset, changeset)
+        |> assign(:repo, repo)
         |> render("edit.html")
     end
   end

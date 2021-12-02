@@ -10,9 +10,10 @@ defmodule Kmxgit.RepositoryManager.Repository do
   schema "repositories" do
     field :deploy_keys, :string
     field :description, :string
-    belongs_to :organisation, Organisation
+    belongs_to :organisation, Organisation, on_replace: :nilify
+    field :owner_slug, :string, virtual: true
     field :slug, :string
-    belongs_to :user, User
+    belongs_to :user, User, on_replace: :nilify
     many_to_many :members, User, join_through: "users_repositories", on_replace: :delete, on_delete: :delete_all
     timestamps()
   end
@@ -26,6 +27,8 @@ defmodule Kmxgit.RepositoryManager.Repository do
   def owner_changeset(repository, attrs, owner = %Organisation{}) do
     repository
     |> cast(attrs, [:deploy_keys, :description, :slug])
+    |> put_change(:organisation_id, owner.id)
+    |> put_change(:user_id, nil)
     |> put_assoc(:organisation, owner)
     |> put_assoc(:user, nil)
     |> common_changeset()
@@ -33,6 +36,8 @@ defmodule Kmxgit.RepositoryManager.Repository do
   def owner_changeset(repository, attrs, owner = %User{}) do
     repository
     |> cast(attrs, [:deploy_keys, :description, :slug])
+    |> put_change(:organisation_id, nil)
+    |> put_change(:user_id, owner.id)
     |> put_assoc(:organisation, nil)
     |> put_assoc(:user, owner)
     |> common_changeset()
