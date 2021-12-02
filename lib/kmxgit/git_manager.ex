@@ -81,7 +81,12 @@ defmodule Kmxgit.GitManager do
   def update_auth do
     {out, status} = System.cmd("update_etc_git_auth", [], stderr_to_stdout: true)
     case status do
-      0 -> :ok
+      0 ->
+        {out, status} = System.cmd("update_git_ssh_authorized_keys", [], stderr_to_stdout: true)
+        case status do
+          0 -> :ok
+          _ -> {:error, out}
+        end
       _ -> {:error, out}
     end
   end
