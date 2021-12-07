@@ -18,13 +18,6 @@ defmodule KmxgitWeb.Admin.UserController do
     show_user(conn, user)
   end
 
-  defp not_found(conn) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(ErrorView)
-    |> render(:"404")
-  end
-
   defp show_user(conn, nil) do
     not_found(conn)
   end
@@ -76,22 +69,16 @@ defmodule KmxgitWeb.Admin.UserController do
   end
 
   def delete(conn, params) do
-    user = UserManager.get_user(params["id"])
-    delete_user(conn, user)
-  end
-
-  defp delete_user(conn, nil) do
-    not_found(conn)
-  end
-    
-  defp delete_user(conn, user) do
-    {:ok, _} = UserManager.delete_user(user)
-    case GitManager.update_auth() do
-      :ok -> nil
-      error -> IO.inspect(error)
+    if user = UserManager.get_user(params["id"]) do
+      {:ok, _} = UserManager.delete_user(user)
+      case GitManager.update_auth() do
+        :ok -> nil
+        error -> IO.inspect(error)
+      end
+      conn
+      |> redirect(to: Routes.admin_user_path(conn, :index))
+    else
+      not_found(conn)
     end
-    conn
-    |> redirect(to: Routes.admin_user_path(conn, :index))
   end
-
 end

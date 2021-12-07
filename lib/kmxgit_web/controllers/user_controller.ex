@@ -7,13 +7,6 @@ defmodule KmxgitWeb.UserController do
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
 
-  defp not_found(conn) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(ErrorView)
-    |> render(:"404")
-  end
-
   def edit(conn, params) do
     current_user = conn.assigns.current_user
     if params["login"] == current_user.slug.slug do

@@ -25,6 +25,13 @@ defmodule KmxgitWeb do
       import KmxgitWeb.Gettext
       alias KmxgitWeb.ErrorView
       alias KmxgitWeb.Router.Helpers, as: Routes
+
+      def not_found(conn, _params \\ %{}) do
+        conn
+        |> put_status(:not_found)
+        |> put_view(ErrorView)
+        |> render(:"404")
+      end
     end
   end
 

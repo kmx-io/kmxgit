@@ -47,13 +47,6 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     end
   end
 
-  defp not_found(conn) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(ErrorView)
-    |> render(:"404")
-  end
-
   def show(conn, params) do
     org = OrganisationManager.get_organisation(params["id"])
     if org do

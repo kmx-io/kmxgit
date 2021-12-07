@@ -8,13 +8,6 @@ defmodule KmxgitWeb.SlugController do
   alias KmxgitWeb.OrganisationView
   alias KmxgitWeb.UserView
 
-  defp not_found(conn) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(ErrorView)
-    |> render(:"404")
-  end
-
   def show(conn, params) do
     slug = SlugManager.get_slug(params["slug"])
     if !slug do
