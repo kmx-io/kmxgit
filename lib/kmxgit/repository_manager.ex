@@ -53,7 +53,7 @@ defmodule Kmxgit.RepositoryManager do
     params = %{description: repo.description,
                slug: slug}
     %Repository{}
-    |> Repository.owner_changeset(params, owner)
+    |> Repository.owner_changeset(params, owner, repo)
     |> Repo.insert()
   end
 
@@ -120,7 +120,9 @@ defmodule Kmxgit.RepositoryManager do
       full_join: us in Slug,
       on: us.user_id == u.id,
       where: (fragment("lower(?)", os.slug) == ^downcase_owner or fragment("lower(?)", us.slug) == ^downcase_owner) and fragment("lower(?)", r.slug) == ^downcase_slug,
-      preload: [members: :slug,
+      preload: [forked_from: [organisation: :slug,
+                              user: :slug],
+                members: :slug,
                 organisation: [:slug, [users: :slug]],
                 user: :slug],
       limit: 1

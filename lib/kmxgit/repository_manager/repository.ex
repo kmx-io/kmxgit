@@ -11,6 +11,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     field :deploy_keys, :string
     field :description, :string
     field :fork_to, :string, virtual: true
+    belongs_to :forked_from, __MODULE__
     belongs_to :organisation, Organisation, on_replace: :nilify
     field :owner_slug, :string, virtual: true
     field :slug, :string
@@ -25,23 +26,34 @@ defmodule Kmxgit.RepositoryManager.Repository do
     |> common_changeset()
   end
 
-  def owner_changeset(repository, attrs, owner = %Organisation{}) do
+  def owner_changeset(repository, attrs, owner, forked_from \\ nil)
+  def owner_changeset(repository, attrs, owner = %Organisation{}, forked_from) do
     repository
     |> cast(attrs, [:deploy_keys, :description, :slug])
     |> put_change(:organisation_id, owner.id)
     |> put_change(:user_id, nil)
     |> put_assoc(:organisation, owner)
     |> put_assoc(:user, nil)
+    |> put_forked_from(forked_from)
     |> common_changeset()
   end
-  def owner_changeset(repository, attrs, owner = %User{}) do
+  def owner_changeset(repository, attrs, owner = %User{}, forked_from) do
     repository
     |> cast(attrs, [:deploy_keys, :description, :slug])
     |> put_change(:organisation_id, nil)
     |> put_change(:user_id, owner.id)
     |> put_assoc(:organisation, nil)
     |> put_assoc(:user, owner)
+    |> put_forked_from(forked_from)
     |> common_changeset()
+  end
+
+  defp put_forked_from(changeset, nil) do
+    changeset
+  end
+  defp put_forked_from(changeset, forked_from) do
+    changeset
+    |> put_change(:forked_from, forked_from)
   end
 
   defp common_changeset(changeset) do

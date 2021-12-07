@@ -2,7 +2,11 @@
 
   <div class="row">
     <div class="col col-12 col-sm-7">
-      <h1 id="repo_title"><%= link Repository.owner_slug(@repo), to: Routes.slug_path(@conn, :show, Repository.owner_slug(@repo)) %>/<%= link @repo.slug, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), String.split(@repo.slug, "/")) %></h1>
+      <h1 id="repo_title"><%= link Repository.owner_slug(@repo), to: Routes.slug_path(@conn, :show, Repository.owner_slug(@repo)) %>/<%= link @repo.slug, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo)) %></h1>
+      <%= if @repo.forked_from do %>
+        <%= gettext("Forked from") %>
+        <%= link Repository.full_slug(@repo.forked_from), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo.forked_from), Repository.splat(@repo.forked_from)) %>
+      <% end %>
     </div>
     <div class="col col-12 col-sm-4">
       <%= if Repository.owner?(@repo, @current_user) do %>
