@@ -153,8 +153,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
 
   def auth(repo) do
     full_slug = full_slug(repo)
-    auth = repo
-    |> members()
+    auth = members(repo)
     |> Enum.sort(fn a, b ->
       a.slug.slug < b.slug.slug
     end)
