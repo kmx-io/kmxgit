@@ -49,6 +49,14 @@ defmodule Kmxgit.RepositoryManager do
     |> Repo.insert()
   end
 
+  def fork_repository(repo, owner, slug) do
+    params = %{description: repo.description,
+               slug: slug}
+    %Repository{}
+    |> Repository.owner_changeset(params, owner)
+    |> Repo.insert()
+  end
+
   def update_repository(repository, attrs = %{"owner_slug" => owner_slug}) do
     if owner_slug && owner_slug != "" do
       if slug = SlugManager.get_slug(owner_slug) do

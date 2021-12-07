@@ -34,3 +34,6 @@ npm-debug.log
 
 /priv/git/
 /.env
+
+/priv/repo/dumps/
+/priv/static/

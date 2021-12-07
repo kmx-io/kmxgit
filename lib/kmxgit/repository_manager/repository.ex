@@ -10,6 +10,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   schema "repositories" do
     field :deploy_keys, :string
     field :description, :string
+    field :fork_to, :string, virtual: true
     belongs_to :organisation, Organisation, on_replace: :nilify
     field :owner_slug, :string, virtual: true
     field :slug, :string

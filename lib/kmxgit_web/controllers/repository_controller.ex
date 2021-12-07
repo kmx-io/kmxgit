@@ -50,7 +50,7 @@ defmodule KmxgitWeb.RepositoryController do
         create_repo(conn, params["repository"], user)
       else
         org = slug.organisation
-        if org && org.users |> Enum.find(& &1.id == current_user.id) do
+        if org && Organisation.owner?(org, current_user) do
           create_repo(conn, params["repository"], org)
         else
           not_found(conn)
@@ -98,7 +98,7 @@ defmodule KmxgitWeb.RepositoryController do
     slug = chunks |> Enum.at(0) |> Enum.join("/")
     {branch, path} = get_branch_and_path(chunks)
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo && Enum.find(Repository.members(repo), fn u -> u.id == current_user.id end) do
+    if repo && Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
       git = setup_git(repo, branch || "master", path, conn)
@@ -430,5 +430,127 @@ defmodule KmxgitWeb.RepositoryController do
   defp assign_current_organisation(conn, org) do
     assign(conn, :current_organisation, org)
   end
-  
+
+  def fork(conn, params) do
+    current_user = conn.assigns.current_user
+    slug = Enum.join(params["slug"], "/")
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo && Repository.member?(repo, current_user) do
+      org = repo.organisation
+      changeset = RepositoryManager.change_repository(repo)
+      conn
+      |> assign(:action, Routes.repository_path(conn, :fork_post, params["owner"], Repository.splat(repo)))
+      |> assign(:changeset, changeset)
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:repo, repo)
+      |> render("fork.html")
+    else
+      not_found(conn)
+    end
+  end
+
+  def fork_post(conn, params) do
+    current_user = conn.assigns.current_user
+    slug = Enum.join(params["slug"], "/")
+    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    if repo && Repository.member?(repo, current_user) do
+      IO.inspect(params)
+      fork_to = params["repository"]["fork_to"]
+      slug = String.split(fork_to, "/") |> Enum.at(0) |> SlugManager.get_slug()
+      if slug do
+        user = slug.user
+        if user do
+          if user.id == current_user.id do
+            fork_repo(conn, params["repository"], user, repo)
+          else
+            changeset = repo
+            |> Repository.changeset(params["repository"])
+            |> Ecto.Changeset.add_error(:fork_to, "you cannot fork to another user")
+            |> changeset_put_action(:fork)
+            conn
+            |> assign(:action, Routes.repository_path(conn, :fork_post, Repository.owner_slug(repo), Repository.splat(repo)))
+            |> assign(:changeset, changeset)
+            |> assign_current_organisation(repo.organisation)
+            |> assign(:current_repository, repo)
+            |> assign(:repo, repo)
+            |> render("fork.html")
+          end
+        else
+          %Organisation{} = org = slug.organisation
+          if Organisation.owner?(org, current_user) do
+            fork_repo(conn, params["repository"], org, repo)
+          else
+            changeset = repo
+            |> Repository.changeset(params["repository"])
+            |> Ecto.Changeset.add_error(:fork_to, "you don't have the permission to fork to this organisation")
+            |> changeset_put_action(:fork)
+            conn
+            |> assign(:action, Routes.repository_path(conn, :fork_post, Repository.owner_slug(repo), Repository.splat(repo)))
+            |> assign(:changeset, changeset)
+            |> assign_current_organisation(repo.organisation)
+            |> assign(:current_repository, repo)
+            |> assign(:repo, repo)
+            |> render("fork.html")
+          end
+        end
+      else
+        changeset = repo
+        |> Repository.changeset(params["repository"])
+        |> Ecto.Changeset.add_error(:fork_to, "owner was not found")
+        |> changeset_put_action(:fork)
+        conn
+        |> assign(:action, Routes.repository_path(conn, :fork_post, Repository.owner_slug(repo), Repository.splat(repo)))
+        |> assign(:changeset, changeset)
+        |> assign_current_organisation(repo.organisation)
+        |> assign(:current_repository, repo)
+        |> assign(:repo, repo)
+        |> render("fork.html")
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  defp fork_repo(conn, params, owner, origin) do
+    [_ | slug] = String.split(params["fork_to"], "/")
+    slug = Enum.join(slug, "/")
+    case Repo.transaction(fn ->
+          case RepositoryManager.fork_repository(origin, owner, slug) do
+            {:ok, repo} ->
+              case GitManager.fork(Repository.full_slug(origin), Repository.full_slug(repo)) do
+                :ok -> repo
+                {:error, e} ->
+                  repo
+                  |> Repository.changeset(params)
+                  |> Ecto.Changeset.add_error(:fork_to, e)
+                  |> changeset_put_action(:fork)
+                  |> Repo.rollback
+              end
+            {:error, changeset} ->
+              Repo.rollback(changeset)
+          end
+        end) do
+      {:ok, repo} ->
+        case GitManager.update_auth() do
+          :ok -> nil
+          error -> IO.inspect(error)
+        end
+        conn
+        |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
+      {:error, changeset} ->
+        IO.inspect changeset
+        conn
+        |> assign(:action, Routes.repository_path(conn, :fork_post, Repository.owner_slug(origin), Repository.splat(origin)))
+        |> assign(:changeset, changeset)
+        |> assign_current_organisation(origin.organisation)
+        |> assign(:current_repository, origin)
+        |> assign(:repo, origin)
+        |> render("fork.html")
+    end
+  end
+
+  defp changeset_put_action(changeset, action) do
+    %Ecto.Changeset{changeset | action: action}
+  end
 end

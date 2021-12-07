@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <h1>
+    <%= gettext "Fork repository %{repo}", repo: Repository.full_slug(@repo) %>
+  </h1>
+
+  <%= form_for @changeset, @action, [method: :post], fn f -> %>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>Invalid parameters</p>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= label f, :fork_to, class: "form-label" %>
+      <%= text_input f, :fork_to, class: "form-control" %>
+      <%= error_tag f, :fork_to %>
+    </div>
+
+    <div class="mb-3">
+      <%= link gettext("Cancel"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@current_repository), Repository.splat(@current_repository)), class: "btn btn-secondary" %>
+      <%= submit gettext("Submit"), class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
+
+</div>

@@ -97,6 +97,11 @@ defmodule KmxgitWeb.Router do
       delete "/repository/:owner/*slug", RepositoryController, :delete
     end
 
+    scope "/_fork/" do
+      get  "/:owner/*slug", RepositoryController, :fork
+      post "/:owner/*slug", RepositoryController, :fork_post
+    end
+
     scope "/_admin", Admin, as: "admin" do
       pipe_through :admin
       get "/", DashboardController, :index

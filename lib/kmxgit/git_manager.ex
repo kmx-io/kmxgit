@@ -147,4 +147,20 @@ defmodule Kmxgit.GitManager do
     "#{@git_root}/#{dir}/"
     |> rm_rf()
   end
+
+  def fork(from, to) do
+    dir_from = git_dir(from)
+    dir_to = git_dir(to)
+    if File.exists?(dir_to) do
+      {:error, "file exists"}
+    else
+      dir = Path.dirname(dir_to)
+      :ok = File.mkdir_p(dir)
+      {out, status} = System.cmd("cp", ["-PRp", dir_from, dir_to], stderr_to_stdout: true)
+      case status do
+        0 -> :ok
+        _ -> {:error, out}
+      end
+    end
+  end
 end

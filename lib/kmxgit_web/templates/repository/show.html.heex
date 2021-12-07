@@ -7,9 +7,10 @@
     <div class="col col-12 col-sm-4">
       <%= if Repository.owner?(@repo, @current_user) do %>
         <%= link gettext("Edit"),
-            to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), String.split(@repo.slug, "/")),
+            to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), Repository.splat(@repo)),
             class: "btn btn-primary" %>
       <% end %>
+      <%= link gettext("Fork"), to: Routes.repository_path(@conn, :fork, Repository.owner_slug(@repo), Repository.splat(@repo)), class: "btn btn-primary" %>
     </div>
   </div>
 
