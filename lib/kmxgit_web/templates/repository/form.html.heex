@@ -23,11 +23,13 @@
     <%= error_tag f, :deploy_keys %>
   </div>
 
-  <div class="mb-3">
-    <%= label f, :owner_slug, gettext("Change owner ⚠"), class: "form-label" %>
-    <%= text_input f, :owner_slug, class: "form-control" %>
-    <%= error_tag f, :owner_slug %>
-  </div>
+  <%= if @conn.assigns[:current_repository] do %>
+    <div class="mb-3">
+      <%= label f, :owner_slug, gettext("Change owner ⚠"), class: "form-label" %>
+      <%= text_input f, :owner_slug, class: "form-control" %>
+      <%= error_tag f, :owner_slug %>
+    </div>
+  <% end %>
 
   <div class="mb-3">
     <%= if @conn.assigns[:current_repository] do %>
