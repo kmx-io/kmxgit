@@ -1,6 +1,6 @@
 <li class="nav-item">
-  <%= link "login", to: Routes.session_path(@conn, :new), class: "nav-link" %>
+  <%= link "login", to: Routes.user_session_path(@conn, :new), class: "nav-link" %>
 </li>
 <li class="nav-item">
-  <%= link "register", to: Routes.registration_path(@conn, :new), class: "nav-link" %>
+  <%= link "register", to: Routes.user_registration_path(@conn, :new), class: "nav-link" %>
 </li>

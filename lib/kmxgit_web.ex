@@ -47,6 +47,10 @@ defmodule KmxgitWeb do
 
       # Include shared imports and aliases for views
       unquote(view_helpers())
+
+      def recaptcha_site_key do
+        Application.get_env :kmxgit, :recaptcha_site_key
+      end
     end
   end
 

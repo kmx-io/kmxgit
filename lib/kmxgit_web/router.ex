@@ -1,6 +1,8 @@
 defmodule KmxgitWeb.Router do
   use KmxgitWeb, :router
 
+  import KmxgitWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule KmxgitWeb.Router do
     plug :put_root_layout, {KmxgitWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
@@ -35,7 +38,7 @@ defmodule KmxgitWeb.Router do
 
   # maybe logged in
   scope "/", KmxgitWeb do
-    pipe_through [:browser, :auth]
+    pipe_through [:browser]
 
     get  "/",                         PageController, :index
     get  "/_etc/git/auth.conf",       PageController, :auth
@@ -47,7 +50,6 @@ defmodule KmxgitWeb.Router do
       get  "/new",    SessionController, :new
       get  "/logout", SessionController, :logout
 
-      pipe_through :recaptcha
       post "/new",    SessionController, :login
     end
 
@@ -57,9 +59,12 @@ defmodule KmxgitWeb.Router do
     post "/_register", RegistrationController, :register
   end
 
-  # definitely logged in, will redirect to login page
   scope "/", KmxgitWeb do
-    pipe_through [:browser, :auth, :ensure_auth]
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/users/settings", UserSettingsController, :edit
+    put "/users/settings", UserSettingsController, :update
+    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
     scope "/_new" do
       get  "/organisation", OrganisationController, :new
@@ -142,5 +147,32 @@ defmodule KmxgitWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", KmxgitWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/users/register", UserRegistrationController, :new
+    get "/users/log_in", UserSessionController, :new
+    get "/users/reset_password", UserResetPasswordController, :new
+    post "/users/reset_password", UserResetPasswordController, :create
+    get "/users/reset_password/:token", UserResetPasswordController, :edit
+    put "/users/reset_password/:token", UserResetPasswordController, :update
+
+    pipe_through :recaptcha
+    post "/users/register", UserRegistrationController, :create
+    post "/users/log_in", UserSessionController, :create
+  end
+
+  scope "/", KmxgitWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+    get "/users/confirm", UserConfirmationController, :new
+    post "/users/confirm", UserConfirmationController, :create
+    get "/users/confirm/:token", UserConfirmationController, :edit
+    post "/users/confirm/:token", UserConfirmationController, :update
   end
 end
