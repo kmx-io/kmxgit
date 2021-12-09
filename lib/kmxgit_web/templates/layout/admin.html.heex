@@ -10,8 +10,10 @@
     <% else %>
       <%= live_title_tag "kmx git [admin]" %>
     <% end %>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/_assets/app.css")}/>
+    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/_assets/app.js")}></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="/_images/git.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/_images/git.16.png">
   </head>
   <body>
     <%= render "admin_nav.html", assigns %>
