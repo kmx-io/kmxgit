@@ -4,7 +4,6 @@ defmodule KmxgitWeb.UserController do
   alias Kmxgit.GitManager
   alias Kmxgit.Repo
   alias Kmxgit.UserManager
-  alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
 
   def edit(conn, params) do
