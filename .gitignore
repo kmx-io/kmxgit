@@ -32,7 +32,7 @@ kmxgit-*.tar
 npm-debug.log
 /assets/node_modules/
 
-/priv/git/
+/priv/git
 /.env
 
 /priv/repo/dumps/
