@@ -60,7 +60,7 @@ defmodule Kmxgit.OrganisationManager do
   end
 
   def add_user(%Organisation{} = org, login) do
-    user = UserManager.get_user_by_slug(login)
+    user = UserManager.get_user_by_login(login)
     if user do
       users = [user | org.users]
       org
@@ -73,7 +73,7 @@ defmodule Kmxgit.OrganisationManager do
   end
 
   def remove_user(%Organisation{} = org, login) do
-    user = UserManager.get_user_by_slug(login)
+    user = UserManager.get_user_by_login(login)
     if user do
       users = Enum.reject(org.users, &(&1.id == user.id))
       org

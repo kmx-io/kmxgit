@@ -9,9 +9,9 @@
     <% end %>
 
     <div class="mb-3">
-      <%= label f, :email, class: "form-label" %>
-      <%= text_input f, :email, class: "form-control", required: true %>
-      <%= error_tag f, :email %>
+      <%= label f, :login, class: "form-label" %>
+      <%= text_input f, :login, class: "form-control", required: true %>
+      <%= error_tag f, :login %>
     </div>
 
     <div class="mb-3">
@@ -20,9 +20,9 @@
       <%= error_tag f, :password %>
     </div>
 
-    <div class="mb-3">
-      <%= label f, :remember_me, "Keep me logged in for 60 days", class: "form-label" %>
-      <%= checkbox f, :remember_me, class: "form-control" %>
+    <div class="mb-3 form-check">
+      <%= checkbox f, :remember_me, class: "form-check-input" %>
+      <%= label f, :remember_me, "Keep me logged in for 60 days", class: "form-check-label" %>
     </div>
 
     <%= render "recaptcha.html", assigns %>

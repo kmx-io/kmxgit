@@ -8,6 +8,8 @@
       <%= email_input f, :email, class: "form-control", required: true %>
     </div>
 
+    <%= render "recaptcha.html", assigns %>
+
     <div>
       <%= submit gettext("Submit"), class: "btn btn-primary" %>
     </div>

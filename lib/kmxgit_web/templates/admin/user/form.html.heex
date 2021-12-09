@@ -32,18 +32,6 @@
     <%= error_tag f, :ssh_keys %>
   </div>
 
-  <div class="mb-3">
-    <%= label f, :password, class: "form-label" %>
-    <%= password_input f, :password, class: "form-control" %>
-    <%= error_tag f, :password %>
-  </div>
-
-  <div class="mb-3">
-    <%= label f, :password_confirmation, class: "form-label" %>
-    <%= password_input f, :password_confirmation, class: "form-control" %>
-    <%= error_tag f, :password_confirmation %>
-  </div>
-
   <div class="mb-3 form-check">
     <%= checkbox f, :is_admin, class: "form-check-input" %>
     <%= label f, :is_admin, class: "form-check-label" %>
@@ -56,7 +44,7 @@
     <%= error_tag f, :deploy_only %>
   </div>
 
-  <div class="form-group">
+  <div class="mb-3">
     <%= if @conn.assigns[:user] do %>
       <%= link gettext("Cancel"),
           to: Routes.admin_user_path(@conn, :show, @user),

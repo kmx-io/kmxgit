@@ -15,56 +15,79 @@ defmodule KmxgitWeb.Admin.UserController do
 
   def show(conn, params) do
     user = UserManager.get_user(params["id"])
-    show_user(conn, user)
-  end
-
-  defp show_user(conn, nil) do
-    not_found(conn)
-  end
-
-  defp show_user(conn, user) do
-    conn
-    |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
-    |> assign(:user, user)
-    |> render("show.html")
+    if user do
+      conn
+      |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
+      |> assign(:user, user)
+      |> render("show.html")
+    else
+      not_found(conn)
+    end
   end
 
   def edit(conn, params) do
     user = UserManager.get_user(params["id"])
-    edit_user(conn, user)
-  end
-
-  defp edit_user(conn, nil) do
-    not_found(conn)
-  end
-
-  defp edit_user(conn, user) do
-    changeset = UserManager.change_user(user)
-    conn
-    |> render("edit.html", user: user, changeset: changeset)
+    if user do
+      changeset = UserManager.change_user(user)
+      conn
+      |> assign(:changeset, changeset)
+      |> assign(:user, user)
+      |> render("edit.html")
+    else
+      not_found(conn)
+    end
   end
 
   def update(conn, params) do
     user = UserManager.get_user(params["id"])
-    update_user(conn, user, params)
+    if user do
+      case UserManager.admin_update_user(user, params["user"]) do
+        {:ok, user1} ->
+          case GitManager.update_auth() do
+            :ok -> nil
+            error -> IO.inspect(error)
+          end
+          conn
+          |> redirect(to: Routes.admin_user_path(conn, :show, user1))
+        {:error, changeset} ->
+          conn
+          |> assign(:changeset, changeset)
+          |> assign(:user, user)
+          |> render("edit.html")
+      end
+    else
+      not_found(conn)
+    end
   end
 
-  defp update_user(conn, nil, _params) do
-    not_found(conn)
+  def edit_password(conn, params) do
+    user = UserManager.get_user(params["user_id"])
+    if user do
+      changeset = UserManager.change_user(user)
+      conn
+      |> assign(:changeset, changeset)
+      |> assign(:user, user)
+      |> render("edit_password.html")
+    else
+      not_found(conn)
+    end
   end
 
-  defp update_user(conn, user, params) do
-    case UserManager.admin_update_user(user, params["user"]) do
-      {:ok, user1} ->
-        case GitManager.update_auth() do
-          :ok -> nil
-          error -> IO.inspect(error)
-        end
-        conn
-        |> redirect(to: Routes.admin_user_path(conn, :show, user1))
-      {:error, changeset} ->
-        conn
-        |> render("edit.html", changeset: changeset)
+  def update_password(conn, params) do
+    user = UserManager.get_user(params["user_id"])
+    if user do
+      case UserManager.admin_update_user_password(user, params["user"]) do
+        {:ok, user1} ->
+          conn
+          |> redirect(to: Routes.admin_user_path(conn, :show, user1))
+        {:error, changeset} ->
+          conn
+          |> assign(:changeset, changeset)
+          |> assign(:user, user)
+          |> render("edit_password.html")
+      end
+    else
+      not_found(conn)
     end
   end
 

@@ -25,11 +25,11 @@ defmodule Kmxgit.UserManager do
     get_user(id) || raise Ecto.NoResultsError
   end
 
-  def get_user_by_slug(slug) do
+  def get_user_by_login(login) do
     Repo.one from u in User,
       join: s in Slug,
       on: s.user_id == u.id,
-      where: fragment("lower(?)", s.slug) == ^String.downcase(slug),
+      where: fragment("lower(?)", s.slug) == ^String.downcase(login),
       limit: 1,
       preload: [:slug,
                 organisations: :slug,
@@ -37,7 +37,13 @@ defmodule Kmxgit.UserManager do
                                      user: :slug]]
   end
 
-  def get_user_by_email(email) when is_binary(email) do
+  def get_user_by_login_and_password(login, password)
+  when is_binary(login) and is_binary(password) do
+    user = get_user_by_login(login)
+    if User.valid_password?(user, password), do: user
+  end
+
+  def get_user_by_email(email) do
     Repo.one from u in User,
       where: u.email == ^email,
       limit: 1,
@@ -45,12 +51,6 @@ defmodule Kmxgit.UserManager do
                 organisations: :slug,
                 owned_repositories: [organisation: :slug,
                                      user: :slug]]
-  end
-
-  def get_user_by_email_and_password(email, password)
-  when is_binary(email) and is_binary(password) do
-    user = get_user_by_email(email) || get_user_by_slug(email)
-    if User.valid_password?(user, password), do: user
   end
 
   def register_user(attrs) do
@@ -130,7 +130,10 @@ defmodule Kmxgit.UserManager do
 
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+    user = Repo.one(query)
+    if user do
+      get_user(user.id)
+    end
   end
 
   def delete_session_token(token) do
@@ -207,6 +210,12 @@ defmodule Kmxgit.UserManager do
   def admin_update_user(%User{} = user, attrs) do
     user
     |> User.admin_changeset(attrs)
+    |> Repo.update()
+  end
+
+  def admin_update_user_password(%User{} = user, attrs) do
+    user
+    |> User.password_changeset(attrs)
     |> Repo.update()
   end
 

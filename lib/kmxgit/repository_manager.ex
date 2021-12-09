@@ -129,7 +129,7 @@ defmodule Kmxgit.RepositoryManager do
   end
 
   def add_member(%Repository{} = repo, login) do
-    user = UserManager.get_user_by_slug(login)
+    user = UserManager.get_user_by_login(login)
     if user do
       members = [user | repo.members]
       repo
@@ -142,7 +142,7 @@ defmodule Kmxgit.RepositoryManager do
   end
 
   def remove_member(%Repository{} = repo, login) do
-    user = UserManager.get_user_by_slug(login)
+    user = UserManager.get_user_by_login(login)
     if user do
       members = Enum.reject(repo.members, &(&1.id == user.id))
       repo

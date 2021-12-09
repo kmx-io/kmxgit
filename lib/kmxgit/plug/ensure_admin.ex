@@ -6,7 +6,7 @@ defmodule Kmxgit.Plug.EnsureAdmin do
 
   def call(conn, _) do
     conn
-    |> ensure_admin(Guardian.Plug.current_resource(conn))
+    |> ensure_admin(conn.assigns.current_user)
   end
 
   defp ensure_admin(conn, user = %User{is_admin: true}) do

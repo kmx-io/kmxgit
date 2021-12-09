@@ -21,16 +21,6 @@ defmodule KmxgitWeb.Router do
     plug PlugRecaptcha2, recaptcha_secret: Application.get_env(:kmxgit, :recaptcha_secret)
   end
 
-  # Our pipeline implements "maybe" authenticated. We'll use the `:ensure_auth` below for when we need to make sure someone is logged in.
-  pipeline :auth do
-    plug Kmxgit.UserManager.Pipeline
-  end
-
-# We use ensure_auth to fail if there is no one logged in
-  pipeline :ensure_auth do
-    plug Guardian.Plug.EnsureAuthenticated
-  end
-
   pipeline :admin do
     plug Kmxgit.Plug.EnsureAdmin
     plug :put_root_layout, {KmxgitWeb.LayoutView, "admin.html"}
@@ -46,17 +36,28 @@ defmodule KmxgitWeb.Router do
     get  "/_new_admin",               PageController, :new_admin
     post "/_new_admin",               PageController, :new_admin_post
 
-    scope "/_sessions" do
-      get  "/new",    SessionController, :new
-      get  "/logout", SessionController, :logout
+    delete "/users/log_out",        UserSessionController, :delete
+    get    "/users/confirm",        UserConfirmationController, :new
+    post   "/users/confirm",        UserConfirmationController, :create
+    get    "/users/confirm/:token", UserConfirmationController, :edit
+    post   "/users/confirm/:token", UserConfirmationController, :update
+  end
 
-      post "/new",    SessionController, :login
-    end
+    ## Authentication routes
 
-    get  "/_register", RegistrationController, :new
+  scope "/", KmxgitWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/users/log_in", UserSessionController, :new
+    get "/users/register", UserRegistrationController, :new
+    get "/users/reset_password", UserResetPasswordController, :new
+    get "/users/reset_password/:token", UserResetPasswordController, :edit
+    put "/users/reset_password/:token", UserResetPasswordController, :update
 
     pipe_through :recaptcha
-    post "/_register", RegistrationController, :register
+    post "/users/log_in", UserSessionController, :create
+    post "/users/register", UserRegistrationController, :create
+    post "/users/reset_password", UserResetPasswordController, :create
   end
 
   scope "/", KmxgitWeb do
@@ -122,7 +123,10 @@ defmodule KmxgitWeb.Router do
         get  "/remove_user", RepositoryController, :remove_user, as: :""
         post "/remove_user", RepositoryController, :remove_user_post, as: :""
       end
-      resources "/users", UserController
+      resources "/users", UserController do
+        get "/password/edit", UserController, :edit_password, as: :""
+        put "/password",      UserController, :update_password, as: :""
+      end
 
       import Phoenix.LiveDashboard.Router
       live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry
@@ -147,32 +151,5 @@ defmodule KmxgitWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
-  end
-
-  ## Authentication routes
-
-  scope "/", KmxgitWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
-
-    get "/users/register", UserRegistrationController, :new
-    get "/users/log_in", UserSessionController, :new
-    get "/users/reset_password", UserResetPasswordController, :new
-    post "/users/reset_password", UserResetPasswordController, :create
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
-    put "/users/reset_password/:token", UserResetPasswordController, :update
-
-    pipe_through :recaptcha
-    post "/users/register", UserRegistrationController, :create
-    post "/users/log_in", UserSessionController, :create
-  end
-
-  scope "/", KmxgitWeb do
-    pipe_through [:browser]
-
-    delete "/users/log_out", UserSessionController, :delete
-    get "/users/confirm", UserConfirmationController, :new
-    post "/users/confirm", UserConfirmationController, :create
-    get "/users/confirm/:token", UserConfirmationController, :edit
-    post "/users/confirm/:token", UserConfirmationController, :update
   end
 end

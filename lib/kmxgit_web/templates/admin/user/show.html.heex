@@ -60,6 +60,10 @@
       to: Routes.admin_user_path(@conn, :edit, @user),
       class: "btn btn-primary" %>
 
+  <%= link gettext("Edit password"),
+      to: Routes.admin_user__path(@conn, :edit_password, @user),
+      class: "btn btn-primary" %>
+
   <%= link gettext("Show"),
       to: Routes.slug_path(@conn, :show, @user.slug.slug),
       class: "btn btn-primary" %>
