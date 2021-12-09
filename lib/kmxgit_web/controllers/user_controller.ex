@@ -10,10 +10,14 @@ defmodule KmxgitWeb.UserController do
   def edit(conn, params) do
     current_user = conn.assigns.current_user
     if params["login"] == current_user.slug.slug do
-      changeset = User.changeset(current_user)
+      changeset = UserManager.change_user(current_user)
+      email_changeset = UserManager.change_user_email(current_user)
+      password_changeset = UserManager.change_user_password(current_user)
       conn
       |> assign(:changeset, changeset)
+      |> assign(:email_changeset, email_changeset)
       |> assign(:page_title, gettext("Edit user %{login}", login: current_user.slug.slug))
+      |> assign(:password_changeset, password_changeset)
       |> render("edit.html")
     else
       not_found(conn)
