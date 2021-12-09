@@ -39,6 +39,7 @@ defmodule Kmxgit.MixProject do
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:floki, ">= 0.30.0", only: :test},
+      {:gen_smtp, "~> 1.1"},
       {:gettext, "~> 0.18"},
       {:guardian, "~> 2.0"},
       {:jason, "~> 1.2"},
