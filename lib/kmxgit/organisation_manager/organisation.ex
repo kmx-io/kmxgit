@@ -32,4 +32,9 @@ defmodule Kmxgit.OrganisationManager.Organisation do
       u.id == user.id
     end)
   end
+
+  def owned_repositories(org) do
+    org.owned_repositories
+    |> Enum.sort_by(&Repository.full_slug/1)
+  end
 end

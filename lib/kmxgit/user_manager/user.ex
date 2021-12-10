@@ -191,4 +191,9 @@ defmodule Kmxgit.UserManager.User do
     end)
     |> Enum.join("\n")
   end
+
+  def owned_repositories(user) do
+    user.owned_repositories
+    |> Enum.sort_by(&Repository.full_slug/1)
+  end
 end

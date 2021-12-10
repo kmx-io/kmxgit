@@ -2,8 +2,8 @@ defmodule KmxgitWeb.SlugController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.RepositoryManager
-  alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
+  alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
   alias KmxgitWeb.OrganisationView
   alias KmxgitWeb.UserView
@@ -17,7 +17,7 @@ defmodule KmxgitWeb.SlugController do
       if user do
         conn
         |> assign(:contributor_repos, RepositoryManager.list_contributor_repositories(user))
-        |> assign(:owned_repos, user.owned_repositories |> Enum.sort_by(&Repository.full_slug/1))
+        |> assign(:owned_repos, User.owned_repositories(user))
         |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
         |> assign(:user, user)
         |> put_view(UserView)
