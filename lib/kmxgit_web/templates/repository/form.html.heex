@@ -17,11 +17,13 @@
     <%= error_tag f, :description %>
   </div>
 
-  <div class="mb-3">
-    <%= label f, :deploy_keys, class: "form-label" %>
-    <%= textarea f, :deploy_keys, class: "form-control" %>
-    <%= error_tag f, :deploy_keys %>
-  </div>
+  <%= if @conn.assigns[:current_repository] do %>
+    <div class="mb-3">
+      <%= label f, :deploy_keys, class: "form-label" %>
+      <%= textarea f, :deploy_keys, class: "form-control" %>
+      <%= error_tag f, :deploy_keys %>
+    </div>
+  <% end %>
 
   <%= if @conn.assigns[:current_repository] do %>
     <div class="mb-3">
