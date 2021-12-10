@@ -87,6 +87,7 @@ defmodule KmxgitWeb.RepositoryController do
         conn
         |> assign(:action, Routes.repository_path(conn, :create, owner.slug.slug))
         |> assign(:changeset, changeset)
+        |> assign_current_organisation(owner)
         |> assign(:owner, owner)
         |> render("new.html")
     end
@@ -426,8 +427,8 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp assign_current_organisation(conn, nil), do: conn
-  defp assign_current_organisation(conn, %Ecto.Association.NotLoaded{}), do: conn
-  defp assign_current_organisation(conn, org) do
+  defp assign_current_organisation(conn, %User{}), do: conn
+  defp assign_current_organisation(conn, org = %Organisation{}) do
     assign(conn, :current_organisation, org)
   end
 
