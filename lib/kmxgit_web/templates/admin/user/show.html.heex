@@ -37,6 +37,18 @@
       </td>
     </tr>
     <tr>
+      <th><%= gettext "Repositories" %></th>
+      <td>
+        <ul>
+          <%= for repo <- @repos do %>
+            <li>
+              <%= link(Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo), class: "repo") %>
+            </li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
+    <tr>
       <th><%= gettext "Admin" %></th>
       <td><%= @user.is_admin %></td>
     </tr>

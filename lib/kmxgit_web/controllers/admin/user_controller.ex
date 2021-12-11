@@ -2,7 +2,9 @@ defmodule KmxgitWeb.Admin.UserController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.GitManager
+  alias Kmxgit.RepositoryManager
   alias Kmxgit.UserManager
+  alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
 
   def index(conn, _params) do
@@ -16,8 +18,12 @@ defmodule KmxgitWeb.Admin.UserController do
   def show(conn, params) do
     user = UserManager.get_user(params["id"])
     if user do
+      owned_repos = User.owned_repositories(user)
+      contributor_repos = RepositoryManager.list_contributor_repositories(user)
+      repos = owned_repos ++ contributor_repos
       conn
       |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
+      |> assign(:repos, repos)
       |> assign(:user, user)
       |> render("show.html")
     else

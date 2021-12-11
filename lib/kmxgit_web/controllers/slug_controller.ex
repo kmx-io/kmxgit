@@ -15,9 +15,11 @@ defmodule KmxgitWeb.SlugController do
     else
       user = slug.user
       if user do
+        owned_repos = User.owned_repositories(user)
+        contributor_repos = RepositoryManager.list_contributor_repositories(user)
+        repos = owned_repos ++ contributor_repos
         conn
-        |> assign(:contributor_repos, RepositoryManager.list_contributor_repositories(user))
-        |> assign(:owned_repos, User.owned_repositories(user))
+        |> assign(:repos, repos)
         |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
         |> assign(:user, user)
         |> put_view(UserView)

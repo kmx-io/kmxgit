@@ -20,12 +20,7 @@
       <hr/>
       <h2><%= gettext "Repositories" %></h2>
       <ul>
-        <%= for repo <- @owned_repos do %>
-          <li>
-            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)) %>
-          </li>
-        <% end %>
-        <%= for repo <- @contributor_repos do %>
+        <%= for repo <- @repos do %>
           <li>
             <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)) %>
           </li>
