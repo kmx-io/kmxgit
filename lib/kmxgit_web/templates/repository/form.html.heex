@@ -11,6 +11,12 @@
     <%= error_tag f, :slug %>
   </div>
 
+  <div class="mb-3 form-check">
+    <%= checkbox f, :public_access, class: "form-check-input" %>
+    <%= label f, :public_access, class: "form-check-label" %>
+    <%= error_tag f, :public_access %>
+  </div>
+
   <div class="mb-3">
     <%= label f, :description, class: "form-label" %>
     <%= textarea f, :description, class: "form-control" %>

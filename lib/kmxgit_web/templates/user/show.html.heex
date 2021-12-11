@@ -4,7 +4,7 @@
       <h1><%= @user.slug.slug %></h1>
     </div>
     <div class="col col-12 col-sm-4">
-      <%= if @user.id == @current_user.id do %>
+      <%= if @current_user && @user.id == @current_user.id do %>
         <%= link gettext("New repository"),
             to: Routes.repository_path(@conn, :new, @user.slug.slug),
             class: "btn btn-primary" %>
@@ -63,7 +63,7 @@
         <tr>
           <th>
             <%= gettext "Organisations" %><br/>
-            <%= if @user.id == @current_user.id do %>
+            <%= if @current_user && @user.id == @current_user.id do %>
               <%= link("+", to: Routes.organisation_path(@conn, :new), class: "btn btn-primary btn-sm") %>
             <% end %>
           </th>

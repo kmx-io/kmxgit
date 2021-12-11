@@ -95,12 +95,12 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   def show(conn, params) do
-    current_user = conn.assigns.current_user
+    current_user = conn.assigns[:current_user]
     chunks = params["slug"] |> chunk_path()
     slug = chunks |> Enum.at(0) |> Enum.join("/")
     {branch, path} = get_branch_and_path(chunks)
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo && Repository.member?(repo, current_user) do
+    if repo && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
       git = setup_git(repo, branch || "master", path, conn)

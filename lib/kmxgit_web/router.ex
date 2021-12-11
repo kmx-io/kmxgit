@@ -36,11 +36,11 @@ defmodule KmxgitWeb.Router do
     get  "/_new_admin",               PageController, :new_admin
     post "/_new_admin",               PageController, :new_admin_post
 
-    delete "/users/log_out",        UserSessionController, :delete
-    get    "/users/confirm",        UserConfirmationController, :new
-    post   "/users/confirm",        UserConfirmationController, :create
-    get    "/users/confirm/:token", UserConfirmationController, :edit
-    post   "/users/confirm/:token", UserConfirmationController, :update
+    delete "/_log_out",        UserSessionController, :delete
+    get    "/_confirm",        UserConfirmationController, :new
+    post   "/_confirm",        UserConfirmationController, :create
+    get    "/_confirm/:token", UserConfirmationController, :edit
+    post   "/_confirm/:token", UserConfirmationController, :update
   end
 
     ## Authentication routes
@@ -131,7 +131,10 @@ defmodule KmxgitWeb.Router do
       import Phoenix.LiveDashboard.Router
       live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry
     end
+  end
 
+  scope "/", KmxgitWeb do
+    pipe_through [:browser]
     get "/:slug", SlugController, :show
     get "/:owner/*slug", RepositoryController, :show
   end

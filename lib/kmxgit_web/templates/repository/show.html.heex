@@ -14,7 +14,9 @@
             to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), Repository.splat(@repo)),
             class: "btn btn-primary" %>
       <% end %>
-      <%= link gettext("Fork"), to: Routes.repository_path(@conn, :fork, Repository.owner_slug(@repo), Repository.splat(@repo)), class: "btn btn-primary" %>
+      <%= if @current_user do %>
+        <%= link gettext("Fork"), to: Routes.repository_path(@conn, :fork, Repository.owner_slug(@repo), Repository.splat(@repo)), class: "btn btn-primary" %>
+      <% end %>
     </div>
   </div>
 
@@ -54,6 +56,16 @@
         <tr>
           <th><%= gettext "SSH" %></th>
           <td><%= Repository.ssh_url(@repo) %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Public access ?" %></th>
+          <td>
+            <%= if @repo.public_access do %>
+              <%= gettext "public" %>
+            <% else %>
+              <%= gettext "private" %>
+            <% end %>
+          </td>
         </tr>
         <tr>
           <th><%= gettext "Description" %></th>
