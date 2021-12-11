@@ -29,6 +29,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   def owner_changeset(repository, attrs, owner, forked_from \\ nil)
   def owner_changeset(repository, attrs, owner = %Organisation{}, forked_from) do
     repository
+    |> cast(%{}, [])
     |> put_change(:organisation_id, owner.id)
     |> put_change(:user_id, nil)
     |> put_assoc(:organisation, owner)
@@ -38,6 +39,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   end
   def owner_changeset(repository, attrs, owner = %User{}, forked_from) do
     repository
+    |> cast(%{}, [])
     |> put_change(:organisation_id, nil)
     |> put_change(:user_id, owner.id)
     |> put_assoc(:organisation, nil)
