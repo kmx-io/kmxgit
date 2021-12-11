@@ -183,10 +183,11 @@ defmodule Kmxgit.UserManager.User do
     (user.ssh_keys || "")
     |> String.split("\n")
     |> Enum.map(fn line ->
-      if Regex.match?(~r/^[ \t]*ssh-/, line) do
-        "environment=\"GIT_AUTH_ID=#{user.slug.slug}\" #{line}"
+      line1 = String.replace(line, "\r", "")
+      if Regex.match?(~r/^[ \t]*ssh-/, line1) do
+        "environment=\"GIT_AUTH_ID=#{user.slug.slug}\" #{line1}"
       else
-        line
+        line1
       end
     end)
     |> Enum.join("\n")

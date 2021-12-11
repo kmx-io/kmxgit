@@ -184,10 +184,11 @@ defmodule Kmxgit.RepositoryManager.Repository do
     (repo.deploy_keys || "")
     |> String.split("\n")
     |> Enum.map(fn line ->
-      if Regex.match?(~r/^[ \t]*ssh-/, line) do
-        "environment=\"GIT_AUTH_ID=#{deploy_user(repo)}\" #{line}"
+      line1 = String.replace(line, "\r", "")
+      if Regex.match?(~r/^[ \t]*ssh-/, line1) do
+        "environment=\"GIT_AUTH_ID=#{deploy_user(repo)}\" #{line1}"
       else
-        line
+        line1
       end
     end)
     |> Enum.join("\n")
