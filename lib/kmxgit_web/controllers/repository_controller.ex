@@ -6,6 +6,7 @@ defmodule KmxgitWeb.RepositoryController do
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
+  alias Kmxgit.UserManager.User
   alias Kmxgit.Repo
 
   def new(conn, params) do
