@@ -104,27 +104,25 @@ defmodule KmxgitWeb.RepositoryController do
       org = repo.organisation
       user = repo.user
       git = setup_git(repo, branch || "master", path, conn)
-      first_branch = Enum.at(git.branches, 0)
-      if !branch && first_branch do
-        {b, _} = first_branch
+      first_branch = case Enum.at(git.branches, 0) do
+                       {first_branch, _} -> first_branch
+                       nil -> nil
+                     end
+      branch1 = branch || first_branch
+      if git.valid do
         conn
-        |> redirect(to: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", b]))
+        |> assign(:branch, branch1)
+        |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", branch1]))
+        |> assign_current_organisation(org)
+        |> assign(:current_repository, repo)
+        |> assign(:git, git)
+        |> assign(:repo, repo)
+        |> assign(:members, Repository.members(repo))
+        |> assign(:owner, org || user)
+        |> assign(:path, path)
+        |> render("show.html")
       else
-        if git.valid do
-          conn
-          |> assign(:branch, branch)
-          |> assign(:branch_url, if git.branches != [] do branch_url(git.branches, branch) end)
-          |> assign_current_organisation(org)
-          |> assign(:current_repository, repo)
-          |> assign(:git, git)
-          |> assign(:repo, repo)
-          |> assign(:members, Repository.members(repo))
-          |> assign(:owner, org || user)
-          |> assign(:path, path)
-          |> render("show.html")
-        else
-          not_found(conn)
-        end
+        not_found(conn)
       end
     else
       not_found(conn)
@@ -173,14 +171,6 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_files(repo, branch, path, conn)
     |> git_put_content(repo)
     |> git_put_readme(repo)
-  end
-
-  defp branch_url([{b, url} | rest], branch) do
-    if b == branch do
-      url
-    else
-      branch_url(rest, branch)
-    end
   end
 
   defp git_put_branches(git = %{valid: true}, repo, conn) do
