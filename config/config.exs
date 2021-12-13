@@ -8,10 +8,10 @@
 import Config
 
 config :kmxgit,
-  recaptcha_site_key: System.get_env("RECAPTCHA_SITE_KEY"),
+  ecto_repos: [Kmxgit.Repo],
+  git_ssh_url: "git@git.kmx.io",
   recaptcha_secret: System.get_env("RECAPTCHA_SECRET"),
-  ssh_url: "git@git.kmx.io",
-  ecto_repos: [Kmxgit.Repo]
+  recaptcha_site_key: System.get_env("RECAPTCHA_SITE_KEY")
 
 # Configures the endpoint
 config :kmxgit, KmxgitWeb.Endpoint,

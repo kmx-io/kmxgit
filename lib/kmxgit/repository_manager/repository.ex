@@ -115,8 +115,12 @@ defmodule Kmxgit.RepositoryManager.Repository do
   end
 
   def ssh_url(repo) do
-    ssh_root = Application.get_env(:kmxgit, :ssh_url)
+    ssh_root = Application.get_env(:kmxgit, :git_ssh_url)
     "#{ssh_root}:#{full_slug(repo)}.git"
+  end
+  def http_url(repo) do
+    http_root = KmxgitWeb.Endpoint.url()
+    "#{http_root}/#{full_slug(repo)}.git"
   end
 
   def splat(repo, rest \\ []) do

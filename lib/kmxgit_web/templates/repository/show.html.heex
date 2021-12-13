@@ -54,7 +54,11 @@
       <h2><%= gettext "Properties" %></h2>
       <table class="table admin-properties">
         <tr>
-          <th><%= gettext "SSH" %></th>
+          <th><%= gettext "Git HTTP" %></th>
+          <td><%= Repository.http_url(@repo) %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Git SSH" %></th>
           <td><%= Repository.ssh_url(@repo) %></td>
         </tr>
         <tr>

@@ -24,6 +24,14 @@
       <td><%= link Repository.full_slug(@repo), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo)) %></td>
     </tr>
     <tr>
+      <th><%= gettext "Git HTTP" %></th>
+      <td><%= Repository.http_url(@repo) %></td>
+    </tr>
+    <tr>
+      <th><%= gettext "Git SSH" %></th>
+      <td><%= Repository.ssh_url(@repo) %></td>
+    </tr>
+    <tr>
       <th><%= gettext "Public access ?" %></th>
       <td>
         <%= if @repo.public_access do %>
