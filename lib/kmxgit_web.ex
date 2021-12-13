@@ -32,6 +32,13 @@ defmodule KmxgitWeb do
         |> put_view(ErrorView)
         |> render(:"404")
       end
+
+      def forbidden(conn, _params \\ %{}) do
+        conn
+        |> put_status(403)
+        |> put_view(ErrorView)
+        |> render(:"403")
+      end
     end
   end
 

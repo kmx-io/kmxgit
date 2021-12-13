@@ -104,7 +104,7 @@ defmodule KmxgitWeb.Admin.RepositoryController do
         end) do
       {:ok, repo1} ->
         case GitManager.update_auth() do
-          :ok -> nil
+          :ok -> :ok = GitManager.public_access(Repository.full_slug(repo1), repo1.public_access)
           error -> IO.inspect(error)
         end
         conn

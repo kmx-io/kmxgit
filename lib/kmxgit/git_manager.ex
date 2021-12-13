@@ -52,7 +52,6 @@ defmodule Kmxgit.GitManager do
     dir = git_dir(repo)
     path1 = if path == "" do "." else path end
     {out, status} = System.cmd("git", ["-C", dir, "ls-tree", tree, path1], stderr_to_stdout: true)
-    IO.inspect {out, status}
     case status do
       0 ->
         list = out
@@ -162,5 +161,20 @@ defmodule Kmxgit.GitManager do
         _ -> {:error, out}
       end
     end
+  end
+
+  def public_access(repo, true) do
+    dir = git_dir(repo)
+    if ! File.exists?(export = "#{dir}/git-daemon-export-ok") do
+      File.write!(export, "")
+    end
+    :ok
+  end
+  def public_access(repo, false) do
+    dir = git_dir(repo)
+    if File.exists?(export = "#{dir}/git-daemon-export-ok") do
+      File.rm!(export)
+    end
+    :ok
   end
 end

@@ -119,8 +119,12 @@ defmodule Kmxgit.RepositoryManager.Repository do
     "#{ssh_root}:#{full_slug(repo)}.git"
   end
 
-  def splat(repo) do
-    String.split(repo.slug, "/")
+  def splat(repo, rest \\ []) do
+    String.split(repo.slug, "/") ++ rest
+  end
+
+  def git_splat(repo, rest \\ []) do
+    String.split("#{repo.slug}.git", "/") ++ rest
   end
 
   def owners(repo) do
