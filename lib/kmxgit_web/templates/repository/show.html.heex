@@ -53,10 +53,12 @@
       <hr/>
       <h2><%= gettext "Properties" %></h2>
       <table class="table admin-properties">
-        <tr>
-          <th><%= gettext "Git HTTP" %></th>
-          <td><%= Repository.http_url(@repo) %></td>
-        </tr>
+        <%= if @repo.public_access do %>
+          <tr>
+            <th><%= gettext "Git HTTP" %></th>
+            <td><%= Repository.http_url(@repo) %></td>
+          </tr>
+        <% end %>
         <tr>
           <th><%= gettext "Git SSH" %></th>
           <td><%= Repository.ssh_url(@repo) %></td>
