@@ -112,7 +112,7 @@ defmodule KmxgitWeb.RepositoryController do
       if git.valid do
         conn
         |> assign(:branch, branch1)
-        |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", branch1]))
+        |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch1 do ["_branch", branch1] else [] end)))
         |> assign_current_organisation(org)
         |> assign(:current_repository, repo)
         |> assign(:git, git)
