@@ -15,6 +15,27 @@ defmodule KmxgitWeb.Admin.UserController do
     |> render("index.html")
   end
 
+  def new(conn, params) do
+    changeset = UserManager.change_user()
+    conn
+    |> assign(:action, Routes.admin_user_path(conn, :create))
+    |> assign(:changeset, changeset)
+    |> render("new.html")
+  end
+
+  def create(conn, params) do
+    case UserManager.create_user(params) do
+      {:ok, user} ->
+        conn
+        |> redirect(to: Routes.admin_user_path(conn, :show, user))
+      {:error, changeset} ->
+        conn
+        |> assign(:action, Routes.admin_user_path(conn, :create))
+        |> assign(:changeset, changeset)
+        |> render("new.html")
+    end
+  end
+
   def show(conn, params) do
     user = UserManager.get_user(params["id"])
     if user do
@@ -22,7 +43,7 @@ defmodule KmxgitWeb.Admin.UserController do
       contributor_repos = RepositoryManager.list_contributor_repositories(user)
       repos = owned_repos ++ contributor_repos
       conn
-      |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
+      |> assign(:page_title, gettext("User %{login}", login: User.login(user)))
       |> assign(:repos, repos)
       |> assign(:user, user)
       |> render("show.html")

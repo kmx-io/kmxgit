@@ -47,6 +47,7 @@ defmodule Kmxgit.UserManager.User do
     |> cast(attrs, [:email, :password])
     |> validate_email()
     |> validate_password(opts)
+    |> common_changeset()
   end
 
   defp validate_email(changeset) do
@@ -196,5 +197,17 @@ defmodule Kmxgit.UserManager.User do
   def owned_repositories(user) do
     user.owned_repositories
     |> Enum.sort_by(&Repository.full_slug/1)
+  end
+
+  def login(user) do
+    if user do
+      if user.slug do
+        user.slug.slug
+      else
+        nil
+      end
+    else
+      nil
+    end
   end
 end

@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1>User <%= @user.slug.slug %></h1>
+  <h1>User <%= User.login(@user) %></h1>
 
   <table class="table admin-properties">
     <tr>
@@ -16,7 +16,7 @@
     </tr>
     <tr>
       <th><%= gettext "Login" %></th>
-      <td><%= link @user.slug.slug, to: Routes.slug_path(@conn, :show, @user.slug.slug) %></td>
+      <td><%= User.login(@user) %></td>
     </tr>
     <tr>
       <th><%= gettext "Description" %></th>
@@ -77,6 +77,6 @@
       class: "btn btn-primary" %>
 
   <%= link gettext("Show"),
-      to: Routes.slug_path(@conn, :show, @user.slug.slug),
+      to: Routes.slug_path(@conn, :show, User.login(@user) || ""),
       class: "btn btn-primary" %>
 </div>
