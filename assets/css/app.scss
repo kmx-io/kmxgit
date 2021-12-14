@@ -42,6 +42,12 @@ pre.admin_ssh_keys {
     margin: 1em;
     width: 94%;
 }
+pre code {
+    display: block;
+    border: solid 1px #ccc;
+    padding: 1em;
+    overflow: scroll;
+}
 
 .invalid-feedback {
     display: inherit;
