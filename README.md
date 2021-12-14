@@ -1,9 +1,16 @@
 # kmxgit
 
-[kmxgit](https://git.kmx.io/kmx.io/kmxgit) is a Git server written in C
-and Elixir.
+[kmxgit](https://git.kmx.io/kmx.io/kmxgit) is a web interface and a Git
+server written in C and Elixir / Phoenix.
+
+kmxgit started as a frontend for
+[git-auth](https://git.kmx.io/kmx.io/git-auth).
+
+Now public repositories are also supported.
+
 
 ## Installation
+
 
 ### git-auth installation
 
@@ -27,6 +34,7 @@ To setup public access repositories on HTTP or HTTPS you need to setup
 your web server to serve certain requests with
 [git-http-backend](https://git-scm.com/docs/git-http-backend).
 
+
 #### Nginx setup
 
 First you need to setup
@@ -42,6 +50,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
     fastcgi_param PATH_INFO        $1;        
 }
 ```
+
 
 # Copyright
 
