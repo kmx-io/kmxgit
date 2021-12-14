@@ -1,5 +1,18 @@
 <div class="container-fluid">
-  <code>
-    "Hello, world !"
-  </code>
+  <p>
+    <code>
+      "Hello, world !"
+    </code>
+  </p>
+  <p>
+    <%= gettext "Welcome to this instance of" %>
+    <%= link "kmxgit", to: "https://git.kmx.io/kmx.io/kmxgit" %>
+    .
+  </p>
+  <p>
+    <%= gettext "You can register and create public and private Git repositories." %>
+  </p>
+
+  <h3>SSH keys fingerprint</h3>
+  <pre><%= render("ssh_keys_fingerprint.txt") %></pre>
 </div>
