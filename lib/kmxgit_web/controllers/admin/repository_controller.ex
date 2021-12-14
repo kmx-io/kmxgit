@@ -50,13 +50,21 @@ defmodule KmxgitWeb.Admin.RepositoryController do
   defp create_repo(conn, owner, params) do
     case Repo.transaction(fn ->
           case RepositoryManager.create_repository(owner, params) do
-            {:ok, repo} -> repo
+            {:ok, repo} ->
+              case GitManager.create(Repository.full_slug(repo)) do
+                {:ok, _} -> repo
+                {:error, e} ->
+                  repo
+                  |> Repository.changeset(params)
+                  |> Ecto.Changeset.add_error(:git, e)
+                  |> Repo.rollback
+              end
             {:error, changeset} -> Repo.rollback changeset
           end
         end) do
       {:ok, repo} ->
         case GitManager.update_auth() do
-          :ok -> nil
+          :ok -> :ok = GitManager.public_access(Repository.full_slug(repo), repo.public_access)
           error -> IO.inspect(error)
         end
         conn

@@ -68,7 +68,7 @@ defmodule KmxgitWeb.RepositoryController do
                 {:ok, _} -> repo
                 {:error, e} ->
                   repo
-                  |> Repository.changeset(%{})
+                  |> Repository.changeset(params)
                   |> Ecto.Changeset.add_error(:git, e)
                   |> Repo.rollback
               end
@@ -78,7 +78,7 @@ defmodule KmxgitWeb.RepositoryController do
         end) do
       {:ok, repo} ->
         case GitManager.update_auth() do
-          :ok -> nil
+          :ok -> :ok = GitManager.public_access(Repository.full_slug(repo), repo.public_access)
           error -> IO.inspect(error)
         end
         conn
