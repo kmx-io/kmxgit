@@ -10,6 +10,7 @@ import Config
 config :kmxgit,
   ecto_repos: [Kmxgit.Repo],
   git_ssh_url: "git@git.kmx.io",
+  mail_from: "git@kmx.io",
   recaptcha_secret: System.get_env("RECAPTCHA_SECRET"),
   recaptcha_site_key: System.get_env("RECAPTCHA_SITE_KEY")
 
