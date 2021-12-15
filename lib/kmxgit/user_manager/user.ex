@@ -18,7 +18,7 @@ defmodule Kmxgit.UserManager.User do
     has_many :owned_repositories, Repository
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
-    #many_to_many :repositories, Repository, join_through: "users_repositories"
+    many_to_many :repositories, Repository, join_through: "users_repositories", on_delete: :delete_all
     has_one :slug, Slug, on_delete: :delete_all
     field :ssh_keys, :string
     many_to_many :organisations, Organisation, join_through: "users_organisations", on_delete: :delete_all
@@ -168,9 +168,8 @@ defmodule Kmxgit.UserManager.User do
     changeset
     |> cast_assoc(:slug)
     |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :slug])
-    |> validate_format(:email, ~r/^[-_+.0-9A-Za-z]+@([-_0-9A-Za-z]+[.])+[A-Za-z]+$/)
+    |> validate_email()
     |> Markdown.validate_markdown(:description)
-    |> unique_constraint(:email)
     |> foreign_key_constraint(:owned_repositories, name: :repositories_user_id_fkey)
   end
 
