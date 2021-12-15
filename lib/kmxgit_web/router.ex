@@ -48,24 +48,24 @@ defmodule KmxgitWeb.Router do
   scope "/", KmxgitWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    get "/users/log_in", UserSessionController, :new
-    get "/users/register", UserRegistrationController, :new
-    get "/users/reset_password", UserResetPasswordController, :new
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
-    put "/users/reset_password/:token", UserResetPasswordController, :update
+    get "/_log_in", UserSessionController, :new
+    get "/_register", UserRegistrationController, :new
+    get "/_reset_password", UserResetPasswordController, :new
+    get "/_reset_password/:token", UserResetPasswordController, :edit
+    put "/_reset_password/:token", UserResetPasswordController, :update
 
     pipe_through :recaptcha
-    post "/users/log_in", UserSessionController, :create
-    post "/users/register", UserRegistrationController, :create
-    post "/users/reset_password", UserResetPasswordController, :create
+    post "/_log_in", UserSessionController, :create
+    post "/_register", UserRegistrationController, :create
+    post "/_reset_password", UserResetPasswordController, :create
   end
 
   scope "/", KmxgitWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    get "/_settings", UserSettingsController, :edit
+    put "/_settings", UserSettingsController, :update
+    get "/_settings/confirm_email/:token", UserSettingsController, :confirm_email
 
     scope "/_new" do
       get  "/organisation", OrganisationController, :new
@@ -133,6 +133,18 @@ defmodule KmxgitWeb.Router do
     end
   end
 
+  # Enables the Swoosh mailbox preview in development.
+  #
+  # Note that preview only shows emails that were sent by the same
+  # node running the Phoenix server.
+  if Mix.env() == :dev do
+    scope "/_dev" do
+      pipe_through :browser
+
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
   scope "/", KmxgitWeb do
     pipe_through [:browser]
     get "/:slug", SlugController, :show
@@ -143,16 +155,4 @@ defmodule KmxgitWeb.Router do
   # scope "/api", KmxgitWeb do
   #   pipe_through :api
   # end
-
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
-  if Mix.env() == :dev do
-    scope "/dev" do
-      pipe_through :browser
-
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
-    end
-  end
 end
