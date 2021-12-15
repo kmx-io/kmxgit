@@ -81,6 +81,7 @@ defmodule KmxgitWeb.Admin.UserController do
           conn
           |> redirect(to: Routes.admin_user_path(conn, :show, user1))
         {:error, changeset} ->
+          IO.inspect(changeset)
           conn
           |> assign(:changeset, changeset)
           |> assign(:user, user)

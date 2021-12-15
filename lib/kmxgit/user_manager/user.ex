@@ -59,6 +59,16 @@ defmodule Kmxgit.UserManager.User do
     |> unique_constraint(:email)
   end
 
+  defp maybe_validate_password(changeset, opts) do
+    p = changeset.changes[:password]
+    if p && p != "" do
+      changeset
+      |> validate_password(opts)
+    else
+      changeset
+    end
+  end
+
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
@@ -174,7 +184,7 @@ defmodule Kmxgit.UserManager.User do
     user
     |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :ssh_keys])
     |> validate_email()
-    |> validate_password(opts)
+    |> maybe_validate_password(opts)
     |> common_changeset()
   end
 
