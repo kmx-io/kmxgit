@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <h1><%= gettext "Create user" %></h1>
+
+  <.form let={f} for={@changeset} action={@action}>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= label f, :name, class: "form-label" %>
+      <%= text_input f, :name, class: "form-control", required: true %>
+      <%= error_tag f, :name %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :email, class: "form-label" %>
+      <%= text_input f, :email, class: "form-control", required: true %>
+      <%= error_tag f, :email %>
+    </div>
+
+    <%= inputs_for f, :slug, fn ff -> %>
+      <div class="mb-3">
+        <%= label ff, :slug, gettext("Login"), class: "form-label" %>
+        <%= text_input ff, :slug, class: "form-control", required: true %>
+        <%= error_tag ff, :slug %>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= label f, :description, class: "form-label" %>
+      <%= textarea f, :description, class: "form-control" %>
+      <%= error_tag f, :description %>
+    </div>
+
+    <div class="mb-3">
+      <%= label f, :ssh_keys, gettext("SSH keys"), class: "form-label" %>
+      <%= textarea f, :ssh_keys, class: "form-control" %>
+      <%= error_tag f, :ssh_keys %>
+    </div>
+
+    <div class="mb-3 form-check">
+      <%= checkbox f, :is_admin, class: "form-check-input" %>
+      <%= label f, :is_admin, class: "form-check-label" %>
+      <%= error_tag f, :is_admin %>
+    </div>
+
+    <div class="mb-3 form-check">
+      <%= checkbox f, :deploy_only, class: "form-check-input" %>
+      <%= label f, :deploy_only, class: "form-check-label" %>
+      <%= error_tag f, :deploy_only %>
+    </div>
+
+    <div class="mb-3">
+      <%= submit gettext("Submit"), class: "btn btn-primary" %>
+    </div>
+  </.form>
+</div>

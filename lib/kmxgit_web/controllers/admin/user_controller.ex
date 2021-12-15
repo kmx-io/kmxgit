@@ -15,7 +15,7 @@ defmodule KmxgitWeb.Admin.UserController do
     |> render("index.html")
   end
 
-  def new(conn, params) do
+  def new(conn, _params) do
     changeset = UserManager.change_user()
     conn
     |> assign(:action, Routes.admin_user_path(conn, :create))
@@ -24,11 +24,15 @@ defmodule KmxgitWeb.Admin.UserController do
   end
 
   def create(conn, params) do
-    case UserManager.create_user(params) do
+    pw = :crypto.strong_rand_bytes(16) |> Base.url_encode64()
+    pw = "Az0!#{pw}"
+    user_params = Map.merge(params["user"], %{"password" => pw})
+    case UserManager.admin_create_user(user_params) do
       {:ok, user} ->
         conn
         |> redirect(to: Routes.admin_user_path(conn, :show, user))
       {:error, changeset} ->
+        IO.inspect changeset
         conn
         |> assign(:action, Routes.admin_user_path(conn, :create))
         |> assign(:changeset, changeset)

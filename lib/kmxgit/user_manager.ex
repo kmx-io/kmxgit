@@ -225,7 +225,7 @@ defmodule Kmxgit.UserManager do
     |> Repo.delete()
   end
 
-  def change_user(%User{} = user) do
+  def change_user(%User{} = user \\ %User{}) do
     User.changeset(user, %{})
   end
 
