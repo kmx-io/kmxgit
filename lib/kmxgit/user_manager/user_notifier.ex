@@ -8,7 +8,7 @@ defmodule Kmxgit.UserManager.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"kmxgit", Application.fetch_env(:kmxgit, :mail_from)})
+      |> from({"kmxgit", Application.fetch_env!(:kmxgit, :mail_from)})
       |> subject(subject)
       |> text_body(body)
 
