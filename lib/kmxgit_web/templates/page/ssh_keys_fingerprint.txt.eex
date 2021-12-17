@@ -1,4 +1,4 @@
-1024 SHA256:Wsjb8ilMFobuNdUrlCAqOv2sPlyHDlzdw0C3CYZRE6g root@image.localhost (DSA)
- 256 SHA256:dQkO4HEBZrMkV3uSnMMnVMRxjuCJLjp5ztUk27ycIKQ root@image.localhost (ECDSA)
- 256 SHA256:jy8iHeeKNeBpWSS2t1q5UUH/ia6u7El/xzKXFZy58Ck root@image.localhost (ED25519)
-3072 SHA256:MOVUW9rek+QUo6SORB5xEWFHwtmGNHgH4eOSyPIuPwo root@image.localhost (RSA)
+1024 SHA256:r57ekxPcF9yJ0WpHOUpAFjm07xTpPjRSGlogZ0rYUCw root@git.kmx.io (DSA)
+ 256 SHA256:18YiaGgFCjxudAXYNqwgTsc18+8VJKhANWY/z1M9QII root@git.kmx.io (ECDSA)
+ 256 SHA256:YIvGEjpZv0WTbi82w9YcWlD0wjrNehdEW/Fm8VGysxI root@git.kmx.io (ED25519)
+3072 SHA256:nCIvnd0P1WO6UktpUlW1txA74kmIojRSn22OUh1uiNs root@git.kmx.io (RSA)
