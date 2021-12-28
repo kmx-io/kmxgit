@@ -205,13 +205,13 @@ defmodule Kmxgit.UserManager do
   end
 
   def update_user(%User{} = user, attrs) do
-    old_login = user.login
+    old_login = user.slug.slug
     case user
          |> User.changeset(attrs)
          |> Repo.update() do
       {:ok, u} ->
-        if u.login != old_login do
-          UserNotifier.deliver_login_changed_email(u, old_login, u.login)
+        if u.slug.slug != old_login do
+          UserNotifier.deliver_login_changed_email(u, old_login, u.slug.slug)
         end
         {:ok, u}
       x -> x
