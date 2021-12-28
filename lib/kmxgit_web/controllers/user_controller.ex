@@ -79,10 +79,11 @@ defmodule KmxgitWeb.UserController do
     if params["login"] == User.login(current_user) do
       user = current_user
       changeset = UserManager.change_user(user)
+      |> Ecto.Changeset.put_change(:otp_last, "")
       totp_enrolment_qrcode_src = totp_enrolment_qrcode_src(user)
       conn
       |> assign(:changeset, changeset)
-      |> assign(:page_title, gettext("Activate TOTP for user %{login}", login: User.login(user)))
+      |> assign(:page_title, gettext("Enrol TOTP for user %{login}", login: User.login(user)))
       |> assign(:totp_enrolment_qrcode_src, totp_enrolment_qrcode_src)
       |> assign(:user, user)
       |> render("totp.html")
@@ -99,16 +100,36 @@ defmodule KmxgitWeb.UserController do
       case UserManager.update_user_totp(user, params["user"]) do
         {:ok, user} ->
           conn
-          |> put_flash(:info, "2FA (TOTP) was successfuly activated")
+          |> put_flash(:info, "Enroled 2FA (TOTP) successfuly.")
           |> redirect(to: Routes.slug_path(conn, :show, User.login(user)))
         {:error, changeset} ->
           totp_enrolment_qrcode_src = totp_enrolment_qrcode_src(user)
           conn
           |> assign(:changeset, changeset)
-          |> assign(:page_title, gettext("Activate TOTP for user %{login}", login: User.login(user)))
+          |> assign(:page_title, gettext("Enrol TOTP for user %{login}", login: User.login(user)))
           |> assign(:totp_enrolment_qrcode_src, totp_enrolment_qrcode_src)
           |> assign(:user, user)
           |> render("totp.html")
+      end
+    else
+      not_found(conn)
+    end
+  end
+
+  def totp_delete(conn, params) do
+    current_user = conn.assigns.current_user
+    if params["login"] == User.login(current_user) do
+      user = current_user
+      case UserManager.delete_user_totp(user) do
+        {:ok, user} ->
+          conn
+          |> put_flash(:info, "Removed 2FA (TOTP) successfuly.")
+          |> redirect(to: Routes.slug_path(conn, :show, User.login(user)))
+        {:error, changeset} ->
+          IO.inspect(changeset)
+          conn
+          |> put_flash(:error, "Failed to remove 2FA (TOTP).")
+          |> redirect(to: Routes.user_path(conn, :edit, User.login(user)))
       end
     else
       not_found(conn)

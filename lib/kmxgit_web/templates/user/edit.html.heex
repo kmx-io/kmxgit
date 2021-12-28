@@ -120,8 +120,22 @@
   <h2><%= gettext "Two factor authentification (2FA)" %></h2>
 
   <%= if @user.otp_last != 0 do %>
-    <%= gettext "2FA enabled (TOTP)" %>
+    <p>
+      <%= gettext "2FA enabled (TOTP)" %>
+    </p>
+    <p>
+      <%= link gettext("Disable TOTP (Google Authenticator)"), to: Routes.user_path(@conn, :totp_delete, User.login(@user)), method: :delete, data: [confirm: gettext("Are you sure you want to disable TOTP (Google Authenticator) for %{site} ?", site: "kmxgit")], class: "btn btn-danger" %>
+    </p>
   <% else %>
-    <%= link gettext("Enable TOTP (Google Authenticator)"), to: Routes.user_path(@conn, :totp, User.login(@user)), class: "btn btn-danger" %>
+    <p>
+      <%= link gettext("Enable TOTP (Google Authenticator)"), to: Routes.user_path(@conn, :totp, User.login(@user)), class: "btn btn-danger" %>
+    </p>
   <% end %>
+
+  <br />
+
+  <hr/>
+
+  <br/>
+  <br/>
 </div>

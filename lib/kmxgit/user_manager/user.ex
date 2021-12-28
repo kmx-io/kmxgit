@@ -215,10 +215,6 @@ defmodule Kmxgit.UserManager.User do
     user.name || login(user)
   end
 
-  def login(user) do
-    user.slug.slug || raise ArgumentError, "no slug for user"
-  end
-
   def ssh_keys_with_env(user) do
     (user.ssh_keys || "")
     |> String.split("\n")
@@ -241,12 +237,12 @@ defmodule Kmxgit.UserManager.User do
   def login(user) do
     if user do
       if user.slug do
-        user.slug.slug
+        user.slug.slug || raise ArgumentError, "no slug for user !"
       else
-        nil
+        raise ArgumentError, "no slug for user"
       end
     else
-      nil
+      raise ArgumentError, "no slug for nil user"
     end
   end
 
@@ -254,6 +250,10 @@ defmodule Kmxgit.UserManager.User do
     :pot.valid_totp(token, secret, [window: 1, addwindow: 1])
   end
 
+  def totp_changeset(user, :delete) do
+    user
+    |> cast(%{otp_last: 0}, [:otp_last])
+  end
   def totp_changeset(user, params) do
     user
     |> cast(params, [:otp_last])

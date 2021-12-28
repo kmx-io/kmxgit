@@ -284,6 +284,16 @@ defmodule Kmxgit.UserManager do
     |> Repo.update()
   end
 
+  def verify_user_totp(user = %User{}, token) do
+    User.totp_verify(user, token)
+  end
+
+  def delete_user_totp(user = %User{}) do
+    user
+    |> User.totp_changeset(:delete)
+    |> Repo.update()
+  end
+
   def admin_user_present? do
     if Repo.one(from user in User,
           where: [is_admin: true],
