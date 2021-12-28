@@ -15,6 +15,8 @@ defmodule Kmxgit.UserManager.User do
     field :hashed_password, :string, redact: true
     field :is_admin, :boolean, null: false, default: false
     field :name, :string
+    field :otp_last, :integer, default: 0, redact: true
+    field :otp_secret, :string, redact: true
     has_many :owned_repositories, Repository
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
@@ -45,8 +47,16 @@ defmodule Kmxgit.UserManager.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password])
+    |> generate_otp_secret()
     |> validate_email()
     |> validate_password(opts)
+    |> common_changeset()
+  end
+
+  def otp_changeset(user) do
+    user
+    |> cast(%{}, [])
+    |> generate_otp_secret()
     |> common_changeset()
   end
 
@@ -167,10 +177,15 @@ defmodule Kmxgit.UserManager.User do
   defp common_changeset(changeset) do
     changeset
     |> cast_assoc(:slug)
-    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :slug])
+    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :otp_secret, :slug])
     |> validate_email()
     |> Markdown.validate_markdown(:description)
     |> foreign_key_constraint(:owned_repositories, name: :repositories_user_id_fkey)
+  end
+
+  defp generate_otp_secret(changeset) do
+    secret = :crypto.strong_rand_bytes(10) |> Base.encode32()
+    put_change(changeset, :otp_secret, secret)
   end
 
   def changeset(user, attrs \\ %{}) do
@@ -182,6 +197,15 @@ defmodule Kmxgit.UserManager.User do
   def admin_changeset(user, attrs \\ %{}, opts \\ []) do
     user
     |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :ssh_keys])
+    |> validate_email()
+    |> maybe_validate_password(opts)
+    |> common_changeset()
+  end
+
+  def admin_create_user_changeset(user, attrs \\ %{}, opts \\ []) do
+    user
+    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :ssh_keys])
+    |> generate_otp_secret()
     |> validate_email()
     |> maybe_validate_password(opts)
     |> common_changeset()

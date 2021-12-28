@@ -259,6 +259,14 @@ defmodule Kmxgit.UserManager do
     end
   end
 
+  def otp_init do
+    Repo.transaction fn ->
+      Enum.each list_users(), fn u ->
+        {:ok, _} = User.otp_changeset(u) |> Repo.update()
+      end
+    end
+  end
+
   def admin_user_present? do
     if Repo.one(from user in User,
           where: [is_admin: true],

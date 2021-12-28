@@ -52,6 +52,7 @@ defmodule Kmxgit.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:plug_recaptcha, git: "https://github.com/thodg/plug_recaptcha.git"},
       {:postgrex, ">= 0.0.0"},
+      {:pot, "~> 1.0"},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
