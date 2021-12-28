@@ -75,11 +75,12 @@ defmodule Kmxgit.UserManager do
   end
 
   def update_user_email(user, token) do
+    old = user.email
     context = "change:#{user.email}"
-
     with {:ok, query} <- UserToken.verify_change_email_token_query(token, context),
          %UserToken{sent_to: email} <- Repo.one(query),
-         {:ok, _} <- Repo.transaction(user_email_multi(user, email, context)) do
+         {:ok, _} <- Repo.transaction(user_email_multi(user, email, context)),
+         _ <- UserNotifier.deliver_email_changed_email(old, email) do
       :ok
     else
       _ -> :error
@@ -117,8 +118,10 @@ defmodule Kmxgit.UserManager do
     |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, :all))
     |> Repo.transaction()
     |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
+         {:ok, %{user: user}} ->
+           UserNotifier.deliver_password_changed_email(user)
+           {:ok, user}
+         {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
 
@@ -202,9 +205,17 @@ defmodule Kmxgit.UserManager do
   end
 
   def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
+    old_login = user.login
+    case user
+         |> User.changeset(attrs)
+         |> Repo.update() do
+      {:ok, u} ->
+        if u.login != old_login do
+          UserNotifier.deliver_login_changed_email(u, old_login, u.login)
+        end
+        {:ok, u}
+      x -> x
+    end
   end
 
   def admin_update_user(%User{} = user, attrs) do

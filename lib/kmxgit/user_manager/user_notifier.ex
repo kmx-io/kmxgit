@@ -22,9 +22,6 @@ defmodule Kmxgit.UserManager.UserNotifier do
   """
   def deliver_confirmation_instructions(user, url) do
     deliver(user.email, "Confirmation instructions", """
-
-    ==============================
-
     Hi #{user.email},
 
     You can confirm your account by visiting the URL below:
@@ -32,8 +29,6 @@ defmodule Kmxgit.UserManager.UserNotifier do
     #{url}
 
     If you didn't create an account with us, please ignore this.
-
-    ==============================
     """)
   end
 
@@ -42,9 +37,6 @@ defmodule Kmxgit.UserManager.UserNotifier do
   """
   def deliver_reset_password_instructions(user, url) do
     deliver(user.email, "Reset password instructions", """
-
-    ==============================
-
     Hi #{user.email},
 
     You can reset your password by visiting the URL below:
@@ -52,8 +44,6 @@ defmodule Kmxgit.UserManager.UserNotifier do
     #{url}
 
     If you didn't request this change, please ignore this.
-
-    ==============================
     """)
   end
 
@@ -62,9 +52,6 @@ defmodule Kmxgit.UserManager.UserNotifier do
   """
   def deliver_update_email_instructions(user, url) do
     deliver(user.email, "Update email instructions", """
-
-    ==============================
-
     Hi #{user.email},
 
     You can change your email by visiting the URL below:
@@ -72,8 +59,42 @@ defmodule Kmxgit.UserManager.UserNotifier do
     #{url}
 
     If you didn't request this change, please ignore this.
+    """)
+  end
 
-    ==============================
+  def deliver_login_changed_email(user, old_login, new_login) do
+    deliver(user.email, "Your login was changed", """
+    Hi #{user.email},
+
+    Your login was changed from #{old_login} to #{new_login}.
+
+    If you didn't request this change, please reply to this e-mail.
+    """)
+  end
+
+  defp email_changed_email_body(email, old, new) do
+    """
+    Hi #{email},
+
+    Your e-mail address was changed from #{old} to #{new}.
+
+    If you didn't request this change, please reply to this e-mail.
+    """
+  end
+
+  def deliver_email_changed_email(old, new) do
+    subject = "Your email address was changed"
+    deliver(old, subject, email_changed_email_body(old, old, new))
+    deliver(new, subject, email_changed_email_body(new, old, new))
+  end
+
+  def deliver_password_changed_email(user) do
+    deliver(user.email, "Your password was changed", """
+    Hi #{user.email},
+
+    Your password was changed.
+
+    If you didn't request this change, please reply to this e-mail.
     """)
   end
 end
