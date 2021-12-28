@@ -14,6 +14,9 @@ Now public repositories are also supported.
 
 ### git-auth installation
 
+git-auth handles all permissions for a single git user accessible
+through SSH with just one config file (`/etc/git/auth.conf`).
+
 Please see [git-auth README.md](https://git.kmx.io/kmx.io/git-auth).
 
 
@@ -23,7 +26,9 @@ Please see [git-auth README.md](https://git.kmx.io/kmx.io/git-auth).
  * Change directory with `cd kmxgit`
  * Install dependencies with `mix deps.get`
  * Create and migrate your database with `mix ecto.setup`
- * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+ * Install `bin/*` into `/usr/local/bin`
+ * Start Phoenix endpoint with `mix phx.server` or inside IEx with
+   `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
@@ -51,6 +56,32 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 }
 ```
 
+# TODO
+
+## kmxgit v0.2
+
+ - auth
+   - DONE auth users using `phx.gen.auth`
+   - DONE change password in separate form
+   - DONE session timeout (60 days)
+   - DONE auth with login
+ - DONE public repositories
+   - DONE option "public access ?"
+   - DONE routes
+   - DONE permissions
+   - DONE git-http-backend
+ - notification e-mails
+   - change login
+   - change e-mail
+   - change password
+ - OAuth2
+   - Google
+   - Github
+   - Gitlab ?
+ - Git features
+   - Tags (releases)
+   - Log
+   - Diff
 
 # Copyright
 
