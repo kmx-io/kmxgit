@@ -70,10 +70,10 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE routes
    - DONE permissions
    - DONE git-http-backend
- - notification e-mails
-   - change login
-   - change e-mail
-   - change password
+ - DONE notification e-mails
+   - DONE change login
+   - DONE change e-mail
+   - DONE change password
  - OAuth2
    - Google
    - Github
