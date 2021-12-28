@@ -25,6 +25,13 @@ pre.admin_ssh_keys {
     max-width: 40em;
     white-space: pre-wrap;
 }
+img.qrcode {
+    width: 50%;
+    min-width: 190px;
+    max-width: 512px;
+    margin: auto;
+    display: block;
+}
 
 /* repository */
 #repo_title {

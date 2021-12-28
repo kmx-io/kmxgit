@@ -1,0 +1,17 @@
+<div class="container-fluid">
+  <h1><%= @page_title %></h1>
+
+  <img src={@totp_enrolment_qrcode_src} alt="" class="qrcode" />
+
+  <%= form_for @changeset, Routes.user_path(@conn, :totp_update, User.login(@user)), fn f -> %>
+    <div class="mb-3">
+      <%= label f, :otp_last, gettext("Token"), class: "form-label" %>
+      <%= number_input f, :otp_last, class: "form-control" %>
+      <%= error_tag f, :otp_last %>
+    </div>
+
+    <div class="mb-3">
+      <%= submit gettext("Submit"), class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

@@ -79,6 +79,8 @@ defmodule KmxgitWeb.Router do
       put "/organisation/:slug", OrganisationController, :update
       get "/user/:login", UserController, :edit
       put "/user/:login", UserController, :update
+      get "/user/:login/totp", UserController, :totp
+      put "/user/:login/totp", UserController, :totp_update
       get "/repository/:owner/*slug", RepositoryController, :edit
       put "/repository/:owner/*slug", RepositoryController, :update
     end

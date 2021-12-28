@@ -1,7 +1,7 @@
 <div class="container-fluid center">
-  <h1>Edit user <%= @current_user.slug.slug %></h1>
+  <h1>Edit user <%= User.login(@user) %></h1>
 
-  <%= form_for @changeset, Routes.user_path(@conn, :update, @current_user.slug.slug), fn f -> %>
+  <%= form_for @changeset, Routes.user_path(@conn, :update, User.login(@user)), fn f -> %>
 
     <div class="mb-3">
       <%= label f, :name, class: "form-label" %>
@@ -41,13 +41,13 @@
 
     <div class="mb-3">
       <%= link gettext("Cancel"),
-               to: Routes.slug_path(@conn, :show, @current_user.slug.slug),
+               to: Routes.slug_path(@conn, :show, User.login(@user)),
                class: "btn btn-secondary" %>
       <%= link gettext("Delete user"),
-          to: Routes.user_path(@conn, :delete, @current_user.slug.slug),
+          to: Routes.user_path(@conn, :delete, User.login(@user)),
           method: :delete,
           class: "btn btn-danger",
-          data: [confirm: gettext("Are you sure you want to delete the user %{user} ?", user: @current_user.slug.slug)] %>
+          data: [confirm: gettext("Are you sure you want to delete the user %{user} ?", user: User.login(@user))] %>
       <%= submit gettext("Submit"), class: "btn btn-primary" %>
     </div>
   <% end %>
@@ -115,4 +115,13 @@
       <%= submit gettext("Submit"), class: "btn btn-primary" %>
     </div>
   </.form>
+
+  <hr/>
+  <h2><%= gettext "Two factor authentification (2FA)" %></h2>
+
+  <%= if @user.otp_last != 0 do %>
+    <%= gettext "2FA enabled (TOTP)" %>
+  <% else %>
+    <%= link gettext("Enable TOTP (Google Authenticator)"), to: Routes.user_path(@conn, :totp, User.login(@user)), class: "btn btn-danger" %>
+  <% end %>
 </div>

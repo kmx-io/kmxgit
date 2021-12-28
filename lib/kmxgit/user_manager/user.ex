@@ -212,7 +212,11 @@ defmodule Kmxgit.UserManager.User do
   end
 
   def display_name(user) do
-    user.name || user.login
+    user.name || login(user)
+  end
+
+  def login(user) do
+    user.slug.slug || raise ArgumentError, "no slug for user"
   end
 
   def ssh_keys_with_env(user) do
@@ -243,6 +247,26 @@ defmodule Kmxgit.UserManager.User do
       end
     else
       nil
+    end
+  end
+
+  def totp_verify(%__MODULE__{otp_secret: secret}, token) do
+    :pot.valid_totp(token, secret, [window: 1, addwindow: 1])
+  end
+
+  def totp_changeset(user, params) do
+    user
+    |> cast(params, [:otp_last])
+    |> verify_otp_last()
+  end
+
+  defp verify_otp_last(changeset) do
+    otp_last = Integer.to_string get_field(changeset, :otp_last)
+    if totp_verify(changeset.data, otp_last) do
+      changeset
+    else
+      changeset
+      |> add_error(:otp_last, "invalid token")
     end
   end
 end

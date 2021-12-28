@@ -55,6 +55,8 @@ defmodule KmxgitWeb do
       # Include shared imports and aliases for views
       unquote(view_helpers())
 
+      alias Kmxgit.UserManager.User
+
       def recaptcha_site_key do
         Application.get_env :kmxgit, :recaptcha_site_key
       end
