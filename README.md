@@ -65,6 +65,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE change password in separate form
    - DONE session timeout (60 days)
    - DONE auth with login
+   - DONE 2FA TOTP (Google Authenticator)
  - DONE public repositories
    - DONE option "public access ?"
    - DONE routes
