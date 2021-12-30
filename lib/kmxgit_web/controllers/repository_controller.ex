@@ -191,6 +191,7 @@ defmodule KmxgitWeb.RepositoryController do
   defp setup_git(repo, branch, path, conn) do
     %{branches: [],
       content: nil,
+      content_type: nil,
       filename: nil,
       files: [],
       readme: [],
@@ -198,7 +199,7 @@ defmodule KmxgitWeb.RepositoryController do
       valid: true}
     |> git_put_branches(repo, conn)
     |> git_put_files(repo, branch, path, conn)
-    |> git_put_content(repo)
+    |> git_put_content(repo, path)
     |> git_put_readme(repo)
   end
 
@@ -234,15 +235,23 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: "blob"}], valid: true}, repo) do
-    IO.inspect(git)
-    case GitManager.content(Repository.full_slug(repo), sha1) do
-      {:ok, content} -> %{git | content: content, filename: name}
-      {:error, error} -> %{git | status: error}
+  defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: "blob"}], valid: true}, repo, path) do
+    if (path == name) do
+      case GitManager.content(Repository.full_slug(repo), sha1) do
+        {:ok, content} ->
+          type = case Regex.run(~r/[.]([^.]+)$/, path) do
+                   [_, ext] -> MIME.type(ext)
+                   _ -> "application/octet-stream"
+                 end
+          %{git | content: content, content_type: type, filename: name}
+        {:error, error} -> %{git | status: error}
+      end
+    else
+      git
     end
   end
 
-  defp git_put_content(git, _) do
+  defp git_put_content(git, _, _) do
     git
   end
 
@@ -477,7 +486,6 @@ defmodule KmxgitWeb.RepositoryController do
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
     if repo && Repository.member?(repo, current_user) do
-      IO.inspect(params)
       fork_to = params["repository"]["fork_to"]
       slug = String.split(fork_to, "/") |> Enum.at(0) |> SlugManager.get_slug()
       if slug do

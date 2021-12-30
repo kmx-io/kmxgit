@@ -29,7 +29,13 @@
       <%= if @git.content do %>
         <hr/>
         <h2><%= gettext("Content") %></h2>
-        <pre><%= @git.content %></pre>
+        <%= if String.match?(@git.content_type, ~r(^text/)) do %>
+          <pre><%= @git.content %></pre>
+        <% end %>
+        <%= if String.match?(@git.content_type, ~r(^image/)) do %>
+          <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
+        <% end %>
+        <%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @branch | String.split(@path, "/")])), class: "btn btn-primary" %>
       <% else %>
         <hr/>
         <h2><%= gettext("Files") %></h2>
