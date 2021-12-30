@@ -55,6 +55,9 @@ pre code {
     padding: 1em;
     overflow: scroll;
 }
+.file-content img {
+    max-width: 100%;
+}
 
 .invalid-feedback {
     display: inherit;
