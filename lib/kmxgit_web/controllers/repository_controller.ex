@@ -98,7 +98,7 @@ defmodule KmxgitWeb.RepositoryController do
     current_user = conn.assigns[:current_user]
     chunks = params["slug"] |> chunk_path()
     slug = chunks |> Enum.at(0) |> Enum.join("/")
-    {branch, path} = get_branch_and_path(chunks)
+    {op, branch, path} = get_op_branch_and_path(chunks)
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
     if repo && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
@@ -110,18 +110,35 @@ defmodule KmxgitWeb.RepositoryController do
                      end
       branch1 = branch || first_branch
       if git.valid do
-        conn
-        |> assign(:branch, branch1)
-        |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch1 do ["_branch", branch1] else [] end)))
-        |> assign_current_organisation(org)
-        |> assign(:current_repository, repo)
-        |> assign(:git, git)
-        |> assign(:repo, repo)
-        |> assign(:members, Repository.members(repo))
-        |> assign(:owner, org || user)
-        |> assign(:path, path)
-        |> render("show.html")
+        op = op || :tree
+        case op do
+          :blob ->
+            if (git.content) do
+              conn
+              |> put_resp_content_type("application/binary")
+              |> put_resp_header("Content-Disposition", "attachment; filename=#{git.filename |> URI.encode()}")
+              |> resp(200, git.content)
+            else
+              not_found(conn)
+            end
+          :tree ->
+            conn
+            |> assign(:branch, branch1)
+            |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch1 do ["_tree", branch1] else [] end)))
+            |> assign_current_organisation(org)
+            |> assign(:current_repository, repo)
+            |> assign(:git, git)
+            |> assign(:repo, repo)
+            |> assign(:members, Repository.members(repo))
+            |> assign(:owner, org || user)
+            |> assign(:path, path)
+            |> render("show.html")
+          x ->
+            IO.inspect({:unknown_op, x})
+            not_found(conn)
+        end
       else
+        IO.inspect(:invalid_git)
         not_found(conn)
       end
     else
@@ -146,23 +163,35 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
-  defp get_branch_and_path(chunks) do
-    if (path = chunks |> Enum.at(1)) && (path |> Enum.at(0)) == "_branch" do
-      {_, rest} = chunks |> Enum.split(2)
-      rest1 = rest |> Enum.map(fn x ->
-        Enum.join(x, "/")
-      end)
-      {["_branch", branch], path1} = path |> Enum.split(2)
-      {branch,
-       path1 ++ rest1 |> Enum.reject(&(!&1 || &1 == "")) |> Enum.join("/")}
+  defp get_op_branch_and_path(chunks) do
+    if path = chunks |> Enum.at(1) do
+      op = case path |> Enum.at(0) do
+             "_tree" -> :tree
+             "_blob" -> :blob
+             _ -> nil
+           end
+      if op do
+        {_, rest} = chunks |> Enum.split(2)
+        rest1 = rest |> Enum.map(fn x ->
+          Enum.join(x, "/")
+        end)
+        {[_, branch], path1} = path |> Enum.split(2)
+        path2 = (path1 ++ rest1)
+        |> Enum.reject(&(!&1 || &1 == ""))
+        |> Enum.join("/")
+        {op, branch, path2}
+      else
+        {nil, nil, ""}
+      end
     else
-      {nil, ""}
+      {nil, nil, ""}
     end
   end
 
   defp setup_git(repo, branch, path, conn) do
     %{branches: [],
       content: nil,
+      filename: nil,
       files: [],
       readme: [],
       status: "",
@@ -178,7 +207,7 @@ defmodule KmxgitWeb.RepositoryController do
       {:ok, branches} ->
         branches = branches
         |> Enum.map(fn b ->
-          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", b])
+          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_tree", b])
           {b, url}
         end)
         %{git | branches: branches}
@@ -195,7 +224,7 @@ defmodule KmxgitWeb.RepositoryController do
       {:ok, files} ->
         files = files
         |> Enum.map(fn f = %{url: url} ->
-          %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_branch", branch | String.split(url, "/")])}
+          %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_tree", branch | String.split(url, "/")])}
         end)
         %{git | files: files}
       {:error, status} -> %{git | status: "#{git.status}\n#{status}", valid: false}
@@ -205,9 +234,10 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_content(git = %{files: [%{type: "blob", sha1: sha1}], valid: true}, repo) do
+  defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: "blob"}], valid: true}, repo) do
+    IO.inspect(git)
     case GitManager.content(Repository.full_slug(repo), sha1) do
-      {:ok, content} -> %{git | content: content}
+      {:ok, content} -> %{git | content: content, filename: name}
       {:error, error} -> %{git | status: error}
     end
   end
