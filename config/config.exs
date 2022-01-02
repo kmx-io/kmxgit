@@ -21,6 +21,10 @@ config :kmxgit, KmxgitWeb.Endpoint,
   pubsub_server: Kmxgit.PubSub,
   live_view: [signing_salt: "0HhihW2z"]
 
+config :kmxgit, Kmxgit.UserManager.Guardian,
+  issuer: "kmxgit",
+  secret_key: File.read!("config/.guardian.secret_key")
+
 config :dart_sass,
   version: "1.39.0",
   default: [
@@ -58,9 +62,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :kmxgit, Kmxgit.UserManager.Guardian,
-  issuer: "kmxgit",
-  secret_key: File.read!("config/.guardian.secret_key")
+config :mime, :types, %{
+  "text/markdown" => ["markdown", "md"],
+  "text/plain" => ["ac", "am", "c", "cc", "cxx", "ex", "eex", "h", "heex", "hh"]
+}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

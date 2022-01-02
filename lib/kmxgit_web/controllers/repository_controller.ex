@@ -115,7 +115,7 @@ defmodule KmxgitWeb.RepositoryController do
           :blob ->
             if (git.content) do
               conn
-              |> put_resp_content_type("application/binary")
+              |> put_resp_content_type("application/octet-stream")
               |> put_resp_header("Content-Disposition", "attachment; filename=#{git.filename |> URI.encode()}")
               |> resp(200, git.content)
             else
@@ -240,8 +240,8 @@ defmodule KmxgitWeb.RepositoryController do
       case GitManager.content(Repository.full_slug(repo), sha1) do
         {:ok, content} ->
           type = case Regex.run(~r/[.]([^.]+)$/, path) do
-                   [_, ext] -> MIME.type(ext)
-                   _ -> "application/octet-stream"
+                   [_, ext] -> MIME.type(ext) || "application/octet-stream"
+                   _ -> if String.valid?(content), do: "text/plain", else: "application/octet-stream"
                  end
           %{git | content: content, content_type: type, filename: name}
         {:error, error} -> %{git | status: error}
