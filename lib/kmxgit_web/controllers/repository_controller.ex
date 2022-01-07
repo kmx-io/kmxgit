@@ -235,13 +235,21 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
+  defp default_mime(content) do
+    if String.valid?(content) do
+      "text/plain"
+    else
+      "application/octet-stream"
+    end
+  end
+
   defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: "blob"}], valid: true}, repo, path) do
     if (path == name) do
       case GitManager.content(Repository.full_slug(repo), sha1) do
         {:ok, content} ->
           type = case Regex.run(~r/[.]([^.]+)$/, path) do
-                   [_, ext] -> MIME.type(ext) || "application/octet-stream"
-                   _ -> if String.valid?(content), do: "text/plain", else: "application/octet-stream"
+                   [_, ext] -> MIME.type(ext) || default_mime(content)
+                   _ -> default_mime(content)
                  end
           %{git | content: content, content_type: type, filename: name}
         {:error, error} -> %{git | status: error}
