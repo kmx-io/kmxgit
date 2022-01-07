@@ -20,9 +20,10 @@ defmodule KmxgitWeb.PageController do
     if ! UserManager.admin_user_present? do
       changeset = UserManager.change_user(%User{})
       conn
+      |> assign(:action, Routes.page_path(conn, :new_admin))
+      |> assign(:changeset, changeset)
       |> assign(:no_navbar_links, true)
-      |> render("new_admin.html", changeset: changeset,
-                action: Routes.page_path(conn, :new_admin))
+      |> render("new_admin.html")
     else
       redirect(conn, to: "/")
     end
