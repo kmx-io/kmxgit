@@ -244,6 +244,12 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
+  defp filename(path) do
+    path
+    |> String.split("/")
+    |> List.last()
+  end
+
   defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: "blob"}], valid: true}, repo, path) do
     if (path == name) do
       case GitManager.content(Repository.full_slug(repo), sha1) do
@@ -252,7 +258,7 @@ defmodule KmxgitWeb.RepositoryController do
                    [_, ext] -> mime_type(content, ext)
                    _ -> mime_type(content)
                  end
-          content_html = Pygmentize.html(content, name)
+          content_html = Pygmentize.html(content, filename(name))
           IO.inspect(path: path, name: name, type: type)
           %{git | content: content, content_html: content_html, content_type: type, filename: name}
         {:error, error} -> %{git | status: error}
