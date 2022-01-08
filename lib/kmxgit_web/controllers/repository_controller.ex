@@ -191,6 +191,7 @@ defmodule KmxgitWeb.RepositoryController do
   defp setup_git(repo, branch, path, conn) do
     %{branches: [],
       content: nil,
+      content_html: nil,
       content_type: nil,
       filename: nil,
       files: [],
@@ -251,8 +252,9 @@ defmodule KmxgitWeb.RepositoryController do
                    [_, ext] -> mime_type(content, ext)
                    _ -> mime_type(content)
                  end
+          content_html = Pygmentize.html(content, name)
           IO.inspect(path: path, name: name, type: type)
-          %{git | content: content, content_type: type, filename: name}
+          %{git | content: content, content_html: content_html, content_type: type, filename: name}
         {:error, error} -> %{git | status: error}
       end
     else
