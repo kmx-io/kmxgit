@@ -144,7 +144,9 @@ defmodule KmxgitWeb.RepositoryController do
              "_commit" -> :commit
              "_log" -> :log
              "_tree" -> :tree
-             x -> :unknown
+             x ->
+               IO.puts "Unknown operation #{x}"
+               :unknown
            end
       if op do
         {_, rest} = chunks |> Enum.split(2)
@@ -276,7 +278,7 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_put_log1(git, repo, branch, path) do
     slug = Repository.full_slug(repo)
-    {:ok, log1} = if path && path != "" do
+    {:ok, log1} = if path do
       GitManager.log1_file(slug, path, branch)
     else
       GitManager.log1(slug, branch)
@@ -284,9 +286,9 @@ defmodule KmxgitWeb.RepositoryController do
     %{git | log1: log1}
   end
 
-  defp git_log(git, repo, branch, path) do
+  defp git_log(repo, branch, path) do
     slug = Repository.full_slug(repo)
-    {:ok, log} = if path && path != "" do
+    {:ok, log} = if path do
       GitManager.log_file(slug, path, branch)
     else
       GitManager.log(slug, branch)
@@ -294,7 +296,7 @@ defmodule KmxgitWeb.RepositoryController do
     log
   end
 
-  defp show_op(conn, :blob, branch, git, org, path, _repo, user) do
+  defp show_op(conn, :blob, _branch, git, _org, _path, _repo, _user) do
     if (git.content) do
       conn
       |> put_resp_content_type("application/octet-stream")
@@ -304,7 +306,7 @@ defmodule KmxgitWeb.RepositoryController do
       not_found(conn)
     end
   end
-  defp show_op(conn, :commit, branch, git, org, path, repo, user) do
+  defp show_op(conn, :commit, _branch, git, org, _path, repo, _user) do
     conn
     |> assign(:commit, git.log1)
     |> assign_current_organisation(org)
@@ -312,8 +314,8 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:repo, repo)
     |> render("commit.html")
   end
-  defp show_op(conn, :log, branch, git, org, path, repo, user) do
-    log = git_log(git, repo, branch, path)
+  defp show_op(conn, :log, branch, git, org, path, repo, _user) do
+    log = git_log(repo, branch, path)
     conn
     |> assign(:branch, branch)
     |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", branch] ++ (if path, do: String.split(path, "/"), else: []))))
@@ -338,7 +340,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:path, path)
     |> render("show.html")
   end
-  defp show_op(conn, x, _branch, _git, _org, _path, _repo, _user) do
+  defp show_op(conn, _op, _branch, _git, _org, _path, _repo, _user) do
     not_found(conn)
   end
 
