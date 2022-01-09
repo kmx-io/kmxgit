@@ -1,6 +1,6 @@
 <div class="log1">
   <span class="hash">
-    <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @branch] ++ (if @path, do: @path |> String.split("/")))) <> "##{@git.log1.hash}" %>
+    <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @branch] ++ (if @path, do: String.split(@path, "/"), else: []))) <> "##{@git.log1.hash}" %>
   </span>
   <span class="author">
     <%= @git.log1.author %>

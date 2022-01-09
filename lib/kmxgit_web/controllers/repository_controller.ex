@@ -155,12 +155,13 @@ defmodule KmxgitWeb.RepositoryController do
         path2 = (path1 ++ rest1)
         |> Enum.reject(&(!&1 || &1 == ""))
         |> Enum.join("/")
-        {op, branch, path2}
+        path3 = if path2 != "", do: path2
+        {op, branch, path3}
       else
-        {nil, nil, ""}
+        {nil, nil, nil}
       end
     else
-      {nil, nil, ""}
+      {nil, nil, nil}
     end
   end
 
@@ -187,7 +188,7 @@ defmodule KmxgitWeb.RepositoryController do
       {:ok, branches} ->
         branches = branches
         |> Enum.map(fn branch ->
-          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op}", branch] ++ (if path, do: String.split(path, "/")))
+          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op || :tree}", branch] ++ (if path, do: String.split(path, "/"), else: []))
           {branch, url}
         end)
         %{git | branches: branches}
@@ -199,7 +200,7 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp git_put_files(git = %{valid: true}, repo, branch, subdir, conn) do
-    case GitManager.files(Repository.full_slug(repo), branch, subdir) do
+    case GitManager.files(Repository.full_slug(repo), branch, subdir || "") do
       {:ok, []} -> git
       {:ok, files} ->
         files = files
@@ -315,7 +316,7 @@ defmodule KmxgitWeb.RepositoryController do
     log = git_log(git, repo, branch, path)
     conn
     |> assign(:branch, branch)
-    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", branch] ++ (if path, do: String.split(path, "/")))))
+    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", branch] ++ (if path, do: String.split(path, "/"), else: []))))
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:git, git)
@@ -327,7 +328,7 @@ defmodule KmxgitWeb.RepositoryController do
   defp show_op(conn, :tree, branch, git, org, path, repo, user) do
     conn
     |> assign(:branch, branch)
-    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch do ["_tree", branch] else [] end)))
+    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", branch] ++ (if path, do: String.split(path, "/"), else: []))))
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:git, git)

@@ -8,7 +8,7 @@
 
   <div class="row">
     <div class="col">
-      <%= if @path && @path != "" do %>
+      <%= if @path do %>
         <hr/>
         <h2><%= link @path, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @branch] ++ String.split(@path, "/"))) %></h2>
       <% end %>
