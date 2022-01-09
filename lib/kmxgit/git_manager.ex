@@ -179,9 +179,37 @@ defmodule Kmxgit.GitManager do
   end
 
   def log(repo, tree \\ nil) do
+    if tree do
+      log_(repo, [tree])
+    else
+      log_(repo, [])
+    end
+  end
+
+  defp ok_hd({:ok, list}), do: {:ok, hd(list)}
+  defp ok_hd(x), do: x
+
+  def log1(repo, tree \\ nil) do
+    if tree do
+      log_(repo, ["-1", tree])
+    else
+      log_(repo, ["-1"])
+    end
+    |> ok_hd()
+  end
+
+  def log1_file(repo, file, tree \\ nil) do
+    if tree do
+      log_(repo, ["-1", tree, "--", file])
+    else
+      log_(repo, ["-1", "--", file])
+    end
+    |> ok_hd()
+  end
+
+  defp log_(repo, args) do
     dir = git_dir(repo)
-    args = ["-C", dir, "log", "--format=%H %aI \"%an <%ae>\" %s"]
-    args = if tree, do: args ++ [tree], else: args
+    args = ["-C", dir, "log", "--format=%H %aI \"%an\" %s"] ++ args
     {out, status} = System.cmd("git", args, stderr_to_stdout: true)
     case status do
       0 ->

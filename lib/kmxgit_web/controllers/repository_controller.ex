@@ -103,40 +103,14 @@ defmodule KmxgitWeb.RepositoryController do
     if repo && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
-      git = setup_git(repo, branch || "master", path, conn)
+      git = setup_git(repo, branch || "master", path, conn, op)
       first_branch = case Enum.at(git.branches, 0) do
                        {first_branch, _} -> first_branch
                        nil -> nil
                      end
       branch1 = branch || first_branch
       if git.valid do
-        op = op || :tree
-        case op do
-          :blob ->
-            if (git.content) do
-              conn
-              |> put_resp_content_type("application/octet-stream")
-              |> put_resp_header("Content-Disposition", "attachment; filename=#{git.filename |> URI.encode()}")
-              |> resp(200, git.content)
-            else
-              not_found(conn)
-            end
-          :tree ->
-            conn
-            |> assign(:branch, branch1)
-            |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch1 do ["_tree", branch1] else [] end)))
-            |> assign_current_organisation(org)
-            |> assign(:current_repository, repo)
-            |> assign(:git, git)
-            |> assign(:repo, repo)
-            |> assign(:members, Repository.members(repo))
-            |> assign(:owner, org || user)
-            |> assign(:path, path)
-            |> render("show.html")
-          x ->
-            IO.inspect({:unknown_op, x})
-            not_found(conn)
-        end
+        show_op(conn, op || :tree, branch1, git, org, path, repo, user)
       else
         IO.inspect(:invalid_git)
         not_found(conn)
@@ -166,9 +140,11 @@ defmodule KmxgitWeb.RepositoryController do
   defp get_op_branch_and_path(chunks) do
     if path = chunks |> Enum.at(1) do
       op = case path |> Enum.at(0) do
-             "_tree" -> :tree
              "_blob" -> :blob
-             _ -> nil
+             "_commit" -> :commit
+             "_log" -> :log
+             "_tree" -> :tree
+             x -> :unknown
            end
       if op do
         {_, rest} = chunks |> Enum.split(2)
@@ -188,28 +164,30 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
-  defp setup_git(repo, branch, path, conn) do
+  defp setup_git(repo, branch, path, conn, op) do
     %{branches: [],
       content: nil,
       content_html: nil,
       content_type: nil,
       filename: nil,
       files: [],
+      log1: nil,
       readme: [],
       status: "",
       valid: true}
-    |> git_put_branches(repo, conn)
+    |> git_put_branches(repo, conn, op)
     |> git_put_files(repo, branch, path, conn)
     |> git_put_content(repo, path)
     |> git_put_readme(repo)
+    |> git_put_log1(repo, branch, path)
   end
 
-  defp git_put_branches(git = %{valid: true}, repo, conn) do
+  defp git_put_branches(git = %{valid: true}, repo, conn, op) do
     case GitManager.branches(Repository.full_slug(repo)) do
       {:ok, branches} ->
         branches = branches
         |> Enum.map(fn b ->
-          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_tree", b])
+          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op}", b])
           {b, url}
         end)
         %{git | branches: branches}
@@ -293,6 +271,73 @@ defmodule KmxgitWeb.RepositoryController do
   end
   defp git_put_readme(git, _) do
     git
+  end
+
+  defp git_put_log1(git, repo, branch, path) do
+    slug = Repository.full_slug(repo)
+    {:ok, log1} = if path && path != "" do
+      GitManager.log1_file(slug, path, branch)
+    else
+      GitManager.log1(slug, branch)
+    end
+    %{git | log1: log1}
+  end
+
+  defp git_log(git, repo, branch, path) do
+    slug = Repository.full_slug(repo)
+    {:ok, log} = if path && path != "" do
+      GitManager.log_file(slug, path, branch)
+    else
+      GitManager.log(slug, branch)
+    end
+    log
+  end
+
+  defp show_op(conn, :blob, branch, git, org, path, _repo, user) do
+    if (git.content) do
+      conn
+      |> put_resp_content_type("application/octet-stream")
+      |> put_resp_header("Content-Disposition", "attachment; filename=#{git.filename |> URI.encode()}")
+      |> resp(200, git.content)
+    else
+      not_found(conn)
+    end
+  end
+  defp show_op(conn, :commit, branch, git, org, path, repo, user) do
+    conn
+    |> assign(:commit, git.log1)
+    |> assign_current_organisation(org)
+    |> assign(:current_repository, repo)
+    |> assign(:repo, repo)
+    |> render("commit.html")
+  end
+  defp show_op(conn, :log, branch, git, org, path, repo, user) do
+    log = git_log(git, repo, branch, path)
+    conn
+    |> assign(:branch, branch)
+    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch do ["_log", branch] else [] end)))
+    |> assign_current_organisation(org)
+    |> assign(:current_repository, repo)
+    |> assign(:git, git)
+    |> assign(:log, log)
+    |> assign(:repo, repo)
+    |> render("log.html")
+  end
+  defp show_op(conn, :tree, branch, git, org, path, repo, user) do
+    conn
+    |> assign(:branch, branch)
+    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch do ["_tree", branch] else [] end)))
+    |> assign_current_organisation(org)
+    |> assign(:current_repository, repo)
+    |> assign(:git, git)
+    |> assign(:repo, repo)
+    |> assign(:members, Repository.members(repo))
+    |> assign(:owner, org || user)
+    |> assign(:path, path)
+    |> render("show.html")
+  end
+  defp show_op(conn, x, _branch, _git, _org, _path, _repo, _user) do
+    not_found(conn)
   end
 
   def edit(conn, params) do

@@ -14,7 +14,13 @@
       <hr/>
       <%= render("show_branch.html", assigns) %>
 
+      <hr/>
       <h2><%= @path %></h2>
+
+      <%= if @git.log1 do %>
+        <%= render("show_commit_message.html", assigns) %>
+      <% end %>
+
       <%= if @git.content do %>
         <hr/>
         <%= render("show_git_content.html", assigns) %>

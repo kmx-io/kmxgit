@@ -1,0 +1,49 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col">
+      <%= render("show_title.html", assigns) %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <hr/>
+      <%= render("show_branch.html", assigns) %>
+
+      <hr/>
+      <h2>
+        <%= gettext("Log") %>
+      </h2>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th><%= gettext "Commit" %></th>
+            <th><%= gettext "Author" %></th>
+            <th><%= gettext "Date" %></th>
+            <th><%= gettext "Message" %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for commit <- @log do %>
+            <tr class="commit">
+              <td class="hash">
+                <%= link commit.hash, id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) %>
+              </td>
+              <td class="author">
+                <%= commit.author %>
+              </td>
+              <td class="date">
+                <%= commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>
+              </td>
+              <td class="message" %>
+                <%= commit.message %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

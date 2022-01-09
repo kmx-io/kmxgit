@@ -6,7 +6,7 @@ defmodule Pygmentize do
   end
 
   def html(content, filename) do
-    dir = "#{System.tmp_dir}/#{random_string}"
+    dir = "#{System.tmp_dir()}/#{random_string()}"
     File.mkdir_p(dir)
     path = "#{dir}/#{filename}"
     File.write(path, content)
@@ -23,7 +23,7 @@ defmodule Pygmentize do
     ref = state.ref
     receive do
       {^port, {:data, msg}} ->
-        state = Map.put(state, content: [msg | state.content])
+        state = Map.put(state, :content, [msg | state.content])
         get_reply(port, state)
       {:DOWN, ^ref, :port, _port, :normal} ->
         Enum.reverse(state.output)
