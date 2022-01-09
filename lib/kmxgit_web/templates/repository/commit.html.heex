@@ -12,11 +12,11 @@
     </h2>
 
     <div class="commit">
-      <div class="date">
-        <%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>
-      </div>
       <div class="author">
         <%= @commit.author %>
+      </div>
+      <div class="date">
+        <%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>
       </div>
       <div class="message" %>
         <%= @commit.message %>

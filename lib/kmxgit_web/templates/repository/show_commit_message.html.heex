@@ -1,13 +1,14 @@
-<%= link to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @branch] ++ (if @path, do: @path |> String.split("/")))) <> "##{@git.log1.hash}" do %>
-  <div class="log1">
-    <div class="date">
-      <%= @git.log1.date |> String.replace("T", " ") |> String.replace("+", " +") %>
-    </div>
-    <div class="author">
-      <%= @git.log1.author %>
-    </div>
-    <div class="message" %>
-      <%= @git.log1.message %>
-    </div>
+<div class="log1">
+  <span class="hash">
+    <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @branch] ++ (if @path, do: @path |> String.split("/")))) <> "##{@git.log1.hash}" %>
+  </span>
+  <span class="author">
+    <%= @git.log1.author %>
+  </span>
+  <span class="date">
+    <%= @git.log1.date |> String.replace("T", " ") |> String.replace("+", " +") %>
+  </span>
+  <div class="message" %>
+    <%= @git.log1.message %>
   </div>
-<% end %>
+</div>

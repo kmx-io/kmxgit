@@ -8,7 +8,7 @@
 
   <div class="row">
     <div class="col">
-      <%= if @path do %>
+      <%= if @path && @path != "" do %>
         <hr/>
         <h2><%= link @path, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @branch] ++ String.split(@path, "/"))) %></h2>
       <% end %>
@@ -32,7 +32,7 @@
           <%= for commit <- @log do %>
             <tr class="commit">
               <td class="hash">
-                <%= link commit.hash, id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) %>
+                <%= link String.slice(commit.hash, 0..8), id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) %>
               </td>
               <td class="author">
                 <%= commit.author %>
