@@ -1,0 +1,2 @@
+<%= gettext("Branch") %>
+<%= select :repository, :branch, @git.branches, selected: @branch_url, onchange: "javascript:document.location = this.value;" %>

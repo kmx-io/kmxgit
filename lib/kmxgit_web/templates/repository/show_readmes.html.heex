@@ -1,0 +1,11 @@
+<%= Enum.map @git.readme, fn readme -> %>
+  <hr/>
+  <h2><%= readme.name %></h2>
+  <div class="container-fluid file-content">
+    <%= if readme.html do %>
+      <%= raw readme.html %>
+    <% else %>
+      <pre><%= readme.txt %></pre>
+    <% end %>
+  </div>
+<% end %>

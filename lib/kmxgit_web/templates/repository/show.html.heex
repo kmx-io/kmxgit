@@ -2,134 +2,34 @@
 
   <div class="row">
     <div class="col col-12 col-sm-7">
-      <h1 id="repo_title"><%= link Repository.owner_slug(@repo), to: Routes.slug_path(@conn, :show, Repository.owner_slug(@repo)) %>/<%= link @repo.slug, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo)) %></h1>
-      <%= if @repo.forked_from do %>
-        <%= gettext("Forked from") %>
-        <%= link Repository.full_slug(@repo.forked_from), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo.forked_from), Repository.splat(@repo.forked_from)) %>
-      <% end %>
+      <%= render("show_title.html", assigns) %>
     </div>
     <div class="col col-12 col-sm-5">
-      <%= if Repository.owner?(@repo, @current_user) do %>
-        <%= link gettext("Edit"),
-            to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), Repository.splat(@repo)),
-            class: "btn btn-primary" %>
-      <% end %>
-      <%= if @current_user do %>
-        <%= link gettext("Fork"), to: Routes.repository_path(@conn, :fork, Repository.owner_slug(@repo), Repository.splat(@repo)), class: "btn btn-primary" %>
-      <% end %>
+      <%= render("show_actions.html", assigns) %>
     </div>
   </div>
 
   <div class="row">
     <div class="col col-12 col-md-7">
       <hr/>
-      <%= gettext("Branch") %>
-      <%= select :repository, :branch, @git.branches, selected: @branch_url, onchange: "javascript:document.location = this.value;" %>
+      <%= render("show_branch.html", assigns) %>
+
       <h2><%= @path %></h2>
       <%= if @git.content do %>
         <hr/>
-        <h2><%= gettext("Content") %></h2>
-        <%= if @git.content_html do %>
-          <div class="content_html">
-            <%= raw @git.content_html %>
-          </div>
-        <% else %>
-          <%= if String.match?(@git.content_type, ~r(^text/)) do %>
-            <pre><%= @git.content %></pre>
-          <% end %>
-        <% end %>
-        <%= if String.match?(@git.content_type, ~r(^image/)) do %>
-          <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
-        <% end %>
-        <%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @branch | String.split(@path, "/")])), class: "btn btn-primary" %>
+        <%= render("show_git_content.html", assigns) %>
       <% else %>
         <hr/>
-        <h2><%= gettext("Files") %></h2>
-        <ul>
-          <%= for file <- @git.files do %>
-            <li>
-              <%= case file.type do %>
-                <% "blob" -> %>
-                  <%= link file.name, to: file.url %>
-                <% "tree" -> %>
-                  <%= link "#{file.name}/", to: file.url %>
-                <% _ -> %>
-                  <%= "#{file.type} #{file.name}" %>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
+        <%= render("show_files.html", assigns) %>
       <% end %>
     </div>
     <div class="col col-12 col-md-5">
       <hr/>
-      <h2><%= gettext "Properties" %></h2>
-      <table class="table admin-properties">
-        <%= if @repo.public_access do %>
-          <tr>
-            <th><%= gettext "Git HTTP" %></th>
-            <td><%= Repository.http_url(@repo) %></td>
-          </tr>
-        <% end %>
-        <tr>
-          <th><%= gettext "Git SSH" %></th>
-          <td><%= Repository.ssh_url(@repo) %></td>
-        </tr>
-        <tr>
-          <th><%= gettext "Public access ?" %></th>
-          <td>
-            <%= if @repo.public_access do %>
-              <%= gettext "public" %>
-            <% else %>
-              <%= gettext "private" %>
-            <% end %>
-          </td>
-        </tr>
-        <tr>
-          <th><%= gettext "Description" %></th>
-          <td>
-            <%= if @repo.description do %>
-              <%= raw Earmark.as_html!(@repo.description) %>
-            <% end %>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            <%= gettext "Users" %><br/>
-            <%= if Repository.owner?(@repo, @current_user) do %>
-              <%= link "-",
-                  to: Routes.repository_path(@conn, :remove_user, @owner.slug.slug, Repository.splat(@repo)),
-                  class: "btn btn-danger btn-sm" %>
-              <%= link "+",
-                  to: Routes.repository_path(@conn, :add_user, @owner.slug.slug, Repository.splat(@repo)),
-                  class: "btn btn-primary btn-sm" %>
-            <% end %>
-          </th>
-          <td>
-            <ul>
-              <%= for user <- @members do %>
-                <li>
-                  <%= link user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug) %>
-                </li>
-              <% end %>
-            </ul>
-          </td>
-        </tr>
-      </table>
+      <%= render("show_properties.html", assigns) %>
     </div>
   </div>
 
   <div class="row">
-    <%= Enum.map @git.readme, fn readme -> %>
-      <hr/>
-      <h2><%= readme.name %></h2>
-      <div class="container-fluid file-content">
-        <%= if readme.html do %>
-          <%= raw readme.html %>
-        <% else %>
-          <pre><%= readme.txt %></pre>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render("show_readmes.html", assigns) %>
   </div>
 </div>

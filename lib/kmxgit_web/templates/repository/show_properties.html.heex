@@ -1,0 +1,53 @@
+<h2><%= gettext "Properties" %></h2>
+<table class="table admin-properties">
+  <%= if @repo.public_access do %>
+    <tr>
+      <th><%= gettext "Git HTTP" %></th>
+      <td><%= Repository.http_url(@repo) %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <th><%= gettext "Git SSH" %></th>
+    <td><%= Repository.ssh_url(@repo) %></td>
+  </tr>
+  <tr>
+    <th><%= gettext "Public access ?" %></th>
+    <td>
+      <%= if @repo.public_access do %>
+        <%= gettext "public" %>
+      <% else %>
+        <%= gettext "private" %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= gettext "Description" %></th>
+    <td>
+      <%= if @repo.description do %>
+        <%= raw Earmark.as_html!(@repo.description) %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      <%= gettext "Users" %><br/>
+      <%= if Repository.owner?(@repo, @current_user) do %>
+        <%= link "-",
+        to: Routes.repository_path(@conn, :remove_user, @owner.slug.slug, Repository.splat(@repo)),
+        class: "btn btn-danger btn-sm" %>
+        <%= link "+",
+        to: Routes.repository_path(@conn, :add_user, @owner.slug.slug, Repository.splat(@repo)),
+        class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </th>
+    <td>
+      <ul>
+        <%= for user <- @members do %>
+          <li>
+            <%= link user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug) %>
+          </li>
+        <% end %>
+      </ul>
+    </td>
+  </tr>
+</table>

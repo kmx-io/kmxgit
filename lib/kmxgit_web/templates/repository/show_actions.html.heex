@@ -1,0 +1,8 @@
+<%= if Repository.owner?(@repo, @current_user) do %>
+  <%= link gettext("Edit"),
+  to: Routes.repository_path(@conn, :edit, Repository.owner_slug(@repo), Repository.splat(@repo)),
+  class: "btn btn-primary" %>
+<% end %>
+<%= if @current_user do %>
+  <%= link gettext("Fork"), to: Routes.repository_path(@conn, :fork, Repository.owner_slug(@repo), Repository.splat(@repo)), class: "btn btn-primary" %>
+<% end %>
