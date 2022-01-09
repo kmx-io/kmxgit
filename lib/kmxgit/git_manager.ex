@@ -177,4 +177,40 @@ defmodule Kmxgit.GitManager do
     end
     :ok
   end
+
+  def log(repo, tree \\ nil) do
+    dir = git_dir(repo)
+    args = ["-C", dir, "log", "--format=%H %aI \"%an <%ae>\" %s"]
+    args = if tree, do: args ++ [tree], else: args
+    {out, status} = System.cmd("git", args, stderr_to_stdout: true)
+    case status do
+      0 ->
+        entries = out
+        |> String.split("\n")
+        |> Enum.map(fn line ->
+          case Regex.run(~r/^([^ ]+) ([^ ]+) "([^"]+)" (.*)$/, line) do
+            [_ , hash, date, author, msg] -> %{author: author, hash: hash, date: date, message: msg}
+            _ -> nil
+          end
+        end)
+        |> Enum.filter(& &1)
+
+        {:ok, entries}
+      _ -> {:error, out}
+    end
+  end
+
+  def tag(repo, tag) do
+    dir = git_dir(repo)
+    args = ["-C", dir, "log", "-1", "--format=%H %aI \"%an <%ae>\"", tag]
+    {out, status} = System.cmd("git", args, stderr_to_stdout: true)
+    case status do
+      0 ->
+        case Regex.run(~r/^([^ ]+) ([^ ]+) "([^"]+)"$/, out) do
+          [_ , hash, date, author] -> {:ok, %{author: author, date: date, hash: hash}}
+          _ -> {:error, nil}
+        end
+      _ -> {:error, out}
+    end
+  end
 end
