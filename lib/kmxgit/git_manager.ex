@@ -186,6 +186,14 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  def log_file(repo, path, tree \\ nil) do
+    if tree do
+      log_(repo, [tree, "--", path])
+    else
+      log_(repo, ["--", path])
+    end
+  end
+
   defp ok_hd({:ok, list}), do: {:ok, hd(list)}
   defp ok_hd(x), do: x
 

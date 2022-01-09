@@ -1,4 +1,4 @@
-<%= link to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @branch])) <> "##{@git.log1.hash}" do %>
+<%= link to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @branch] ++ (if @path, do: @path |> String.split("/")))) <> "##{@git.log1.hash}" do %>
   <div class="log1">
     <div class="date">
       <%= @git.log1.date |> String.replace("T", " ") |> String.replace("+", " +") %>

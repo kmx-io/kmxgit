@@ -175,26 +175,26 @@ defmodule KmxgitWeb.RepositoryController do
       readme: [],
       status: "",
       valid: true}
-    |> git_put_branches(repo, conn, op)
+    |> git_put_branches(repo, conn, op, path)
     |> git_put_files(repo, branch, path, conn)
     |> git_put_content(repo, path)
     |> git_put_readme(repo)
     |> git_put_log1(repo, branch, path)
   end
 
-  defp git_put_branches(git = %{valid: true}, repo, conn, op) do
+  defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
     case GitManager.branches(Repository.full_slug(repo)) do
       {:ok, branches} ->
         branches = branches
-        |> Enum.map(fn b ->
-          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op}", b])
-          {b, url}
+        |> Enum.map(fn branch ->
+          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op}", branch] ++ (if path, do: String.split(path, "/")))
+          {branch, url}
         end)
         %{git | branches: branches}
       {:error, status} -> %{git | status: status, valid: false}
     end
   end
-  defp git_put_branches(git, _, _) do
+  defp git_put_branches(git, _, _, _, _) do
     git
   end
 
@@ -315,11 +315,12 @@ defmodule KmxgitWeb.RepositoryController do
     log = git_log(git, repo, branch, path)
     conn
     |> assign(:branch, branch)
-    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, if branch do ["_log", branch] else [] end)))
+    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", branch] ++ (if path, do: String.split(path, "/")))))
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:git, git)
     |> assign(:log, log)
+    |> assign(:path, path)
     |> assign(:repo, repo)
     |> render("log.html")
   end
