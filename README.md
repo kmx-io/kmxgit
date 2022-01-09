@@ -75,6 +75,10 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE change login
    - DONE change e-mail
    - DONE change password
+ - DONE front
+   - DONE source code coloration
+ - admin
+   - create organisation without members
  - OAuth2
    - Google
    - Github
