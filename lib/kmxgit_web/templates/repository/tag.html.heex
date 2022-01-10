@@ -14,9 +14,11 @@
         <%= @tag.tag %>
       </h2>
 
-      <div class="message" %>
+      <p>
         <%= @tag.message %>
-      </div>
+      </p>
+
+      <%= link gettext("Browse"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @tag.tag])), class: "btn btn-primary" %>
     </div>
 
     <div class="col col-12 col-md-5">
