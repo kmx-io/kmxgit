@@ -1,0 +1,40 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <%= render("show_title.html", assigns) %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <hr/>
+      <h2>
+        <%= gettext("Tag") %>
+        <%= @tag.tag %>
+      </h2>
+
+      <div class="message" %>
+        <%= @tag.message %>
+      </div>
+    </div>
+
+    <div class="col col-12 col-md-5">
+      <hr/>
+      <table class="table">
+        <tr>
+          <th><%= gettext("Commit") %></th>
+          <td><%= link (@tag.hash |> String.slice(0..7)), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @tag.hash])) %></td>
+        </tr>
+        <tr>
+          <th><%= gettext("Author") %></th>
+          <td><%= @tag.author %></td>
+        </tr>
+        <tr>
+          <th><%= gettext("Date") %></th>
+          <td><%= @tag.date |> String.replace("T", " ") |> String.replace("+", " +") %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

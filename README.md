@@ -84,9 +84,10 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - Github
    - Gitlab ?
  - Git features
-   - Diff
-   - Log
-   - Tags (releases)
+   - diff
+   - DONE log
+   - DONE tags
+ - Releases (tags with db info)
 
 # Copyright
 

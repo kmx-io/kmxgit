@@ -50,4 +50,18 @@
       </ul>
     </td>
   </tr>
+  <%= if @git.tags do %>
+    <tr>
+      <th><%= gettext("Tags") %></th>
+      <td>
+        <ul>
+          <%= for tag <- @git.tags |> Enum.reverse() do %>
+            <li>
+              <%= link tag.tag, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tag", tag.tag])) %>
+            </li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
+  <% end %>      
 </table>

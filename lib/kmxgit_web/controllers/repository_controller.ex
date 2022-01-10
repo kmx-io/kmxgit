@@ -143,6 +143,7 @@ defmodule KmxgitWeb.RepositoryController do
              "_blob" -> :blob
              "_commit" -> :commit
              "_log" -> :log
+             "_tag" -> :tag
              "_tree" -> :tree
              x ->
                IO.puts "Unknown operation #{x}"
@@ -177,12 +178,14 @@ defmodule KmxgitWeb.RepositoryController do
       log1: nil,
       readme: [],
       status: "",
+      tags: [],
       valid: true}
     |> git_put_branches(repo, conn, op, path)
     |> git_put_files(repo, branch, path, conn)
     |> git_put_content(repo, path)
     |> git_put_readme(repo)
     |> git_put_log1(repo, branch, path)
+    |> git_put_tags(repo)
   end
 
   defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
@@ -286,6 +289,11 @@ defmodule KmxgitWeb.RepositoryController do
     %{git | log1: log1}
   end
 
+  defp git_put_tags(git, repo) do
+    {:ok, tags} = GitManager.tags(Repository.full_slug(repo))
+    %{git | tags: tags}
+  end
+
   defp git_log(repo, branch, path) do
     slug = Repository.full_slug(repo)
     {:ok, log} = if path do
@@ -326,6 +334,15 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:path, path)
     |> assign(:repo, repo)
     |> render("log.html")
+  end
+  defp show_op(conn, :tag, branch, git, org, _path, repo, _user) do
+    tag = Enum.find(git.tags, fn tag -> tag.tag == branch end)
+    conn
+    |> assign_current_organisation(org)
+    |> assign(:current_repository, repo)
+    |> assign(:repo, repo)
+    |> assign(:tag, tag)
+    |> render("tag.html")
   end
   defp show_op(conn, :tree, branch, git, org, path, repo, user) do
     conn

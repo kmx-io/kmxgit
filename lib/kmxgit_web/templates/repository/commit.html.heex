@@ -1,26 +1,32 @@
 <div class="container-fluid">
-
   <div class="row">
-    <%= render("show_title.html", assigns) %>
+    <div class="col col-12">
+      <%= render("show_title.html", assigns) %>
+      <h2>
+        <%= gettext("Commit") %>
+        <%= @commit.hash %>
+      </h2>
+    </div>
   </div>
-
   <div class="row">
     <hr/>
-    <h2>
-      <%= gettext("Commit") %>
-      <%= @commit.hash %>
-    </h2>
-
-    <div class="commit">
-      <div class="author">
-        <%= @commit.author %>
-      </div>
-      <div class="date">
-        <%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>
-      </div>
-      <div class="message" %>
+    <div class="col col-12 col-md-7">
+      <p>
         <%= @commit.message %>
-      </div>
+      </p>
+      <hr/>
+    </div>
+    <div class="col col-12 col-md-5">
+      <table class="table">
+        <tr>
+          <th><%= gettext("Author") %></th>
+          <td><%= @commit.author %></td>
+        </tr>
+        <tr>
+          <th><%= gettext("Date") %></th>
+          <td><%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %></td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

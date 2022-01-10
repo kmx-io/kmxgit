@@ -249,4 +249,26 @@ defmodule Kmxgit.GitManager do
       _ -> {:error, out}
     end
   end
+
+  def tags(repo) do
+    dir = git_dir(repo)
+    {out, status} = System.cmd("git", ["-C", dir, "tag", "-l"], stderr_to_stdout: true)
+    case status do
+      0 ->
+        tags = out
+        |> String.split("\n")
+        |> Enum.filter(& &1 && &1 != "")
+        |> Enum.map(& tag_info(repo, &1))
+
+        {:ok, tags}
+      _ ->
+        {:error, out}
+    end
+  end
+
+  def tag_info(repo, tag) do
+    {:ok, commit} = log1(repo, tag)
+    commit
+    |> Map.put(:tag, tag)
+  end
 end

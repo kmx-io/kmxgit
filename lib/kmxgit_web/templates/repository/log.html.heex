@@ -32,7 +32,7 @@
           <%= for commit <- @log do %>
             <tr class="commit">
               <td class="hash">
-                <%= link String.slice(commit.hash, 0..8), id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) %>
+                <%= link String.slice(commit.hash, 0..7), id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) %>
               </td>
               <td class="author">
                 <%= commit.author %>
