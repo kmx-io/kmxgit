@@ -35,6 +35,8 @@ defmodule KmxgitWeb.Router do
     get  "/_etc/ssh/authorized_keys", PageController, :keys
     get  "/_new_admin",               PageController, :new_admin
     post "/_new_admin",               PageController, :new_admin_post
+    get  "/_privacy",                 PageController, :privacy
+    get  "/_user_agreement",          PageController, :user_agreement
 
     delete "/_log_out",        UserSessionController, :delete
     get    "/_confirm",        UserConfirmationController, :new

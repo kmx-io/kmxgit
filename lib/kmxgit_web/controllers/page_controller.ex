@@ -7,6 +7,18 @@ defmodule KmxgitWeb.PageController do
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.{Guardian, User}
 
+  def auth(conn, _params) do
+    a = RepositoryManager.list_repositories
+    |> Enum.sort(fn a, b ->
+      Repository.full_slug(a) < Repository.full_slug(b)
+    end)
+    |> Enum.map(fn repo -> Repository.auth(repo) end)
+    |> Enum.join("\n")
+    conn
+    |> put_resp_content_type("text/text")
+    |> resp(200, a)
+  end    
+
   def index(conn, _params) do
     if ! UserManager.admin_user_present? do
       redirect(conn, to: Routes.page_path(conn, :new_admin))
@@ -14,6 +26,17 @@ defmodule KmxgitWeb.PageController do
       conn
       |> render(:index)
     end
+  end
+
+  def keys(conn, _params) do
+    k1 = UserManager.list_users
+    |> Enum.map(&User.ssh_keys_with_env/1)
+    k2 = RepositoryManager.list_repositories
+    |> Enum.map(&Repository.deploy_keys_with_env/1)
+    k = (k1 ++ k2) |> Enum.join("\n")
+    conn
+    |> put_resp_content_type("text/text")
+    |> resp(200, k)
   end
 
   def new_admin(conn, _params) do
@@ -51,26 +74,13 @@ defmodule KmxgitWeb.PageController do
     end
   end
 
-  def keys(conn, _params) do
-    k1 = UserManager.list_users
-    |> Enum.map(&User.ssh_keys_with_env/1)
-    k2 = RepositoryManager.list_repositories
-    |> Enum.map(&Repository.deploy_keys_with_env/1)
-    k = (k1 ++ k2) |> Enum.join("\n")
+  def privacy(conn, _params) do
     conn
-    |> put_resp_content_type("text/text")
-    |> resp(200, k)
+    |> render(:privacy)
   end
 
-  def auth(conn, _params) do
-    a = RepositoryManager.list_repositories
-    |> Enum.sort(fn a, b ->
-      Repository.full_slug(a) < Repository.full_slug(b)
-    end)
-    |> Enum.map(fn repo -> Repository.auth(repo) end)
-    |> Enum.join("\n")
+  def user_agreement(conn, _params) do
     conn
-    |> put_resp_content_type("text/text")
-    |> resp(200, a)
-  end    
+    |> render(:user_agreement)
+  end
 end
