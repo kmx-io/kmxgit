@@ -348,7 +348,7 @@ defmodule KmxgitWeb.RepositoryController do
   defp show_op(conn, :tree, branch, git, org, path, repo, user) do
     conn
     |> assign(:branch, branch)
-    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", branch] ++ (if path, do: String.split(path, "/"), else: []))))
+    |> assign(:branch_url, branch && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", branch] ++ (if path, do: String.split(path, "/"), else: []))))
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:git, git)
