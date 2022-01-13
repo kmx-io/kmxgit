@@ -20,12 +20,6 @@
       <%= error_tag f, :password %>
     </div>
 
-    <div class="mb-3">
-      <%= label f, :otp, gettext("TOTP (Google Authenticator)"), class: "form-label" %>
-      <%= number_input f, :otp, class: "form-control" %>
-      <%= error_tag f, :otp %>
-    </div>
-
     <div class="mb-3 form-check">
       <%= checkbox f, :remember_me, class: "form-check-input" %>
       <%= label f, :remember_me, "Keep me logged in for 60 days", class: "form-check-label" %>

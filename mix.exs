@@ -34,11 +34,9 @@ defmodule Kmxgit.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 2.0"},
-      {:dart_sass, "~> 0.2", runtime: Mix.env() == :dev},
       {:earmark, "~> 1.4.5"},
       {:ecto_sql, "~> 3.6"},
       {:elixir_auth_google, "~> 1.6.2"},
-      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:floki, ">= 0.30.0", only: :test},
       {:gen_smtp, "~> 1.1"},
       {:gettext, "~> 0.18"},

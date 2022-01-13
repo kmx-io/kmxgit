@@ -236,8 +236,8 @@ defmodule Kmxgit.UserManager do
     |> Repo.delete()
   end
 
-  def change_user(%User{} = user \\ %User{}) do
-    User.changeset(user, %{})
+  def change_user(%User{} = user \\ %User{}, params \\ %{}) do
+    User.changeset(user, params)
   end
 
   def authenticate_user(login, password) do
@@ -259,10 +259,10 @@ defmodule Kmxgit.UserManager do
     end
   end
 
-  def otp_init do
+  def totp_init do
     Repo.transaction fn ->
       Enum.each list_users(), fn u ->
-        {:ok, _} = User.otp_changeset(u) |> Repo.update()
+        {:ok, _} = User.totp_changeset(u) |> Repo.update()
       end
     end
   end
@@ -274,7 +274,7 @@ defmodule Kmxgit.UserManager do
   ## Examples
       iex> generate_totp_enrolment_url(user)
   """
-  def totp_enrolment_url(%User{email: email, otp_secret: secret}) do
+  def totp_enrolment_url(%User{email: email, totp_secret: secret}) do
     "otpauth://totp/kmxgit:#{email}?secret=#{secret}&issuer=kmxgit&algorithm=SHA1&digits=6&period=30"
   end
 
@@ -285,7 +285,7 @@ defmodule Kmxgit.UserManager do
   end
 
   def verify_user_totp(user = %User{}, token) do
-    User.totp_verify(user, token)
+    User.totp_verify(user, token || 0)
   end
 
   def delete_user_totp(user = %User{}) do

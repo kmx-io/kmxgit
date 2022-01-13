@@ -79,7 +79,7 @@ defmodule KmxgitWeb.UserController do
     if params["login"] == User.login(current_user) do
       user = current_user
       changeset = UserManager.change_user(user)
-      |> Ecto.Changeset.put_change(:otp_last, "")
+      |> Ecto.Changeset.put_change(:totp_last, "")
       totp_enrolment_qrcode_src = totp_enrolment_qrcode_src(user)
       conn
       |> assign(:changeset, changeset)

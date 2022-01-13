@@ -1,0 +1,28 @@
+<div class="container-fluid">
+  <h1><%= gettext "Log in (2FA)" %></h1>
+
+  <.form let={f} for={@changeset} action={Routes.user_session_path(@conn, :create)} as={:user}>
+    <%= if @totp do %>
+      <div class="alert alert-danger">
+        <p><%= @error_message %></p>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= label f, :totp, gettext("TOTP (Google Authenticator)"), class: "form-label" %>
+      <%= number_input f, :totp, class: "form-control" %>
+      <%= error_tag f, :totp %>
+    </div>
+
+    <div class="mb-3 form-check">
+      <%= checkbox f, :remember_me, class: "form-check-input" %>
+      <%= label f, :remember_me, "Keep me logged in for 60 days", class: "form-check-label" %>
+    </div>
+
+    <%= render "recaptcha.html", assigns %>
+
+    <div>
+      <%= submit gettext("Submit"), class: "btn btn-primary" %>
+    </div>
+  </.form>
+</div>

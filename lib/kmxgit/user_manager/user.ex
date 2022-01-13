@@ -15,8 +15,8 @@ defmodule Kmxgit.UserManager.User do
     field :hashed_password, :string, redact: true
     field :is_admin, :boolean, null: false, default: false
     field :name, :string
-    field :otp_last, :integer, default: 0, redact: true
-    field :otp_secret, :string, redact: true
+    field :totp_last, :integer, default: 0, redact: true
+    field :totp_secret, :string, redact: true
     has_many :owned_repositories, Repository
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
@@ -47,16 +47,16 @@ defmodule Kmxgit.UserManager.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password])
-    |> generate_otp_secret()
+    |> generate_totp_secret()
     |> validate_email()
     |> validate_password(opts)
     |> common_changeset()
   end
 
-  def otp_changeset(user) do
+  def totp_changeset(user) do
     user
     |> cast(%{}, [])
-    |> generate_otp_secret()
+    |> generate_totp_secret()
     |> common_changeset()
   end
 
@@ -177,15 +177,15 @@ defmodule Kmxgit.UserManager.User do
   defp common_changeset(changeset) do
     changeset
     |> cast_assoc(:slug)
-    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :otp_secret, :slug])
+    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :totp_secret, :slug])
     |> validate_email()
     |> Markdown.validate_markdown(:description)
     |> foreign_key_constraint(:owned_repositories, name: :repositories_user_id_fkey)
   end
 
-  defp generate_otp_secret(changeset) do
+  defp generate_totp_secret(changeset) do
     secret = :crypto.strong_rand_bytes(10) |> Base.encode32()
-    put_change(changeset, :otp_secret, secret)
+    put_change(changeset, :totp_secret, secret)
   end
 
   def changeset(user, attrs \\ %{}) do
@@ -205,7 +205,7 @@ defmodule Kmxgit.UserManager.User do
   def admin_create_user_changeset(user, attrs \\ %{}, opts \\ []) do
     user
     |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :ssh_keys])
-    |> generate_otp_secret()
+    |> generate_totp_secret()
     |> validate_email()
     |> maybe_validate_password(opts)
     |> common_changeset()
@@ -246,27 +246,27 @@ defmodule Kmxgit.UserManager.User do
     end
   end
 
-  def totp_verify(%__MODULE__{otp_secret: secret}, token) do
+  def totp_verify(%__MODULE__{totp_secret: secret}, token) do
     :pot.valid_totp(token, secret, [window: 1, addwindow: 1])
   end
 
   def totp_changeset(user, :delete) do
     user
-    |> cast(%{otp_last: 0}, [:otp_last])
+    |> cast(%{totp_last: 0}, [:totp_last])
   end
   def totp_changeset(user, params) do
     user
-    |> cast(params, [:otp_last])
-    |> verify_otp_last()
+    |> cast(params, [:totp_last])
+    |> verify_totp_last()
   end
 
-  defp verify_otp_last(changeset) do
-    otp_last = Integer.to_string get_field(changeset, :otp_last)
+  defp verify_totp_last(changeset) do
+    otp_last = changeset |> get_field(:otp_last) |> Integer.to_string()
     if totp_verify(changeset.data, otp_last) do
       changeset
     else
       changeset
-      |> add_error(:otp_last, "invalid token")
+      |> add_error(:totp_last, "invalid token")
     end
   end
 end

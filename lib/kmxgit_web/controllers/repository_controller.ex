@@ -281,11 +281,12 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_put_log1(git, repo, branch, path) do
     slug = Repository.full_slug(repo)
-    {:ok, log1} = if path do
-      GitManager.log1_file(slug, path, branch)
-    else
-      GitManager.log1(slug, branch)
-    end
+    log1 = case if path, do: GitManager.log1_file(slug, path, branch), else: GitManager.log1(slug, branch) do
+             {:ok, log1} -> log1
+             {:error, err} ->
+               IO.inspect(err)
+               nil
+           end
     %{git | log1: log1}
   end
 
