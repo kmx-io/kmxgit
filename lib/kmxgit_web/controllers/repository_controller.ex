@@ -317,7 +317,7 @@ defmodule KmxgitWeb.RepositoryController do
   end
   defp show_op(conn, :commit, _branch, git, org, _path, repo, _user) do
     IO.inspect(git)
-    {:ok, diff} = GitManager.diff(Repository.full_slug(repo), git.log1.hash, "#{git.log1.hash}~1")
+    {:ok, diff} = GitManager.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash)
     diff_html = Pygmentize.html(diff, "diff.patch")
     conn
     |> assign(:commit, git.log1)
