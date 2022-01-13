@@ -316,10 +316,14 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, :commit, _branch, git, org, _path, repo, _user) do
+    IO.inspect(git)
+    {:ok, diff} = GitManager.diff(Repository.full_slug(repo), git.log1.hash, "#{git.log1.hash}~1")
+    diff_html = Pygmentize.html(diff, "diff.patch")
     conn
     |> assign(:commit, git.log1)
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
+    |> assign(:diff_html, diff_html)
     |> assign(:repo, repo)
     |> render("commit.html")
   end

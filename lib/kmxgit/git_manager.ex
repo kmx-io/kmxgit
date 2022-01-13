@@ -271,4 +271,13 @@ defmodule Kmxgit.GitManager do
     commit
     |> Map.put(:tag, tag)
   end
+
+  def diff(repo, from, to) do
+    dir = git_dir(repo)
+    {out, status} = System.cmd("git", ["-C", dir, "diff", from, to], stderr_to_stdout: true)
+    case status do
+      0 -> {:ok, out}
+      _ -> {:error, out}
+    end
+  end
 end
