@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-12">
+      <%= render("show_title.html", assigns) %>
+      <h2>
+        <%= gettext("Diff") %>
+        <%= gettext("from") %>
+        <%= @diff_from %>
+        <%= gettext("to") %>
+        <%= @diff_to %>
+      </h2>
+    </div>
+  </div>
+  <div class="row">
+    <hr/>
+    <div class="col col-12">
+      <%= raw @diff_html %>
+      <hr/>
+    </div>
+  </div>
+</div>

@@ -337,13 +337,15 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:repo, repo)
     |> render("commit.html")
   end
-  defp show_op(conn, :diff, %{branch: branch, org: org, path: path, repo: repo}) do
-    {:ok, diff} = GitManager.diff(Repository.full_slug(repo), branch, path)
+  defp show_op(conn, :diff, %{from: from, org: org, repo: repo, to: to}) do
+    {:ok, diff} = GitManager.diff(Repository.full_slug(repo), from, to)
     diff_html = Pygmentize.html(diff, "diff.patch")
     conn
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
+    |> assign(:diff_from, from)
     |> assign(:diff_html, diff_html)
+    |> assign(:diff_to, to)
     |> assign(:repo, repo)
     |> render("diff.html")
   end
