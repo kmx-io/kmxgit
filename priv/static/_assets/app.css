@@ -14589,14 +14589,14 @@ img.qrcode {
   color: blue;
 }
 
-.content_html {
+.content_text {
   border: solid 1px #ccc;
   padding: 0.5em 0.5em 0.5em 3.5em;
   margin: 0;
   position: relative;
 }
 
-.content_html .line_numbers {
+.content_text .line_numbers {
   position: absolute;
   top: 0.5em;
   left: 0.5em;

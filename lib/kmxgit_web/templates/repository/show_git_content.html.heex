@@ -1,17 +1,26 @@
 <h3><%= gettext("Content") %></h3>
-<%= if @git.content_html do %>
-  <div class="content_html">
-    <div class="line_numbers">
-      <pre><%= @git.line_numbers %></pre>
+<div class="file_content">
+  <%= if @git.content_html do %>
+    <div class="content_text">
+      <div class="line_numbers">
+        <pre><%= @git.line_numbers %></pre>
+      </div>
+      <div class="content_html">
+        <%= raw @git.content_html %>
+      </div>
     </div>
-    <%= raw @git.content_html %>
-  </div>
-<% else %>
-  <%= if String.match?(@git.content_type, ~r(^text/)) do %>
-    <pre><%= @git.content %></pre>
+  <% else %>
+    <%= if String.match?(@git.content_type, ~r(^text/)) do %>
+      <div class="content_text">
+        <div class="line_numbers">
+          <pre><%= @git.line_numbers %></pre>
+        </div>
+        <pre><%= @git.content %></pre>
+      </div>
+    <% end %>
   <% end %>
-<% end %>
-<%= if String.match?(@git.content_type, ~r(^image/)) do %>
-  <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
-<% end %>
-<%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @branch | String.split(@path, "/")])), class: "btn btn-primary" %>
+  <%= if String.match?(@git.content_type, ~r(^image/)) do %>
+    <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
+  <% end %>
+  <%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @branch | String.split(@path, "/")])), class: "btn btn-primary" %>
+</div>
