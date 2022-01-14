@@ -77,6 +77,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE change password
  - DONE front
    - DONE source code coloration
+   - DONE line numbers
  - admin
    - create organisation without members
  - OAuth2
@@ -85,6 +86,8 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - Gitlab ?
  - Git features
    - diff
+     - DONE sub-route, controller, view
+     - links
    - DONE log
    - DONE tags
  - Releases (tags with db info)

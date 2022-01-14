@@ -1,6 +1,9 @@
 <h3><%= gettext("Content") %></h3>
 <%= if @git.content_html do %>
   <div class="content_html">
+    <div class="line_numbers">
+      <pre><%= @git.line_numbers %></pre>
+    </div>
     <%= raw @git.content_html %>
   </div>
 <% else %>

@@ -44,19 +44,28 @@ img.qrcode {
         color: blue;
     }
 }
-.file-content {
+.content_html {
     border: solid 1px #ccc;
-    padding: 1.5em;
-    margin: 1em;
-    width: 94%;
+    padding: 0.5em 0.5em 0.5em 3.5em;
+    margin: 0;
+    position: relative;
 }
+.content_html .line_numbers {
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    text-align: right;
+    width: 2.5em;
+    color: #aaa;
+} 
+    
 pre code {
     display: block;
     border: solid 1px #ccc;
     padding: 1em;
     overflow: scroll;
 }
-.file-content img {
+.content_html img {
     max-width: 100%;
 }
 

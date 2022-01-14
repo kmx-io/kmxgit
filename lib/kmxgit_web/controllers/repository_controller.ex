@@ -185,6 +185,7 @@ defmodule KmxgitWeb.RepositoryController do
       content_type: nil,
       filename: nil,
       files: [],
+      line_numbers: nil,
       log1: nil,
       readme: [],
       status: "",
@@ -253,8 +254,13 @@ defmodule KmxgitWeb.RepositoryController do
                    _ -> mime_type(content)
                  end
           content_html = Pygmentize.html(content, filename(name))
+          line_numbers = content
+          |> String.split("\n")
+          |> Enum.with_index()
+          |> Enum.map(fn {_, i} -> i end)
+          |> Enum.join("\n")
           IO.inspect(path: path, name: name, type: type)
-          %{git | content: content, content_html: content_html, content_type: type, filename: name}
+          %{git | content: content, content_html: content_html, content_type: type, filename: name, line_numbers: line_numbers}
         {:error, error} -> %{git | status: error}
       end
     else
