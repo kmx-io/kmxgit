@@ -98,24 +98,27 @@ defmodule KmxgitWeb.RepositoryController do
     current_user = conn.assigns[:current_user]
     chunks = params["slug"] |> chunk_path()
     slug = chunks |> Enum.at(0) |> Enum.join("/")
-    {op, branch, path} = get_op_branch_and_path(chunks)
+    op = get_op(chunks)
+    op_params = get_op_params(op, chunks)
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
     if repo && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
-      git = setup_git(repo, branch || "master", path, conn, op)
+      git = setup_git(repo, op_params.branch || "master", op_params.path, conn, op)
       first_branch = case Enum.at(git.branches, 0) do
                        {first_branch, _} -> first_branch
                        nil -> nil
                      end
-      branch1 = branch || first_branch
+      branch1 = op_params.branch || first_branch
+      op_params = %{op_params | branch: branch1, git: git, org: org, repo: repo, user: user}
       if git.valid do
-        show_op(conn, op || :tree, branch1, git, org, path, repo, user)
+        show_op(conn, op || :tree, op_params)
       else
         IO.inspect(:invalid_git)
         not_found(conn)
       end
     else
+      IO.inspect(:no_repo)
       not_found(conn)
     end
   end
@@ -137,35 +140,42 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
-  defp get_op_branch_and_path(chunks) do
+  defp get_op(chunks) do
     if path = chunks |> Enum.at(1) do
-      op = case path |> Enum.at(0) do
-             "_blob" -> :blob
-             "_commit" -> :commit
-             "_log" -> :log
-             "_tag" -> :tag
-             "_tree" -> :tree
-             x ->
-               IO.puts "Unknown operation #{x}"
-               :unknown
-           end
-      if op do
-        {_, rest} = chunks |> Enum.split(2)
-        rest1 = rest |> Enum.map(fn x ->
-          Enum.join(x, "/")
-        end)
-        {[_, branch], path1} = path |> Enum.split(2)
-        path2 = (path1 ++ rest1)
-        |> Enum.reject(&(!&1 || &1 == ""))
-        |> Enum.join("/")
-        path3 = if path2 != "", do: path2
-        {op, branch, path3}
-      else
-        {nil, nil, nil}
+      case path |> Enum.at(0) do
+        "_blob" -> :blob
+        "_commit" -> :commit
+        "_diff" -> :diff
+        "_log" -> :log
+        "_tag" -> :tag
+        "_tree" -> :tree
+        x ->
+          IO.puts "Unknown operation #{x}"
+          :unknown
       end
-    else
-      {nil, nil, nil}
     end
+  end
+
+  defp get_op_params(nil, _) do
+    %{branch: nil, from: nil, git: nil, org: nil, path: nil, repo: nil, to: nil, user: nil}
+  end
+  defp get_op_params(:diff, chunks) do
+    path = chunks |> Enum.at(1)
+    {[_, from, to], _} = path |> Enum.split(3)
+    %{branch: nil, from: from, git: nil, org: nil, path: nil, repo: nil, to: to, user: nil}
+  end
+  defp get_op_params(_, chunks) do
+    path = chunks |> Enum.at(1)
+    {_, rest} = chunks |> Enum.split(2)
+    rest1 = rest |> Enum.map(fn x ->
+      Enum.join(x, "/")
+    end)
+    {[_, branch], path1} = path |> Enum.split(2)
+    path2 = (path1 ++ rest1)
+    |> Enum.reject(&(!&1 || &1 == ""))
+    |> Enum.join("/")
+    path3 = if path2 != "", do: path2
+    %{branch: branch, from: nil, git: nil, org: nil, path: path3, repo: nil, to: nil, user: nil}
   end
 
   defp setup_git(repo, branch, path, conn, op) do
@@ -305,7 +315,7 @@ defmodule KmxgitWeb.RepositoryController do
     log
   end
 
-  defp show_op(conn, :blob, _branch, git, _org, _path, _repo, _user) do
+  defp show_op(conn, :blob, %{git: git}) do
     if (git.content) do
       conn
       |> put_resp_content_type("application/octet-stream")
@@ -315,7 +325,7 @@ defmodule KmxgitWeb.RepositoryController do
       not_found(conn)
     end
   end
-  defp show_op(conn, :commit, _branch, git, org, _path, repo, _user) do
+  defp show_op(conn, :commit, %{git: git, org: org, repo: repo}) do
     IO.inspect(git)
     {:ok, diff} = GitManager.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash)
     diff_html = Pygmentize.html(diff, "diff.patch")
@@ -327,7 +337,17 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:repo, repo)
     |> render("commit.html")
   end
-  defp show_op(conn, :log, branch, git, org, path, repo, _user) do
+  defp show_op(conn, :diff, %{branch: branch, org: org, path: path, repo: repo}) do
+    {:ok, diff} = GitManager.diff(Repository.full_slug(repo), branch, path)
+    diff_html = Pygmentize.html(diff, "diff.patch")
+    conn
+    |> assign_current_organisation(org)
+    |> assign(:current_repository, repo)
+    |> assign(:diff_html, diff_html)
+    |> assign(:repo, repo)
+    |> render("diff.html")
+  end
+  defp show_op(conn, :log, %{branch: branch, git: git, org: org, path: path, repo: repo}) do
     log = git_log(repo, branch, path)
     conn
     |> assign(:branch, branch)
@@ -340,7 +360,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:repo, repo)
     |> render("log.html")
   end
-  defp show_op(conn, :tag, branch, git, org, _path, repo, _user) do
+  defp show_op(conn, :tag, %{branch: branch, git: git, org: org, repo: repo}) do
     tag = Enum.find(git.tags, fn tag -> tag.tag == branch end)
     conn
     |> assign_current_organisation(org)
@@ -349,7 +369,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:tag, tag)
     |> render("tag.html")
   end
-  defp show_op(conn, :tree, branch, git, org, path, repo, user) do
+  defp show_op(conn, :tree, %{branch: branch, git: git, org: org, path: path, repo: repo, user: user}) do
     conn
     |> assign(:branch, branch)
     |> assign(:branch_url, branch && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", branch] ++ (if path, do: String.split(path, "/"), else: []))))
@@ -362,7 +382,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:path, path)
     |> render("show.html")
   end
-  defp show_op(conn, _op, _branch, _git, _org, _path, _repo, _user) do
+  defp show_op(conn, _, _) do
     not_found(conn)
   end
 
