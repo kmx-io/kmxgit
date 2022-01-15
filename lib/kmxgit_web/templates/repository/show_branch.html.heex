@@ -3,7 +3,7 @@
     <hr/>
     <p>
       <%= tree_type(tree) %>
-      <%= select :repository, :tree, select_trees(@git.trees), selected: @tree_url, onchange: "javascript:document.location = this.value;" %>
+      <%= select :repository, :tree, select_trees(@git.trees), selected: @tree_url, class: "tree" %>
     </p>
   <% end %>
 <% end %>
