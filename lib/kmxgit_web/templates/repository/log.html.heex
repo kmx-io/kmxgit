@@ -10,7 +10,7 @@
     <div class="col">
       <%= if @path do %>
         <hr/>
-        <h2><%= link @path, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @branch] ++ String.split(@path, "/"))) %></h2>
+        <h2><%= link @path, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @tree] ++ String.split(@path, "/"))) %></h2>
       <% end %>
 
       <%= render("show_branch.html", assigns) %>
