@@ -104,13 +104,13 @@ defmodule KmxgitWeb.RepositoryController do
     if repo && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
-      git = setup_git(repo, op_params.branch || "master", op_params.path, conn, op)
-      first_branch = case Enum.at(git.branches, 0) do
-                       {first_branch, _} -> first_branch
+      git = setup_git(repo, op_params.tree || "master", op_params.path, conn, op)
+      first_tree = case Enum.at(git.trees, 0) do
+                       {_, first_tree, _} -> first_tree
                        nil -> nil
                      end
-      branch1 = op_params.branch || first_branch
-      op_params = %{op_params | branch: branch1, git: git, org: org, repo: repo, user: user}
+      tree1 = op_params.tree || first_tree
+      op_params = %{op_params | tree: tree1, git: git, org: org, repo: repo, user: user}
       if git.valid do
         show_op(conn, op || :tree, op_params)
       else
@@ -157,12 +157,12 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp get_op_params(nil, _) do
-    %{branch: nil, from: nil, git: nil, org: nil, path: nil, repo: nil, to: nil, user: nil}
+    %{tree: nil, from: nil, git: nil, org: nil, path: nil, repo: nil, to: nil, user: nil}
   end
   defp get_op_params(:diff, chunks) do
     path = chunks |> Enum.at(1)
     {[_, from, to], _} = path |> Enum.split(3)
-    %{branch: nil, from: from, git: nil, org: nil, path: nil, repo: nil, to: to, user: nil}
+    %{tree: nil, from: from, git: nil, org: nil, path: nil, repo: nil, to: to, user: nil}
   end
   defp get_op_params(_, chunks) do
     path = chunks |> Enum.at(1)
@@ -170,16 +170,16 @@ defmodule KmxgitWeb.RepositoryController do
     rest1 = rest |> Enum.map(fn x ->
       Enum.join(x, "/")
     end)
-    {[_, branch], path1} = path |> Enum.split(2)
+    {[_, tree], path1} = path |> Enum.split(2)
     path2 = (path1 ++ rest1)
     |> Enum.reject(&(!&1 || &1 == ""))
     |> Enum.join("/")
     path3 = if path2 != "", do: path2
-    %{branch: branch, from: nil, git: nil, org: nil, path: path3, repo: nil, to: nil, user: nil}
+    %{tree: tree, from: nil, git: nil, org: nil, path: path3, repo: nil, to: nil, user: nil}
   end
 
-  defp setup_git(repo, branch, path, conn, op) do
-    %{branches: [],
+  defp setup_git(repo, tree, path, conn, op) do
+    %{trees: [],
       content: nil,
       content_html: nil,
       content_type: nil,
@@ -192,22 +192,23 @@ defmodule KmxgitWeb.RepositoryController do
       tags: [],
       valid: true}
     |> git_put_branches(repo, conn, op, path)
-    |> git_put_files(repo, branch, path, conn)
+    |> git_put_files(repo, tree, path, conn)
     |> git_put_content(repo, path)
     |> git_put_readme(repo)
-    |> git_put_log1(repo, branch, path)
-    |> git_put_tags(repo)
+    |> git_put_log1(repo, tree, path)
+    |> git_put_tags(repo, conn, op, path)
+    |> git_put_commit(repo, conn, op, tree, path)
   end
 
   defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
     case GitManager.branches(Repository.full_slug(repo)) do
       {:ok, branches} ->
-        branches = branches
+        branch_trees = branches
         |> Enum.map(fn branch ->
           url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op || :tree}", branch] ++ (if path, do: String.split(path, "/"), else: []))
-          {branch, url}
+          {:branch, branch, url}
         end)
-        %{git | branches: branches}
+        %{git | trees: git.trees ++ branch_trees}
       {:error, status} -> %{git | status: status, valid: false}
     end
   end
@@ -215,13 +216,13 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_files(git = %{valid: true}, repo, branch, subdir, conn) do
-    case GitManager.files(Repository.full_slug(repo), branch, subdir || "") do
+  defp git_put_files(git = %{valid: true}, repo, tree, subdir, conn) do
+    case GitManager.files(Repository.full_slug(repo), tree, subdir || "") do
       {:ok, []} -> git
       {:ok, files} ->
         files = files
         |> Enum.map(fn f = %{url: url} ->
-          %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_tree", branch | String.split(url, "/")])}
+          %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_tree", tree | String.split(url, "/")])}
         end)
         %{git | files: files}
       {:error, status} -> %{git | status: "#{git.status}\n#{status}", valid: false}
@@ -267,7 +268,6 @@ defmodule KmxgitWeb.RepositoryController do
       git
     end
   end
-
   defp git_put_content(git, _, _) do
     git
   end
@@ -295,9 +295,9 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_log1(git, repo, branch, path) do
+  defp git_put_log1(git = %{valid: true}, repo, tree, path) do
     slug = Repository.full_slug(repo)
-    log1 = case if path, do: GitManager.log1_file(slug, path, branch), else: GitManager.log1(slug, branch) do
+    log1 = case if path, do: GitManager.log1_file(slug, path, tree), else: GitManager.log1(slug, tree) do
              {:ok, log1} -> log1
              {:error, err} ->
                IO.inspect(err)
@@ -305,18 +305,44 @@ defmodule KmxgitWeb.RepositoryController do
            end
     %{git | log1: log1}
   end
-
-  defp git_put_tags(git, repo) do
-    {:ok, tags} = GitManager.tags(Repository.full_slug(repo))
-    %{git | tags: tags}
+  defp git_put_log1(git, _, _, _) do
+    git
   end
 
-  defp git_log(repo, branch, path) do
+  defp git_put_tags(git = %{valid: true}, repo, conn, op, path) do
+    case GitManager.tags(Repository.full_slug(repo)) do
+      {:ok, tags} ->
+        tag_trees = tags
+        |> Enum.map(fn %{tag: tag} ->
+          url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op || :tree}", tag] ++ (if path, do: String.split(path, "/"), else: []))
+          {:tag, tag, url}
+        end)
+        %{git | tags: tags, trees: git.trees ++ tag_trees}
+      {:error, status} -> %{git | status: status, valid: false}
+    end
+  end
+  defp git_put_tags(git, _, _, _, _) do
+    git
+  end
+
+  defp git_put_commit(git = %{valid: true}, repo, conn, op, tree, path) do
+    if Enum.find(git.trees, fn {_, id, _} -> id == tree end) do
+      git
+    else
+      url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op || :tree}", tree] ++ (if path, do: String.split(path, "/"), else: []))
+      %{git | trees: [{:commit, tree, url} | git.trees]}
+    end
+  end
+  defp git_put_commit(git, _, _, _, _, _) do
+    git
+  end
+
+  defp git_log(repo, tree, path) do
     slug = Repository.full_slug(repo)
     {:ok, log} = if path do
-      GitManager.log_file(slug, path, branch)
+      GitManager.log_file(slug, path, tree)
     else
-      GitManager.log(slug, branch)
+      GitManager.log(slug, tree)
     end
     log
   end
@@ -355,11 +381,11 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:repo, repo)
     |> render("diff.html")
   end
-  defp show_op(conn, :log, %{branch: branch, git: git, org: org, path: path, repo: repo}) do
-    log = git_log(repo, branch, path)
+  defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
+    log = git_log(repo, tree, path)
     conn
-    |> assign(:branch, branch)
-    |> assign(:branch_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", branch] ++ (if path, do: String.split(path, "/"), else: []))))
+    |> assign(:tree, tree)
+    |> assign(:tree_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", tree] ++ (if path, do: String.split(path, "/"), else: []))))
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:git, git)
@@ -368,8 +394,8 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:repo, repo)
     |> render("log.html")
   end
-  defp show_op(conn, :tag, %{branch: branch, git: git, org: org, repo: repo}) do
-    tag = Enum.find(git.tags, fn tag -> tag.tag == branch end)
+  defp show_op(conn, :tag, %{tree: tree, git: git, org: org, repo: repo}) do
+    tag = Enum.find(git.tags, fn tag -> tag.tag == tree end)
     conn
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
@@ -377,10 +403,10 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:tag, tag)
     |> render("tag.html")
   end
-  defp show_op(conn, :tree, %{branch: branch, git: git, org: org, path: path, repo: repo, user: user}) do
+  defp show_op(conn, :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
     conn
-    |> assign(:branch, branch)
-    |> assign(:branch_url, branch && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", branch] ++ (if path, do: String.split(path, "/"), else: []))))
+    |> assign(:tree, tree)
+    |> assign(:tree_url, tree && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", tree] ++ (if path, do: String.split(path, "/"), else: []))))
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:git, git)
