@@ -317,6 +317,7 @@ defmodule KmxgitWeb.RepositoryController do
           url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op || :tree}", tag] ++ (if path, do: String.split(path, "/"), else: []))
           {:tag, tag, url}
         end)
+        |> Enum.reverse()
         %{git | tags: tags, trees: git.trees ++ tag_trees}
       {:error, status} -> %{git | status: status, valid: false}
     end
