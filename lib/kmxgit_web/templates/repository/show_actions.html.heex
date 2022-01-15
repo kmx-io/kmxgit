@@ -6,3 +6,6 @@
 <%= if @current_user do %>
   <%= link gettext("Fork"), to: Routes.repository_path(@conn, :fork, Repository.owner_slug(@repo), Repository.splat(@repo)), class: "btn btn-primary" %>
 <% end %>
+<%= if (@branch != "master") do %>
+  <%= link gettext("Diff"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_diff", @branch, "master"])), class: "btn btn-primary" %>
+<% end %>

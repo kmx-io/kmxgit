@@ -1,19 +1,21 @@
 <%= if @branch do %>
   <hr/>
   <%= if Enum.find(@git.branches, fn {name, _} -> name == @branch end) do %>
-    <%= gettext("Branch") %>
-    <%= select :repository, :branch, @git.branches, selected: @branch_url, onchange: "javascript:document.location = this.value;" %>
+    <p>
+      <%= gettext("Branch") %>
+      <%= select :repository, :branch, @git.branches, selected: @branch_url, onchange: "javascript:document.location = this.value;" %>
+    </p>
   <% else %>
     <%= if String.length(@branch) == 40 do %>
       <h2>
         <%= gettext("Commit") %>
         <%= @branch %>
       </h2>
-    <% else %>
+     <% else %>
       <h2>
         <%= gettext("Tag") %>
         <%= @branch %>
       </h2>
-    <% end %>
+     <% end %>
   <% end %>
 <% end %>
