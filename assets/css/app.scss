@@ -44,6 +44,13 @@ img.qrcode {
         color: blue;
     }
 }
+.file-content {
+    border: solid 1px #ccc;
+    padding: 1em;
+    * {
+        word-break: normal;
+    }
+}
 .content_text {
     border: solid 1px #ccc;
     padding: 0.5em 0.5em 0.5em 3.5em;
