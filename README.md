@@ -11,7 +11,6 @@ Now public repositories are also supported.
 
 ## Installation
 
-
 ### git-auth installation
 
 git-auth handles all permissions for a single git user accessible
@@ -56,11 +55,12 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 }
 ```
 
+
 # TODO
 
 ## kmxgit v0.2
 
- - auth
+ - DONE auth
    - DONE auth users using `phx.gen.auth`
    - DONE change password in separate form
    - DONE session timeout (60 days)
@@ -71,32 +71,39 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE routes
    - DONE permissions
    - DONE git-http-backend
- - DONE notification e-mails
-   - DONE change login
-   - DONE change e-mail
-   - DONE change password
  - DONE front
    - DONE source code coloration
    - DONE line numbers
- - admin
-   - create organisation without members
+ - DONE admin
+   - DONE create organisation without members
+ - DONE Git features
+   - DONE diff
+     - DONE sub-route, controller, view
+     - DONE links
+     - DONE line numbers
+   - DONE log
+   - DONE tags
+ - notification e-mails
+   - DONE change login
+   - DONE change e-mail
+   - DONE change password
+   - change 2FA
+
+
+## kmxgit v0.3
+
  - OAuth2
    - Google
    - Github
    - Gitlab ?
- - Git features
-   - diff
-     - DONE sub-route, controller, view
-     - links
-   - DONE log
-   - DONE tags
  - Releases (tags with db info)
+
 
 # Copyright
 
 kmxgit - git server administration
 
-Copyright 2021 Thomas de Grivel <thoxdg@gmail.com>
+Copyright 2021,2022 Thomas de Grivel <thoxdg@gmail.com>
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
