@@ -14,8 +14,13 @@
   <div class="row">
     <hr/>
     <div class="col col-12">
-      <%= raw @diff_html %>
-      <hr/>
+      <div class="content_text">
+        <div class="line_numbers">
+          <pre><%= for ln <- @diff_line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
+          <% end %></pre>
+        </div>
+        <%= raw @diff_html %>
+      </div>
     </div>
   </div>
 </div>

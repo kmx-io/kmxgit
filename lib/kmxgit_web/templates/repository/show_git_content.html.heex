@@ -3,7 +3,8 @@
   <%= if @git.content_html do %>
     <div class="content_text">
       <div class="line_numbers">
-        <pre><%= @git.line_numbers %></pre>
+        <pre><%= for ln <- @git.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
+        <% end %></pre>
       </div>
       <div class="content_html">
         <%= raw @git.content_html %>
@@ -13,7 +14,8 @@
     <%= if String.match?(@git.content_type, ~r(^text/)) do %>
       <div class="content_text">
         <div class="line_numbers">
-          <pre><%= @git.line_numbers %></pre>
+          <pre><%= for ln <- @git.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
+          <% end %></pre>
         </div>
         <pre><%= @git.content %></pre>
       </div>

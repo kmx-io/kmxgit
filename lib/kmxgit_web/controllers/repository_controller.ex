@@ -371,11 +371,13 @@ defmodule KmxgitWeb.RepositoryController do
   defp show_op(conn, :diff, %{from: from, org: org, repo: repo, to: to}) do
     {:ok, diff} = GitManager.diff(Repository.full_slug(repo), from, to)
     diff_html = Pygmentize.html(diff, "diff.patch")
+    diff_line_numbers = line_numbers(diff)
     conn
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:diff_from, from)
     |> assign(:diff_html, diff_html)
+    |> assign(:diff_line_numbers, diff_line_numbers)
     |> assign(:diff_to, to)
     |> assign(:repo, repo)
     |> render("diff.html")
@@ -442,8 +444,7 @@ defmodule KmxgitWeb.RepositoryController do
     string
     |> String.split("\n")
     |> Enum.with_index()
-    |> Enum.map(fn {_, i} -> "#{i}" end)
-    |> Enum.join("\n")
+    |> Enum.map(fn {_, i} -> "#{i + 1}" end)
   end
 
   def update(conn, params) do

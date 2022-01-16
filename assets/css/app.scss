@@ -57,6 +57,10 @@ img.qrcode {
     text-align: right;
     width: 2.5em;
     color: #aaa;
+    a {
+        text-decoration: none;
+        color: #aaa;
+    }
 } 
     
 pre code {

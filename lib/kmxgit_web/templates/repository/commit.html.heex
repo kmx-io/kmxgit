@@ -28,8 +28,9 @@
       </p>
       <div class="content_text">
         <div class="line_numbers">
-          <pre><%= @diff_line_numbers %></pre>
-        </div>
+          <pre><%= for ln <- @diff_line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
+          <% end %></pre>
+         </div>
         <%= raw @diff_html %>
       </div>
       <hr/>
