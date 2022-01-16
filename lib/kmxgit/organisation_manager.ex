@@ -15,11 +15,18 @@ defmodule Kmxgit.OrganisationManager do
       order_by: s.slug
   end
 
+  def get_organisation(id) do
+    Repo.one from organisation in Organisation,
+      where: [id: ^id],
+      preload: [:slug,
+                owned_repositories: [organisation: :slug,
+                                     user: :slug],
+                users: :slug],
+      limit: 1
+  end
+
   def get_organisation!(id) do
-    org = Repo.one from org in Organisation,
-      where: org.id == ^id,
-      preload: [:slug, :users]
-    org || raise Ecto.NoResultsError
+    get_organisation(id) || raise Ecto.NoResultsError
   end
 
   def change_organisation(organisation \\ %Organisation{}) do
@@ -37,14 +44,6 @@ defmodule Kmxgit.OrganisationManager do
     organisation
     |> Organisation.changeset(attrs)
     |> Repo.update()
-  end
-
-  def get_organisation(id) do
-    Repo.one from organisation in Organisation,
-      where: [id: ^id],
-      preload: :slug,
-      preload: [users: :slug],
-      limit: 1
   end
 
   def get_organisation_by_slug(slug) do
@@ -89,5 +88,11 @@ defmodule Kmxgit.OrganisationManager do
     organisation
     |> Organisation.changeset(%{})
     |> Repo.delete()
+  end
+
+  def admin_create_organisation(attrs \\ %{}) do
+    %Organisation{}
+    |> Organisation.changeset(attrs)
+    |> Repo.insert()
   end
 end

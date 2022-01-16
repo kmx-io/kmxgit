@@ -19,31 +19,23 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     conn
     |> assign(:action, Routes.admin_organisation_path(conn, :create))
     |> assign(:changeset, changeset)
+    |> assign(:org, nil)
     |> render("new.html")
   end
 
   def create(conn, params) do
     current_user = conn.assigns.current_user
     org_params = params["organisation"]
-    Repo.transaction fn ->
-      case SlugManager.create_slug(org_params["slug"]["slug"]) do
-        {:ok, slug} ->
-          case OrganisationManager.create_organisation(Map.merge(org_params, %{slug: slug, user: current_user})) do
-            {:ok, org} ->
-              conn
-              |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
-            {:error, changeset} ->
-              conn
-              |> assign(:action, Routes.admin_organisation_path(conn, :create))
-              |> assign(:changeset, changeset)
-              |> render("new.html")
-          end
-        {:error, changeset} ->
-          conn
-          |> assign(:action, Routes.admin_organisation_path(conn, :create))
-          |> assign(:changeset, changeset)
-          |> render("new.html")
-      end
+    case OrganisationManager.admin_create_organisation(org_params) do
+      {:ok, org} ->
+        conn
+        |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
+      {:error, changeset} ->
+        conn
+        |> assign(:action, Routes.admin_organisation_path(conn, :create))
+        |> assign(:changeset, changeset)
+        |> assign(:org, nil)
+        |> render("new.html")
     end
   end
 

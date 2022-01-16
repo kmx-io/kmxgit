@@ -36,6 +36,18 @@
             class: "btn btn-primary btn-sm" %>
       </td>
     </tr>
+    <tr>
+      <th><%= gettext "Repositories" %></th>
+      <td>
+        <ul>
+          <%= for repo <- @org.owned_repositories do %>
+            <li>
+              <%= link(Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo), class: "repo") %>
+            </li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
   </table>
 
   <%= link gettext("Delete organisation"),

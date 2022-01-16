@@ -1,22 +1,32 @@
 <div class="container-fluid">
-  <h1><%= gettext "Organisations" %></h1>
-
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <h1><%= gettext "Organisations" %></h1>
+    </div>
+    <div class="col col-12 col-md-5">
+      <%= link gettext("Create"), to: Routes.admin_organisation_path(@conn, :new), class: "btn btn-primary" %>
+    </div>
+  </div>
   <table class="table admin-index">
-    <tr>
-      <th><%= gettext "Id" %></th>
-      <th><%= gettext "Name" %></th>
-      <th><%= gettext "Slug" %></th>
-      <th><%= gettext "Actions" %></th>
-    </tr>
-    <%= Enum.map @orgs, fn org -> %>
+    <thead>
       <tr>
-        <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
-        <td><%= link org.name, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
-        <td><%= link org.slug.slug, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
-        <td>
-          <%= link gettext("Show"), to: Routes.slug_path(@conn, :show, org.slug.slug), class: "btn btn-sm btn-primary" %>
-        </td>
+        <th><%= gettext "Id" %></th>
+        <th><%= gettext "Name" %></th>
+        <th><%= gettext "Slug" %></th>
+        <th><%= gettext "Actions" %></th>
       </tr>
-    <% end %>
+    </thead>
+    <tbody>
+      <%= Enum.map @orgs, fn org -> %>
+        <tr>
+          <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
+          <td><%= link org.name, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
+          <td><%= link org.slug.slug, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
+          <td>
+            <%= link gettext("Show"), to: Routes.slug_path(@conn, :show, org.slug.slug), class: "btn btn-sm btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 </div>
