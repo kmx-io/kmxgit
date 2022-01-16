@@ -9,7 +9,7 @@ defmodule KmxgitWeb.UserSessionController do
     render(conn, "new.html", error_message: nil)
   end
 
-  def create(conn, params = %{"user" => user_params}) do
+  def create(conn, %{"user" => user_params}) do
     user_id = conn |> get_session(:check_totp_for)
     user = if user_id do
       {id, ""} = Integer.parse(user_id)
