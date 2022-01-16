@@ -1,40 +1,38 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col col-12">
+    <div class="col col-12 col-md-7">
       <%= render("show_title.html", assigns) %>
+    </div>
+    <div class="col col-12 col-md-5">
+      <%= link gettext("Browse"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @commit.hash])), class: "btn btn-primary" %>
+      <%= link gettext("Diff"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_diff", @commit.hash, "master"])), class: "btn btn-primary" %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-12">
+      <hr/>
       <h2>
         <%= gettext("Commit") %>
         <%= @commit.hash %>
       </h2>
-    </div>
-  </div>
-  <div class="row">
-    <hr/>
-    <div class="col col-12 col-md-7">
+      <div>
+        <b><%= gettext("Author") %> :</b>
+        <%= @commit.author %>
+      </div>
+      <div>
+        <b><%= gettext("Date") %> :</b>
+        <%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>
+      </div>
       <p>
         <%= @commit.message %>
       </p>
-      <%= raw @diff_html %>
+      <div class="content_text">
+        <div class="line_numbers">
+          <pre><%= @diff_line_numbers %></pre>
+        </div>
+        <%= raw @diff_html %>
+      </div>
       <hr/>
-    </div>
-    <div class="col col-12 col-md-5">
-      <table class="table">
-        <tr>
-          <th><%= gettext("Actions") %></th>
-          <td>
-            <%= link gettext("Browse"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @commit.hash])), class: "btn btn-primary" %>
-            <%= link gettext("Diff"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_diff", @commit.hash, "master"])), class: "btn btn-primary" %>
-          </td>
-        </tr>
-        <tr>
-          <th><%= gettext("Author") %></th>
-          <td><%= @commit.author %></td>
-        </tr>
-        <tr>
-          <th><%= gettext("Date") %></th>
-          <td><%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %></td>
-        </tr>
-      </table>
     </div>
   </div>
 </div>

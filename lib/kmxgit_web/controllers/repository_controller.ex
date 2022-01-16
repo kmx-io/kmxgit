@@ -255,11 +255,7 @@ defmodule KmxgitWeb.RepositoryController do
                    _ -> mime_type(content)
                  end
           content_html = Pygmentize.html(content, filename(name))
-          line_numbers = content
-          |> String.split("\n")
-          |> Enum.with_index()
-          |> Enum.map(fn {_, i} -> i end)
-          |> Enum.join("\n")
+          line_numbers = line_numbers(content)
           IO.inspect(path: path, name: name, type: type)
           %{git | content: content, content_html: content_html, content_type: type, filename: name, line_numbers: line_numbers}
         {:error, error} -> %{git | status: error}
@@ -362,11 +358,13 @@ defmodule KmxgitWeb.RepositoryController do
     IO.inspect(git)
     {:ok, diff} = GitManager.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash)
     diff_html = Pygmentize.html(diff, "diff.patch")
+    diff_line_numbers = line_numbers(diff)
     conn
     |> assign(:commit, git.log1)
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
     |> assign(:diff_html, diff_html)
+    |> assign(:diff_line_numbers, diff_line_numbers)
     |> assign(:repo, repo)
     |> render("commit.html")
   end
@@ -438,6 +436,14 @@ defmodule KmxgitWeb.RepositoryController do
     else
       not_found(conn)
     end
+  end
+
+  def line_numbers(string) do
+    string
+    |> String.split("\n")
+    |> Enum.with_index()
+    |> Enum.map(fn {_, i} -> "#{i}" end)
+    |> Enum.join("\n")
   end
 
   def update(conn, params) do
