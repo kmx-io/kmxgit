@@ -4,7 +4,6 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager
   alias Kmxgit.Repo
-  alias Kmxgit.SlugManager
   alias KmxgitWeb.ErrorView
 
   def index(conn, _params) do
@@ -24,7 +23,6 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   end
 
   def create(conn, params) do
-    current_user = conn.assigns.current_user
     org_params = params["organisation"]
     case OrganisationManager.admin_create_organisation(org_params) do
       {:ok, org} ->
