@@ -56,39 +56,41 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 ```
 
 
-# TODO
+# Features
 
-## kmxgit v0.2
+## Added in kmxgit v0.2.0
 
- - DONE auth
-   - DONE auth users using `phx.gen.auth`
-   - DONE change password in separate form
-   - DONE session timeout (60 days)
-   - DONE auth with login
-   - DONE 2FA TOTP (Google Authenticator)
- - DONE public repositories
-   - DONE option "public access ?"
-   - DONE routes
-   - DONE permissions
-   - DONE git-http-backend
- - DONE front
-   - DONE source code coloration
-   - DONE line numbers
- - DONE admin
-   - DONE create organisation without members
- - DONE Git features
-   - DONE diff
-     - DONE sub-route, controller, view
-     - DONE links
-     - DONE line numbers
-   - DONE log
-   - DONE tags
+ - auth
+   - auth users using `phx.gen.auth`
+   - change password in separate form
+   - session timeout (60 days)
+   - auth with login
+   - 2FA TOTP (Google Authenticator)
+ - public repositories
+   - option "public access ?"
+   - routes
+   - permissions
+   - git-http-backend
+ - front
+   - source code coloration
+   - line numbers
+ - admin
+   - create organisation without members
+ - Git features
+   - diff
+     - sub-route, controller, view
+     - links
+     - line numbers
+   - log
+   - tags
  - notification e-mails
-   - DONE change login
-   - DONE change e-mail
-   - DONE change password
+   - change login
+   - change e-mail
+   - change password
    - change 2FA
 
+
+# TODO
 
 ## kmxgit v0.3
 
