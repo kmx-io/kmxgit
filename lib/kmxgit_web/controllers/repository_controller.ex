@@ -405,7 +405,6 @@ defmodule KmxgitWeb.RepositoryController do
     |> render("tag.html")
   end
   defp show_op(conn, :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
-    {:ok, {repo_size, _}} = GitManager.disk_usage(Repository.full_slug(repo))
     conn
     |> assign(:tree, tree)
     |> assign(:tree_url, tree && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", tree] ++ (if path, do: String.split(path, "/"), else: []))))
@@ -413,7 +412,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:current_repository, repo)
     |> assign(:git, git)
     |> assign(:repo, repo)
-    |> assign(:repo_size, repo_size)
+    |> assign(:repo_size, Repository.disk_usage(repo))
     |> assign(:members, Repository.members(repo))
     |> assign(:owner, org || user)
     |> assign(:path, path)
