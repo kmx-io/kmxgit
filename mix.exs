@@ -39,6 +39,7 @@ defmodule Kmxgit.MixProject do
       {:ecto_sql, "~> 3.6"},
       {:elixir_auth_google, "~> 1.6.2"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
+      {:file_size, "~> 3.0"},
       {:floki, ">= 0.30.0", only: :test},
       {:gen_smtp, "~> 1.1"},
       {:gettext, "~> 0.18"},
