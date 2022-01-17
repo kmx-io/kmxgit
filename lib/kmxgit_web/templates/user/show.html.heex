@@ -82,6 +82,10 @@
             </pre>
           </td>
         </tr>
+        <tr>
+          <th><%= gettext("Disk usage") %></th>
+          <td><%= FileSize.new(@disk_usage, :mb) |> FileSize.to_string() %></td>
+</tr>
       </table>
     </div>
   </div>

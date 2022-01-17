@@ -269,4 +269,10 @@ defmodule Kmxgit.UserManager.User do
       |> add_error(:totp_last, "invalid token")
     end
   end
+
+  def disk_usage(user) do
+    user.owned_repositories
+    |> Enum.map(&Repository.disk_usage/1)
+    |> Enum.sum()
+  end
 end

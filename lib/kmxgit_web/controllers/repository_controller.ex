@@ -406,16 +406,16 @@ defmodule KmxgitWeb.RepositoryController do
   end
   defp show_op(conn, :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
     conn
-    |> assign(:tree, tree)
-    |> assign(:tree_url, tree && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", tree] ++ (if path, do: String.split(path, "/"), else: []))))
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
+    |> assign(:disk_usage, Repository.disk_usage(repo))
     |> assign(:git, git)
     |> assign(:repo, repo)
-    |> assign(:repo_size, Repository.disk_usage(repo))
     |> assign(:members, Repository.members(repo))
     |> assign(:owner, org || user)
     |> assign(:path, path)
+    |> assign(:tree, tree)
+    |> assign(:tree_url, tree && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", tree] ++ (if path, do: String.split(path, "/"), else: []))))
     |> render("show.html")
   end
   defp show_op(conn, _, _) do
