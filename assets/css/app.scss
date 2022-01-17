@@ -90,6 +90,14 @@ h2 a {
 * {
     word-break: break-all;
 }
+/* log */
+table.git-log {
+    * { word-break: normal; }
+    .commit  { min-width: 6em; }
+    .author  { min-width: 10em; }
+    .date    { min-width: 15em; }
+    .message { min-width: 15em; }
+}
 
 /* LiveView specific classes for your customization */
 .phx-no-feedback.invalid-feedback,
