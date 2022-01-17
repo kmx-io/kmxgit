@@ -1,4 +1,4 @@
-# kmxgit
+# kmxgit 0.3
 
 [kmxgit](https://git.kmx.io/kmx.io/kmxgit) is a web interface and a Git
 server written in C and Elixir / Phoenix.
@@ -7,6 +7,12 @@ kmxgit started as a frontend for
 [git-auth](https://git.kmx.io/kmx.io/git-auth).
 
 Now public repositories are also supported.
+
+This branch is work in progress, for the stable branch see
+[v0.2](https://git.kmx.io/kmx.io/kmxgit/_tree/v0.2).
+
+For releases see the tags, latest is
+[v0.2.0](https://git.kmx.io/kmx.io/kmxgit/_tag/v0.2.0).
 
 
 ## Installation
@@ -58,7 +64,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 # Features
 
-## Added in kmxgit v0.2.0
+## Added in kmxgit 0.2
 
  - auth
    - auth users using `phx.gen.auth`
@@ -92,13 +98,23 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 # TODO
 
-## kmxgit v0.3
+## kmxgit 0.3
 
+ - Disk usage
+   - Per repo
+   - Per user
+   - Per organisation
+ - Release
+   - info
+   - static files
+ - Pull requests
+   - Comments in diff
+ - Issues
+ - Static site generator
  - OAuth2
    - Google
    - Github
    - Gitlab ?
- - Releases (tags with db info)
 
 
 # Copyright
