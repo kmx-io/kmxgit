@@ -60,6 +60,12 @@ defmodule KmxgitWeb do
       def recaptcha_site_key do
         Application.get_env :kmxgit, :recaptcha_site_key
       end
+
+      def disk_usage(size) do
+        FileSize.new(size, :kb)
+        |> FileSize.convert(:mb)
+        |> FileSize.to_string()
+      end
     end
   end
 
