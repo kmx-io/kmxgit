@@ -279,9 +279,15 @@ defmodule Kmxgit.UserManager do
   end
 
   def update_user_totp(user = %User{}, params) do
-    user
+    case user
     |> User.totp_changeset(params)
     |> Repo.update()
+      do
+      {:ok, user1} ->
+        if (user.totp_last == 0 && user1.totp_last != 0), do: UserNotifier.deliver_totp_enabled_email(user)
+        {:ok, user1}
+      x -> x
+    end
   end
 
   def verify_user_totp(user = %User{}, token) do
@@ -289,9 +295,15 @@ defmodule Kmxgit.UserManager do
   end
 
   def delete_user_totp(user = %User{}) do
-    user
+    case user
     |> User.totp_changeset(:delete)
     |> Repo.update()
+      do
+      {:ok, user1} ->
+        if (user.totp_last != 0 && user1.totp_last == 0), do: UserNotifier.deliver_totp_disabled_email(user)
+        {:ok, user1}
+      x -> x
+    end
   end
 
   def admin_user_present? do

@@ -97,4 +97,28 @@ defmodule Kmxgit.UserManager.UserNotifier do
     If you didn't request this change, please reply to this e-mail.
     """)
   end
+
+  def deliver_totp_enabled_email(user) do
+    deliver(user.email, "TOTP was enabled", """
+    Hi #{user.email},
+
+    TOTP (Google Authenticator) has been activated on your account.
+    You will need to enter a new TOTP each time you login in addition
+    to login / password.
+
+    If you didn't request this change, please reply to this e-mail.
+    """)
+  end
+
+
+  def deliver_totp_disabled_email(user) do
+    deliver(user.email, "TOTP was disabled !", """
+    Hi #{user.email},
+
+    TOTP (Google Authenticator) has been disabled on your account.
+    You will no longer need to enter a new TOTP each time you login.
+
+    If you didn't request this change, please reply to this e-mail.
+    """)
+  end
 end
