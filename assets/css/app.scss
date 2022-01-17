@@ -44,6 +44,9 @@ img.qrcode {
         color: blue;
     }
 }
+table.admin-properties th {
+    min-width: 8em;
+}
 .file-content {
     border: solid 1px #ccc;
     padding: 1em;
