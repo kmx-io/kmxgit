@@ -26,14 +26,16 @@
       <p>
         <%= @commit.message %>
       </p>
-      <div class="content_text">
-        <div class="line_numbers">
-          <pre><%= for ln <- @diff_line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
-          <% end %></pre>
-         </div>
-        <%= raw @diff_html %>
-      </div>
-      <hr/>
+      <%= if @diff_html do %>
+        <div class="content_text">
+          <div class="line_numbers">
+            <pre><%= for ln <- @diff_line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
+            <% end %></pre>
+          </div>
+          <%= raw @diff_html %>
+        </div>
+        <hr/>
+      <% end %>
     </div>
   </div>
 </div>
