@@ -205,8 +205,17 @@ defmodule Kmxgit.RepositoryManager.Repository do
     |> Enum.join("\n")
   end
 
-  def disk_usage(repo) do
-    {:ok, {du, _}} = GitManager.disk_usage(full_slug(repo))
-    du
+  def disk_usage(repo = %__MODULE__{}) do
+    case GitManager.disk_usage(full_slug(repo)) do
+      {:ok, {du, _}} -> du
+      x ->
+        IO.inspect(x)
+        0
+    end
+  end
+  def disk_usage(repos) when is_list(repos) do
+    repos
+    |> Enum.map(&disk_usage/1)
+    |> Enum.sum()
   end
 end

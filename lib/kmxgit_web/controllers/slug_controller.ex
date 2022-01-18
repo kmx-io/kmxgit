@@ -3,6 +3,7 @@ defmodule KmxgitWeb.SlugController do
 
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.RepositoryManager
+  alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
@@ -20,7 +21,8 @@ defmodule KmxgitWeb.SlugController do
         contributor_repos = RepositoryManager.list_contributor_repositories(user)
         repos = owned_repos ++ contributor_repos
         conn
-        |> assign(:disk_usage, User.disk_usage(user))
+        |> assign(:disk_usage, Repository.disk_usage(owned_repos))
+        |> assign(:disk_usage_all, Repository.disk_usage(repos))
         |> assign(:repos, repos)
         |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
         |> assign(:user, user)
@@ -31,7 +33,7 @@ defmodule KmxgitWeb.SlugController do
         if org do
           conn
           |> assign(:current_organisation, org)
-          |> assign(:disk_usage, Organisation.disk_usage(org))
+          |> assign(:disk_usage, Repository.disk_usage(org.owned_repositories))
           |> assign(:org, org)
           |> assign(:page_title, org.name || org.slug.slug)
           |> put_view(OrganisationView)

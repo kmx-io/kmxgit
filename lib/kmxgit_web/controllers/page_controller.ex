@@ -1,6 +1,8 @@
 defmodule KmxgitWeb.PageController do
   use KmxgitWeb, :controller
 
+  require Logger
+
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
@@ -19,11 +21,24 @@ defmodule KmxgitWeb.PageController do
     |> resp(200, a)
   end    
 
+  def du_ks(path) do
+    {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)
+    case status do
+      0 ->
+        {du, _} = Integer.parse(out)
+        du
+      x ->
+        Logger.error(out)
+        0
+    end
+  end
+
   def index(conn, _params) do
     if ! UserManager.admin_user_present? do
       redirect(conn, to: Routes.page_path(conn, :new_admin))
     else
       conn
+      |> assign(:disk_usage, du_ks("/home/git"))
       |> render(:index)
     end
   end

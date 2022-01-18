@@ -83,9 +83,13 @@
           </td>
         </tr>
         <tr>
-          <th><%= gettext("Disk usage") %></th>
+          <th><%= gettext "Disk usage" %></th>
           <td><%= disk_usage(@disk_usage) %></td>
-</tr>
+        </tr>
+        <tr>
+          <th><%= gettext "Accessible" %></th>
+          <td><%= disk_usage(@disk_usage_all) %></td>
+        </tr>
       </table>
     </div>
   </div>

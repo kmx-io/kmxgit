@@ -37,10 +37,4 @@ defmodule Kmxgit.OrganisationManager.Organisation do
     org.owned_repositories
     |> Enum.sort_by(&Repository.full_slug/1)
   end
-
-  def disk_usage(org) do
-    org.owned_repositories
-    |> Enum.map(&Repository.disk_usage/1)
-    |> Enum.sum()
-  end
 end
