@@ -13,6 +13,10 @@ defmodule Kmxgit.UserManager do
     Repo.all from user in User, preload: :slug
   end
 
+  def count_users do
+    Repo.one from user in User, select: count()
+  end
+
   def get_user(id) do
     Repo.one from user in User,
       where: [id: ^id],

@@ -18,6 +18,10 @@ defmodule Kmxgit.RepositoryManager do
     |> Enum.sort_by(&Repository.full_slug/1)
   end
 
+  def count_repositories do
+    Repo.one from org in Repository, select: count()
+  end
+
   def list_contributor_repositories(user) do
     list_repositories()
     |> Enum.filter(fn repo ->

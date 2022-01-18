@@ -15,6 +15,10 @@ defmodule Kmxgit.OrganisationManager do
       order_by: s.slug
   end
 
+  def count_organisations do
+    Repo.one from org in Organisation, select: count()
+  end
+
   def get_organisation(id) do
     Repo.one from organisation in Organisation,
       where: [id: ^id],

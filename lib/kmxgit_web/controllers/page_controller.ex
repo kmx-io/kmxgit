@@ -3,6 +3,7 @@ defmodule KmxgitWeb.PageController do
 
   require Logger
 
+  alias Kmxgit.OrganisationManager
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
@@ -39,6 +40,9 @@ defmodule KmxgitWeb.PageController do
     else
       conn
       |> assign(:disk_usage, du_ks("/home/git"))
+      |> assign(:org_count, OrganisationManager.count_organisations())
+      |> assign(:repo_count, RepositoryManager.count_repositories())
+      |> assign(:user_count, UserManager.count_users())
       |> render(:index)
     end
   end

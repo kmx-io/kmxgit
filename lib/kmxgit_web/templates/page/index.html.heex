@@ -25,6 +25,18 @@
           <th><%= gettext "Disk usage" %></th>
           <td><%= disk_usage(@disk_usage) %></td>
         </tr>
+        <tr>
+          <th><%= gettext "Users" %></th>
+          <td><%= @user_count %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Organisations" %></th>
+          <td><%= @org_count %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Repositories" %></th>
+          <td><%= @repo_count %></td>
+        </tr>
       </table>
     </div>
   </div>
