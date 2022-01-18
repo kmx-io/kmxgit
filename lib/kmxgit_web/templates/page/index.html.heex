@@ -18,10 +18,15 @@
 
   <h3><%= gettext("Stats") %></h3>
 
-  <table class="table">
-    <tr>
-      <th><%= gettext "Disk usage" %></th>
-      <td><%= disk_usage(@disk_usage) %></td>
-    </tr>
-  </table>
+  <div class="row">
+    <div class="col col-12 col-md-5">
+      <table class="table">
+        <tr>
+          <th><%= gettext "Disk usage" %></th>
+          <td><%= disk_usage(@disk_usage) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>
+
