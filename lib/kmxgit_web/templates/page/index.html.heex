@@ -1,43 +1,47 @@
 <div class="container-fluid">
-  <p>
-    <code>
-      "<%= gettext "Hello, world !" %>"
-    </code>
-  </p>
-  <p>
-    <%= gettext "Welcome to this instance of" %>
-    <%= link "kmxgit", to: "https://git.kmx.io/kmx.io/kmxgit" %>
-    .
-  </p>
-  <p>
-    <%= gettext "Anyone can register and create public and private Git repositories." %>
-  </p>
-
-  <h3><%= gettext "SSH keys fingerprint" %></h3>
-  <pre><%= render("ssh_keys_fingerprint.txt") %></pre>
-
-  <h3><%= gettext("Stats") %></h3>
-
   <div class="row">
-    <div class="col col-12 col-md-5">
-      <table class="table">
-        <tr>
-          <th><%= gettext "Disk usage" %></th>
-          <td><%= disk_usage(@disk_usage) %></td>
-        </tr>
-        <tr>
-          <th><%= gettext "Users" %></th>
-          <td><%= @user_count %></td>
-        </tr>
-        <tr>
-          <th><%= gettext "Organisations" %></th>
-          <td><%= @org_count %></td>
-        </tr>
-        <tr>
-          <th><%= gettext "Repositories" %></th>
-          <td><%= @repo_count %></td>
-        </tr>
-      </table>
+    <div class="col">
+      <p>
+        <code>
+          "<%= gettext "Hello, world !" %>"
+        </code>
+      </p>
+      <p>
+        <%= gettext "Welcome to this instance of" %>
+        <%= link "kmxgit", to: "https://git.kmx.io/kmx.io/kmxgit" %>
+        .
+      </p>
+      <p>
+        <%= gettext "Anyone can register and create public and private Git repositories." %>
+      </p>
+
+      <h3><%= gettext "SSH keys fingerprint" %></h3>
+      <pre><%= render("ssh_keys_fingerprint.txt") %></pre>
+
+      <h3><%= gettext("Stats") %></h3>
+
+      <div class="row">
+        <div class="col col-12 col-md-5">
+          <table class="table">
+            <tr>
+              <th><%= gettext "Disk usage" %></th>
+              <td><%= disk_usage(@disk_usage) %></td>
+            </tr>
+            <tr>
+              <th><%= gettext "Users" %></th>
+              <td><%= @user_count %></td>
+            </tr>
+            <tr>
+              <th><%= gettext "Organisations" %></th>
+              <td><%= @org_count %></td>
+            </tr>
+            <tr>
+              <th><%= gettext "Repositories" %></th>
+              <td><%= @repo_count %></td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>

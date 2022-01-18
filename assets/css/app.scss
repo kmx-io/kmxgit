@@ -5,6 +5,11 @@
 @import "./flash.scss";
 @import "./pygments.scss";
 
+/* footer */
+.footer {
+    padding: 1em;
+    word-break: normal;
+}
 /* user */
 textarea#user_description,
 textarea#organisation_description,

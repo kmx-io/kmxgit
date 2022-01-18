@@ -9,6 +9,7 @@ import Config
 
 config :kmxgit,
   ecto_repos: [Kmxgit.Repo],
+  footer: "<a href=\"https://www.kmx.io/\" target=\"_blank\">kmx.io</a>",
   git_ssh_url: "git@git.kmx.io",
   mail_from: "git@kmx.io",
   recaptcha_secret: System.get_env("RECAPTCHA_SECRET"),
