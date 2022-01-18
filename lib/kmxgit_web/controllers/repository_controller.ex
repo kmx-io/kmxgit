@@ -372,18 +372,24 @@ defmodule KmxgitWeb.RepositoryController do
     |> render("commit.html")
   end
   defp show_op(conn, :diff, %{from: from, org: org, repo: repo, to: to}) do
-    {:ok, diff} = GitManager.diff(Repository.full_slug(repo), from, to)
-    diff_html = Pygmentize.html(diff, "diff.patch")
-    diff_line_numbers = line_numbers(diff)
-    conn
-    |> assign_current_organisation(org)
-    |> assign(:current_repository, repo)
-    |> assign(:diff_from, from)
-    |> assign(:diff_html, diff_html)
-    |> assign(:diff_line_numbers, diff_line_numbers)
-    |> assign(:diff_to, to)
-    |> assign(:repo, repo)
-    |> render("diff.html")
+    case GitManager.diff(Repository.full_slug(repo), from, to) do
+      {:ok, diff} ->
+        diff_html = Pygmentize.html(diff, "diff.patch")
+        diff_line_numbers = line_numbers(diff)
+        IO.inspect(from: from, to: to, diff: diff, html: diff_html, line_numbers: diff_line_numbers)
+        conn
+        |> assign_current_organisation(org)
+        |> assign(:current_repository, repo)
+        |> assign(:diff_from, from)
+        |> assign(:diff_html, diff_html)
+        |> assign(:diff_line_numbers, diff_line_numbers)
+        |> assign(:diff_to, to)
+        |> assign(:repo, repo)
+        |> render("diff.html")
+      {:error, e} ->
+        IO.inspect(e)
+        not_found(conn)
+    end
   end
   defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
     log = git_log(repo, tree, path)
