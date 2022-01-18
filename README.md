@@ -100,16 +100,27 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 ## kmxgit 0.3
 
- - Disk usage
-   - Per repo
-   - Per user
-   - Per organisation
- - Release
-   - info
+ - DONE Disk usage
+   - DONE Per repo
+   - DONE Per user
+   - DONE Per organisation
+   - DONE Server-wise
+ - Front page
+   - Stats
+     - DONE count users, organisations, repositories
+     - ?
+   - git cli help
+     - install git
+     - git clone
+     - git remote add kmx git@git.kmx.io:user/repo.git
+     - git push -u kmx branch
+     - git pull
+ - Releases
+   - infos
    - static files
  - Pull requests
    - Comments in diff
- - Issues
+ - Issues / tickets ?
  - Static site generator
  - OAuth2
    - Google
