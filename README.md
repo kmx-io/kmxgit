@@ -105,6 +105,8 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE Per user
    - DONE Per organisation
    - DONE Server-wise
+ - Footer
+   - environment variable
  - Front page
    - Stats
      - DONE count users, organisations, repositories
