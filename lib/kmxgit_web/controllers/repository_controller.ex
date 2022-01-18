@@ -453,6 +453,7 @@ defmodule KmxgitWeb.RepositoryController do
   def line_numbers(string) do
     string
     |> String.split("\n")
+    |> tl()
     |> Enum.with_index()
     |> Enum.map(fn {_, i} -> "#{i + 1}" end)
   end
