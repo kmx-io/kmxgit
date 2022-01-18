@@ -27,7 +27,7 @@ defmodule KmxgitWeb.PageController do
       0 ->
         {du, _} = Integer.parse(out)
         du
-      x ->
+      _ ->
         Logger.error(out)
         0
     end

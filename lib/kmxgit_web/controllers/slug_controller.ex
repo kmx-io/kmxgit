@@ -1,7 +1,6 @@
 defmodule KmxgitWeb.SlugController do
   use KmxgitWeb, :controller
 
-  alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
