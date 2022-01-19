@@ -105,12 +105,13 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE Per user
    - DONE Per organisation
    - DONE Server-wise
- - Footer
-   - environment variable
+ - DONE Footer
+   - DONE environment variable
+ - bug : fix diff
  - Front page
-   - Stats
+   - DONE Stats
      - DONE count users, organisations, repositories
-     - ?
+     - DONE disk usage
    - git cli help
      - install git
      - git clone
