@@ -96,7 +96,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - change 2FA
 
 
-<h1><a id="todo" href="#todo">TODO</a></h1>
+<h1><a id="todo" href="#todo" style="text-decoration:none;color:#000;">TODO</a></h1>
 
 ## kmxgit 0.3
 
