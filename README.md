@@ -107,7 +107,10 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE Server-wise
  - DONE Footer
    - DONE environment variable
- - bug : fix diff
+ - Bug : fix empty diff
+ - Users
+   - Profile picture
+   - Link user in git log and commits
  - Front page
    - DONE Stats
      - DONE count users, organisations, repositories
