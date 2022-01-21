@@ -49,6 +49,10 @@
       </td>
     </tr>
     <tr>
+      <th><%= gettext "2FA" %></th>
+      <td><%= if @user.totp_last != 0, do: "TOTP", else: "none" %></td>
+    </tr>
+    <tr>
       <th><%= gettext "Admin" %></th>
       <td><%= @user.is_admin %></td>
     </tr>
