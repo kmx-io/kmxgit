@@ -40,6 +40,7 @@ defmodule KmxgitWeb.PageController do
     else
       conn
       |> assign(:disk_usage, du_ks("/home/git"))
+      |> assign(:git_ssh_url, Application.get_env(:kmxgit, :git_ssh_url))
       |> assign(:org_count, OrganisationManager.count_organisations())
       |> assign(:repo_count, RepositoryManager.count_repositories())
       |> assign(:user_count, UserManager.count_users())
