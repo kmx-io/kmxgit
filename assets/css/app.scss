@@ -93,9 +93,11 @@ pre code {
 .invalid-feedback {
     display: inherit;
 }
-h2 a {
-    text-decoration: none;
-    color: #000;
+h1,h2,h3,h4,h5,h6 {
+    a {
+        text-decoration: none;
+        color: #000;
+    }
 }
 * {
     word-break: break-all;

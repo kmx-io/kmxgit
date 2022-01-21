@@ -15,10 +15,10 @@
         <%= gettext "Anyone can register and create public and private Git repositories." %>
       </p>
 
-      <h3><%= gettext "SSH keys fingerprint" %></h3>
+      <h3><%= link gettext("SSH keys fingerprint"), to: "#ssh-keys", id: "ssh-keys" %></h3>
       <pre><%= render("ssh_keys_fingerprint.txt") %></pre>
 
-      <h3><%= gettext("Help") %></h3>
+      <h3><%= link gettext("Help"), to: "#help", id: "help" %></h3>
       <div class="highlight">
         <pre><code><span class="c1"># <%= gettext "Clone repository user/path/to/repo if repo does not exist" %> :</span>
 git clone <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
@@ -50,7 +50,7 @@ git push -u kmx master</code></pre>
         Get the git url at <b><%= Routes.page_url(@conn, :index) %>user/path/to/repo</b>
       </p>
 
-      <h3><%= gettext("Stats") %></h3>
+      <h3><%= link gettext("Stats"), to: "#stats", id: "stats" %></h3>
 
       <div class="row">
         <div class="col col-12 col-md-5">

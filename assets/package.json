@@ -1,5 +1,7 @@
 {
   "description": "kmx git assets",
+  "license": "MIT",
+  "repository": "https://git.kmx.io/kmx.io/kmxgit.git",
   "dependencies": {
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.1.3",
