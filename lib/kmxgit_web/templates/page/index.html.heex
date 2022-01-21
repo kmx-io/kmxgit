@@ -49,6 +49,8 @@ git push -u kmx master</code></pre>
       <p>
         <%= gettext("Get the git url at") %> <b><%= Routes.page_url(@conn, :index) %>user/path/to/repo</b>
       </p>
+
+      <h4><%= link gettext("Links"), to: "#links", id: "links" %></h4>
       <p>
         <%= gettext("If you need more help with git, please see :") %>
         <ul>
@@ -83,6 +85,13 @@ git push -u kmx master</code></pre>
           </table>
         </div>
       </div>
+
+      <hr/>
+
+      <h3><%= link gettext("kmxgit authors"), to: "#authors", id: "authors" %></h3>
+      <ul>
+        <li>Thomas de Grivel &lt;thoxdg@gmail.com&gt;</li>
+      </ul>
     </div>
   </div>
 </div>
