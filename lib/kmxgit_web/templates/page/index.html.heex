@@ -47,8 +47,17 @@ git remote add kmx <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
 git push -u kmx master</code></pre>
       </div>
       <p>
-        Get the git url at <b><%= Routes.page_url(@conn, :index) %>user/path/to/repo</b>
+        <%= gettext("Get the git url at") %> <b><%= Routes.page_url(@conn, :index) %>user/path/to/repo</b>
       </p>
+      <p>
+        <%= gettext("If you need more help with git, please see :") %>
+        <ul>
+          <li><a href="https://git-scm.com/doc"><%= gettext("the official git documentation") %></a></li>
+          <li><a href="https://stackoverflow.com/questions/tagged/git"><%= gettext("StackOverflow about git") %></a></li>
+        </ul>
+      </p>
+
+      <hr/>
 
       <h3><%= link gettext("Stats"), to: "#stats", id: "stats" %></h3>
 
