@@ -31,6 +31,9 @@ $code-font-size: $font-size-base;
     float: left;
     margin-right: 0.5em;
 }
+.clear {
+    clear: both;
+}
 /* user */
 textarea#user_description,
 textarea#organisation_description,
