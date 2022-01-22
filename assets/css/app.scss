@@ -10,6 +10,10 @@ $code-font-size: $font-size-base;
 @import "./flash.scss";
 @import "./pygments.scss";
 
+/* navbar */
+.nav-link {
+    padding: 0.6rem 1rem 0.3rem;
+}
 /* footer */
 .footer {
     padding: 1em;
