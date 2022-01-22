@@ -221,15 +221,15 @@ defmodule Kmxgit.GitManager do
 
   defp log_(repo, args) do
     dir = git_dir(repo)
-    args = ["-C", dir, "log", "--format=%H %aI \"%an\" %s"] ++ args
+    args = ["-C", dir, "log", "--format=%H %aI \"%an <%ae>\" %s"] ++ args
     {out, status} = System.cmd("git", args, stderr_to_stdout: true)
     case status do
       0 ->
         entries = out
         |> String.split("\n")
         |> Enum.map(fn line ->
-          case Regex.run(~r/^([^ ]+) ([^ ]+) "([^"]+)" (.*)$/, line) do
-            [_ , hash, date, author, msg] -> %{author: author, hash: hash, date: date, message: msg}
+          case Regex.run(~r/^([^ ]+) ([^ ]+) "(.+ <([^>]+)>)" (.*)$/, line) do
+            [_ , hash, date, author, email, msg] -> %{author: author, author_email: email, hash: hash, date: date, message: msg}
             _ -> nil
           end
         end)
