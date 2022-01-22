@@ -62,9 +62,9 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 ```
 
 
-# Features
+<h1><a id="features" href="#features">Features</a></h1>
 
-## Added in kmxgit 0.2
+<h2><a id="features-0.2" href="#features-0.2">Added in kmxgit 0.2</a></h2>
 
  - auth
    - auth users using `phx.gen.auth`
@@ -134,7 +134,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - Gitlab ?
 
 
-# Copyright
+<h1><a href="#copyright" id="copyright">Copyright</a></h1>
 
 kmxgit - git server administration
 
