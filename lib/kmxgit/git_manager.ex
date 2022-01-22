@@ -58,11 +58,14 @@ defmodule Kmxgit.GitManager do
         |> String.split("\n")
         |> Enum.reject(&(&1 == ""))
         |> Enum.map(fn line ->
-          [stat, name] = String.split(line, "\t")
-          [mode, type, sha1] = String.split(stat, " ")
-          url = "#{parent}/#{name}"
-          %{mode: mode, name: name, sha1: sha1, type: type, url: url}
+          case String.split(line, "\t") do
+            [stat, name] ->
+              [mode, type, sha1] = String.split(stat, " ")
+              url = "#{parent}/#{name}"
+              %{mode: mode, name: name, sha1: sha1, type: type, url: url}
+            _ -> nil
         end)
+        |> Enum.reject(&(&1 == nil))
         case list do
           [%{name: ^path1, sha1: sha1, type: "tree"}] ->
             files(repo, sha1, "", "#{parent}/#{path1}")
