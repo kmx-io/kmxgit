@@ -1,7 +1,9 @@
 /* This file is for your main application CSS */
 @import "./inter.scss";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
 $font-family-sans-serif: "Inter", sans-serif;
 $font-family-monospace: "Courier New", monospace;
+$code-font-size: $font-size-base;
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../node_modules/font-awesome/scss/font-awesome.scss";
 
