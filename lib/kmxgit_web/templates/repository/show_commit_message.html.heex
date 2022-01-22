@@ -1,5 +1,5 @@
 <div class="log1">
-  <%= render("avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, title: @git.log1.author, class: "commit-avatar") %>
+  <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, title: @git.log1.author, class: "commit-avatar") %>
   <span class="hash">
     <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @tree] ++ (if @path, do: String.split(@path, "/"), else: []))) <> "##{@git.log1.hash}" %>
   </span>
