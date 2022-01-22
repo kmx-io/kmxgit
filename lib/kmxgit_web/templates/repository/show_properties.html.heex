@@ -41,13 +41,9 @@
       <% end %>
     </th>
     <td>
-      <ul>
-        <%= for user <- @members do %>
-          <li>
-            <%= link user.slug.slug, to: Routes.slug_path(@conn, :show, user.slug.slug) %>
-          </li>
-        <% end %>
-      </ul>
+      <%= for user <- @members do %>
+        <%= render("avatar.html", conn: @conn, email: user.email, size: 32, title: user.slug.slug) %>
+      <% end %>
     </td>
   </tr>
   <%= if @git.tags do %>
