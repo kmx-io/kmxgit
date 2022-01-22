@@ -16,6 +16,18 @@
   </div>
 
   <div class="row">
+    <hr/>
+    <div class="col col-12 col-md-4">
+      <img src={Exgravatar.gravatar_url(@user.email, s: 256)} alt="Avatar"/>
+    </div>
+    <div class="col col-12 col-md-8">
+      <%= if @user.description do %>
+        <%= raw Earmark.as_html!(@user.description) %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col col-12 col-md-7">
       <hr/>
       <h2><%= gettext "Repositories" %></h2>
@@ -46,9 +58,6 @@
         <tr>
           <th><%= gettext "Description" %></th>
           <td>
-            <%= if @user.description do %>
-              <%= raw Earmark.as_html!(@user.description) %>
-            <% end %>
           </td>
         </tr>
         <tr>
