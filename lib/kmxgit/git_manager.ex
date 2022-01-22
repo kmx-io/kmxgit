@@ -228,7 +228,7 @@ defmodule Kmxgit.GitManager do
         entries = out
         |> String.split("\n")
         |> Enum.map(fn line ->
-          case Regex.run(~r/^([^ ]+) ([^ ]+) "(.+ <([^>]+)>)" (.*)$/, line) do
+          case Regex.run(~r/^([^ ]+) ([^ ]+) "(.+) <([^>]+)>" (.*)$/, line) do
             [_ , hash, date, author, email, msg] -> %{author: author, author_email: email, hash: hash, date: date, message: msg}
             _ -> nil
           end

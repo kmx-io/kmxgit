@@ -24,9 +24,12 @@ $code-font-size: $font-size-base;
 /* footer */
 .footer {
     padding: 1em;
-    word-break: normal;
 }
 /* misc */
+.avatar-lg {
+    float: left;
+    margin: 0 0.5em 0.5em 0;
+}
 .commit-avatar {
     float: left;
     margin-right: 0.5em;
@@ -79,9 +82,6 @@ table.admin-properties th {
 .file-content {
     border: solid 1px #ccc;
     padding: 1em;
-    * {
-        word-break: normal;
-    }
 }
 .content_text {
     border: solid 1px #ccc;
@@ -117,7 +117,7 @@ pre code {
 h1,h2,h3,h4,h5,h6 {
     a {
         text-decoration: none;
-        color: #000;
+        color: #103;
     }
 }
 .break-all {
@@ -125,9 +125,6 @@ h1,h2,h3,h4,h5,h6 {
 }
 /* log */
 table.git-log {
-    * { word-break: normal; }
-    .commit  { min-width: 6em; }
-    .author  { min-width: 10em; }
     .date    { min-width: 15em; }
     .message { min-width: 15em; }
 }
