@@ -1,0 +1,6 @@
+<% user = Kmxgit.UserManager.get_user_by_email(@email) %>
+<%= if user do %>
+  <%= link to: Routes.slug_path(@conn, :show, user.slug.slug) do %><img src={Exgravatar.gravatar_url(@email, s: @size)} alt={@title} title={@title} /><% end %>
+<% else %>
+  <img src={Exgravatar.gravatar_url(@email, s: @size)} alt={@title} title={@title} />
+<% end %>

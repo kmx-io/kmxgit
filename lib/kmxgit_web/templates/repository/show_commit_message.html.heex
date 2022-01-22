@@ -2,9 +2,7 @@
   <span class="hash">
     <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @tree] ++ (if @path, do: String.split(@path, "/"), else: []))) <> "##{@git.log1.hash}" %>
   </span>
-  <span class="author">
-    <img src={Exgravatar.gravatar_url(@git.log1.author_email, s: 32)} alt={@git.log1.author} title={@git.log1.author} />
-  </span>
+  <%= render("avatar.html", conn: @conn, email: @git.log1.author_email, size: 32, title: @git.log1.author) %>
   <span class="date">
     <%= @git.log1.date |> String.replace("T", " ") |> String.replace("+", " +") %>
   </span>
