@@ -64,6 +64,7 @@ defmodule Kmxgit.GitManager do
               url = "#{parent}/#{name}"
               %{mode: mode, name: name, sha1: sha1, type: type, url: url}
             _ -> nil
+          end
         end)
         |> Enum.reject(&(&1 == nil))
         case list do
