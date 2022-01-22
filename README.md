@@ -107,6 +107,8 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE Server-wise
  - DONE Footer
    - DONE environment variable
+ - DONE Fonts : Inter & Courier New
+ - DONE Dark navbar
  - Bug : fix empty diff
  - Users
    - Profile picture
