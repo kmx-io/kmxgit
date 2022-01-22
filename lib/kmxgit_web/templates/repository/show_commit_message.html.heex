@@ -6,6 +6,7 @@
   <span class="date">
     <%= @git.log1.date |> String.replace("T", " ") |> String.replace("+", " +") %>
   </span>
+  <br/>
   <span class="message" %>
     <%= @git.log1.message %>
   </span>
