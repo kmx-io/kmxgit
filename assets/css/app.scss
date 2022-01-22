@@ -26,6 +26,11 @@ $code-font-size: $font-size-base;
     padding: 1em;
     word-break: normal;
 }
+/* misc */
+.commit-avatar {
+    float: left;
+    margin-right: 0.5em;
+}
 /* user */
 textarea#user_description,
 textarea#organisation_description,
@@ -92,8 +97,7 @@ table.admin-properties th {
         text-decoration: none;
         color: #aaa;
     }
-} 
-    
+}
 pre code {
     display: block;
     border: solid 1px #ccc;
@@ -113,7 +117,7 @@ h1,h2,h3,h4,h5,h6 {
         color: #000;
     }
 }
-* {
+.break-all {
     word-break: break-all;
 }
 /* log */

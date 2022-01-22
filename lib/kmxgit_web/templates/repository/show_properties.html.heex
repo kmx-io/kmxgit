@@ -42,7 +42,7 @@
     </th>
     <td>
       <%= for user <- @members do %>
-        <%= render("avatar.html", conn: @conn, email: user.email, size: 32, title: user.slug.slug) %>
+        <%= render("avatar.html", conn: @conn, email: user.email, size: 48, title: user.slug.slug, class: "") %>
       <% end %>
     </td>
   </tr>
