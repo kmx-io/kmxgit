@@ -12,6 +12,6 @@ $(function() {
     const color = kmx_colors[name];
     const x = getRandomInt(5) - 2;
     $("a").css("text-shadow", "0 0 0");
-    $("a:hover").css("text-shadow", x + "px 0 " + color);
-  }, 100);
+    $("a:hover").css("text-shadow", x + "px 0 0 " + color);
+  }, 20);
 });
