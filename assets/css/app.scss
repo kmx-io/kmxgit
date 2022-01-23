@@ -1,15 +1,23 @@
 /* This file is for your main application CSS */
 @import "./inter.scss";
+@import "./kmx_colors.scss";
+$primary: $kmx_blue;
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 $font-family-sans-serif: "Inter", sans-serif;
-$font-family-monospace: "Courier New", monospace;
+$font-family-monospace: "courier_new", "Courier New", monospace;
+@import "./courier_new.scss";
 $code-font-size: $font-size-base;
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+$fa-font-path: "/_fonts";
 @import "../node_modules/font-awesome/scss/font-awesome.scss";
 
 @import "./flash.scss";
 @import "./pygments.scss";
 
+a {
+    text-decoration: none;
+    color: var(--bs-primary);
+}
 /* navbar */
 .navbar {
     padding-top: 0.3rem;
@@ -20,6 +28,11 @@ $code-font-size: $font-size-base;
 } 
 .nav-link {
     padding: 0.65rem 1rem 0;
+}
+.kmxgit-logo {
+    display: inline-block;
+    transform: rotate(0.125turn);
+    margin: 0 0.3em;
 }
 /* footer */
 .footer {
