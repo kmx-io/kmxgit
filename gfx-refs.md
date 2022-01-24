@@ -3,24 +3,24 @@
 ## Logo
 
 <div>
-  <div class="kmxgit-logo-lg">
+  <a class="kmxgit-logo-lg">
     <span><i class="fa fa-square"></i></span> kmx git
-  </div>
+  </a>
 </div>
 <div>
-  <div class="kmxgit-logo-light-lg">
+  <a class="kmxgit-logo-light-lg">
     <span><i class="fa fa-square"></i></span> kmx git
-  </div>
+  </a>
 </div>
 <div>
-  <div class="kmxgit-logo">
+  <a class="kmxgit-logo">
     <span><i class="fa fa-square"></i></span> kmx git
-  </div>
+  </a>
 </div>
 <div>
-  <div class="kmxgit-logo-light">
+  <a class="kmxgit-logo-light">
     <span><i class="fa fa-square"></i></span> kmx git
-  </div>
+  </a>
 </div>
 
 ## Colors
