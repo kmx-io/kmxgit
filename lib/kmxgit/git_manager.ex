@@ -198,7 +198,8 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  defp ok_hd({:ok, list}), do: {:ok, hd(list)}
+  defp ok_hd({:ok, [first | _]}), do: {:ok, first}
+  defp ok_hd({:ok, []}), do: {:ok, nil}
   defp ok_hd(x), do: x
 
   def log1(repo, tree \\ nil) do
