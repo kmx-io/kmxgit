@@ -123,6 +123,9 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - DONE git remote add kmx git@git.kmx.io:user/repo.git
      - DONE git push -u kmx branch
      - DONE git pull
+ - SEO
+   - /_sitemap.txt
+   - /robots.txt
  - Display markdown files as HTML
  - Releases
    - infos

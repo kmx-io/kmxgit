@@ -11,7 +11,8 @@ defmodule Kmxgit.OrganisationManager do
     Repo.all from org in Organisation,
       join: s in Slug,
       on: s.organisation_id == org.id,
-      preload: :slug,
+      preload: [:owned_repositories,
+                :slug],
       order_by: s.slug
   end
 

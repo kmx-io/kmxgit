@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: <%= Routes.page_url(@conn, :sitemap) %>

@@ -1,0 +1,6 @@
+<%= Routes.page_url(@conn, :index) %>
+<%= for user <- @users do %><%= Routes.slug_url(@conn, :show, user.slug.slug) %>
+<%= for repo <- user.owned_repositories do %><%= if repo.public_access do %><%= Routes.repository_url(@conn, :show, user.slug.slug, Repository.splat(repo)) %>
+<% end %><% end %><% end %><%= for org <- @orgs do %><%= Routes.slug_url(@conn, :show, org.slug.slug) %>
+<%= for repo <- org.owned_repositories do %><%= if repo.public_access do %><%= Routes.repository_url(@conn, :show, org.slug.slug, Repository.splat(repo)) %>
+<% end %><% end %><% end %>

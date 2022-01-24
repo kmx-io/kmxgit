@@ -36,6 +36,8 @@ defmodule KmxgitWeb.Router do
     get  "/_new_admin",               PageController, :new_admin
     post "/_new_admin",               PageController, :new_admin_post
     get  "/_privacy",                 PageController, :privacy
+    get  "/robots.txt",               PageController, :robots
+    get  "/_sitemap.txt",             PageController, :sitemap
     get  "/_user_agreement",          PageController, :user_agreement
 
     delete "/_log_out",        UserSessionController, :delete

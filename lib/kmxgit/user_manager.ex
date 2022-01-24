@@ -10,7 +10,9 @@ defmodule Kmxgit.UserManager do
   alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
 
   def list_users do
-    Repo.all from user in User, preload: :slug
+    Repo.all from user in User,
+      preload: [:owned_repositories,
+                :slug]
   end
 
   def count_users do

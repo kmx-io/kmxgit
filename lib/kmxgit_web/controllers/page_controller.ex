@@ -99,6 +99,20 @@ defmodule KmxgitWeb.PageController do
     |> render(:privacy)
   end
 
+  def robots(conn, _params) do
+    conn
+    |> put_resp_content_type("text/plain")
+    |> render("robots.txt")
+  end
+
+  def sitemap(conn, _params) do
+    conn
+    |> assign(:orgs, OrganisationManager.list_organisations())
+    |> assign(:users, UserManager.list_users())
+    |> put_resp_content_type("text/plain")
+    |> render("sitemap.txt")
+  end
+
   def user_agreement(conn, _params) do
     conn
     |> render(:user_agreement)
