@@ -1,28 +1,28 @@
-<h3><%= gettext("Content") %></h3>
-<div class="file_content">
-  <%= if @git.content_html do %>
-    <div class="content_text">
-      <div class="line_numbers">
-        <pre><%= for ln <- @git.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
-        <% end %></pre>
+<%= if String.match?(@git.content_type, ~r(^text/)) do %>
+  <%= if @git.markdown_html do %>
+    <ul class="nav nav-tabs" id="contentTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="contentTabMarkdown" data-bs-toggle="tab" data-bs-target="#contentMarkdown" type="button" role="tab" aria-selected="true"><%= gettext "Markdown" %></button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="contentTabSource" data-bs-toggle="tab" data-bs-target="#contentSource" type="button" role="tab" aria-selected="false"><%= gettext "Source" %></button>
+      </li>
+    </ul>
+    <div class="tab-content" id="contentTabContent">
+      <div class="tab-pane fade show active" id="contentMarkdown" role="tabpanel" aria-labelledby="contentTabMarkdown">
+        <div class="file-content">
+          <%= raw @git.markdown_html %>
+        </div>
       </div>
-      <div class="content_html">
-        <%= raw @git.content_html %>
+      <div class="tab-pane fade" id="contentSource" role="tabpanel" aria-labelledby="contentTabSource">
+        <%= render("show_git_content_text.html", assigns) %>
       </div>
     </div>
   <% else %>
-    <%= if String.match?(@git.content_type, ~r(^text/)) do %>
-      <div class="content_text">
-        <div class="line_numbers">
-          <pre><%= for ln <- @git.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
-          <% end %></pre>
-        </div>
-        <pre><%= @git.content %></pre>
-      </div>
-    <% end %>
+    <%= render("show_git_content_text.html", assigns) %>
   <% end %>
-  <%= if String.match?(@git.content_type, ~r(^image/)) do %>
-    <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
-  <% end %>
-  <%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @tree | String.split(@path, "/")])), class: "btn btn-primary" %>
-</div>
+<% end %>
+<%= if String.match?(@git.content_type, ~r(^image/)) do %>
+  <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
+<% end %>
+<%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @tree | String.split(@path, "/")])), class: "btn btn-primary" %>

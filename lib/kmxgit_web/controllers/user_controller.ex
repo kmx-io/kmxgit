@@ -44,7 +44,6 @@ defmodule KmxgitWeb.UserController do
     current_user = conn.assigns.current_user
     if params["login"] == User.login(current_user) do
       user = current_user
-      avatar_param = params["user"]["avatar"]
       case Repo.transaction(fn ->
             case UserManager.update_user(user, params["user"]) do
               {:ok, user1} ->

@@ -1,8 +1,6 @@
 defmodule Kmxgit.UserManager.Avatar do
   import Mogrify
 
-  alias Kmxgit.UserManager.User
-
   @sizes [256, 48]
 
   def path(user, size) do

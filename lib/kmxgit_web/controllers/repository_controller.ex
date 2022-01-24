@@ -187,6 +187,7 @@ defmodule KmxgitWeb.RepositoryController do
       files: [],
       line_numbers: nil,
       log1: nil,
+      markdown_html: nil,
       readme: [],
       status: "",
       tags: [],
@@ -250,14 +251,17 @@ defmodule KmxgitWeb.RepositoryController do
     if (path == name) do
       case GitManager.content(Repository.full_slug(repo), sha1) do
         {:ok, content} ->
-          type = case Regex.run(~r/[.]([^.]+)$/, path) do
-                   [_, ext] -> mime_type(content, ext)
-                   _ -> mime_type(content)
-                 end
+          {type, ext} = case Regex.run(~r/[.]([^.]+)$/, path) do
+                          [_, ext] -> {mime_type(content, ext), ext}
+                          _ -> {mime_type(content), nil}
+                        end
           content_html = Pygmentize.html(content, filename(name))
           line_numbers = line_numbers(content)
+          markdown_html = if String.match?(ext, ~r/md/i) do
+            Earmark.as_html!(content)
+          end
           IO.inspect(path: path, name: name, type: type)
-          %{git | content: content, content_html: content_html, content_type: type, filename: name, line_numbers: line_numbers}
+          %{git | content: content, content_html: content_html, content_type: type, filename: name, line_numbers: line_numbers, markdown_html: markdown_html}
         {:error, error} -> %{git | status: error}
       end
     else
