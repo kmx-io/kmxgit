@@ -109,24 +109,23 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE environment variable
  - DONE Fonts : Inter & Courier New
  - DONE Dark navbar
- - Bug : fix empty diff
- - Users
+ - DONE Users
    - DONE Profile picture
    - DONE Link user in git log and commits
+ - DONE SEO
+   - DONE /_sitemap.txt
+   - DONE /robots.txt
+ - DONE Display markdown files as HTML
  - Front page
    - DONE Stats
      - DONE count users, organisations, repositories
      - DONE disk usage
    - git cli help
-     - install git
      - DONE git clone
      - DONE git remote add kmx git@git.kmx.io:user/repo.git
      - DONE git push -u kmx branch
      - DONE git pull
- - SEO
-   - /_sitemap.txt
-   - /robots.txt
- - Display markdown files as HTML
+     - install git
  - Releases
    - infos
    - static files
@@ -134,6 +133,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - Comments in diff
  - Issues / tickets ?
  - Static site generator
+ - Bug : fix empty diff between commits and master
  - OAuth2
    - Google
    - Github
