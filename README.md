@@ -111,18 +111,18 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
  - DONE Dark navbar
  - Bug : fix empty diff
  - Users
-   - Profile picture
-   - Link user in git log and commits
+   - DONE Profile picture
+   - DONE Link user in git log and commits
  - Front page
    - DONE Stats
      - DONE count users, organisations, repositories
      - DONE disk usage
    - git cli help
      - install git
-     - git clone
-     - git remote add kmx git@git.kmx.io:user/repo.git
-     - git push -u kmx branch
-     - git pull
+     - DONE git clone
+     - DONE git remote add kmx git@git.kmx.io:user/repo.git
+     - DONE git push -u kmx branch
+     - DONE git pull
  - Releases
    - infos
    - static files
