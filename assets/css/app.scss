@@ -2,6 +2,7 @@
 @import "./inter.scss";
 @import "./kmx_colors.scss";
 $primary: $kmx_blue;
+$danger: $kmx_orange;
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 $font-family-sans-serif: "Inter", sans-serif;
 $font-family-monospace: "courier_new", "Courier New", monospace;
@@ -51,6 +52,9 @@ a {
     clear: both;
 }
 /* user */
+.btn-danger, .btn-danger:hover {
+    color: #fff;
+}
 textarea#user_description,
 textarea#organisation_description,
 textarea#repository_description {
