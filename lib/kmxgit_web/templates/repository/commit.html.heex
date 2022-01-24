@@ -16,16 +16,13 @@
         <%= @commit.hash %>
       </h2>
       <div>
-        <b><%= gettext("Author") %> :</b>
-        <%= @commit.author %>
-      </div>
-      <div>
-        <b><%= gettext("Date") %> :</b>
+        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @commit.author_email, size: 48, title: @commit.author, class: "commit-avatar") %>
         <%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>
+        <p>
+          <%= @commit.message %>
+        </p>
+        <div class="clear"></div>
       </div>
-      <p>
-        <%= @commit.message %>
-      </p>
       <%= if @diff_html do %>
         <div class="content_text">
           <div class="line_numbers">
