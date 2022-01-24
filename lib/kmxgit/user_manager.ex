@@ -7,7 +7,7 @@ defmodule Kmxgit.UserManager do
 
   alias Kmxgit.Repo
   alias Kmxgit.SlugManager.Slug
-  alias Kmxgit.UserManager.{User, UserToken, UserNotifier}
+  alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
 
   def list_users do
     Repo.all from user in User, preload: :slug
@@ -56,7 +56,7 @@ defmodule Kmxgit.UserManager do
                 owned_repositories: [organisation: :slug,
                                      user: :slug]]
   end
-
+ 
   def register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
@@ -209,13 +209,17 @@ defmodule Kmxgit.UserManager do
   end
 
   def update_user(%User{} = user, attrs) do
-    old_login = user.slug.slug
+    old_login = User.login(user)
     case user
          |> User.changeset(attrs)
          |> Repo.update() do
       {:ok, u} ->
-        if u.slug.slug != old_login do
-          UserNotifier.deliver_login_changed_email(u, old_login, u.slug.slug)
+        if User.login(u) != old_login do
+          UserNotifier.deliver_login_changed_email(u, old_login, User.login(u))
+        end
+        if attrs["avatar"] do
+            %{path: path} = attrs["avatar"]
+            Avatar.set_image(u, path)
         end
         {:ok, u}
       x -> x

@@ -17,7 +17,7 @@
   <div class="row">
     <div class="col col-12">
       <hr/>
-      <img src={Exgravatar.gravatar_url(@user.email, s: 256)} alt="Avatar" class="avatar-lg" />
+      <%= render("avatar.html", conn: @conn, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %>
       <h1><%= @user.name %></h1>
       <div class="col col-12 col-md-8">
         <%= if @user.description do %>

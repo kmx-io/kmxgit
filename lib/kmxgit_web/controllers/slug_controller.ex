@@ -23,7 +23,7 @@ defmodule KmxgitWeb.SlugController do
         |> assign(:disk_usage, Repository.disk_usage(owned_repos))
         |> assign(:disk_usage_all, Repository.disk_usage(repos))
         |> assign(:repos, repos)
-        |> assign(:page_title, gettext("User %{login}", login: user.slug.slug))
+        |> assign(:page_title, gettext("User %{login}", login: User.login(user)))
         |> assign(:user, user)
         |> put_view(UserView)
         |> render("show.html")

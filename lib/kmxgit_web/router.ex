@@ -65,6 +65,8 @@ defmodule KmxgitWeb.Router do
   scope "/", KmxgitWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    get "/_avatar/:login/:size/avatar.png", UserController, :avatar
+
     get "/_settings", UserSettingsController, :edit
     put "/_settings", UserSettingsController, :update
     get "/_settings/confirm_email/:token", UserSettingsController, :confirm_email

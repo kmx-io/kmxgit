@@ -35,5 +35,6 @@ npm-debug.log
 /priv/git
 /.env
 
+/priv/avatar/
 /priv/repo/dumps/
 /priv/static/

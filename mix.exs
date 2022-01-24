@@ -46,6 +46,7 @@ defmodule Kmxgit.MixProject do
       {:gettext, "~> 0.18"},
       {:guardian, "~> 2.0"},
       {:jason, "~> 1.2"},
+      {:mogrify, "~> 0.9.1"},
       {:phoenix, "~> 1.6.2"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.0"},

@@ -1,6 +1,7 @@
-<% user = Kmxgit.UserManager.get_user_by_email(@email) %>
+<% user = UserManager.get_user_by_email(@email) %>
 <%= if user do %>
-  <%= link to: Routes.slug_path(@conn, :show, user.slug.slug) do %><img src={Exgravatar.gravatar_url(@email, s: @size)} alt={@title} title={@title} class={@class} /><% end %>
+  <% avatar_path = Avatar.path(user, @size) |> IO.inspect() %>
+  <%= link to: Routes.slug_path(@conn, :show, User.login(user)) do %><%= if File.exists?(avatar_path) do %><%= img_tag(Routes.user_path(@conn, :avatar, User.login(user), @size), alt: @title, title: @title, class: @class) %><% else %><img src={Exgravatar.gravatar_url(@email, s: @size)} alt={@title} title={@title} class={@class} /><% end %><% end %>
 <% else %>
   <img src={Exgravatar.gravatar_url(@email, s: @size)} alt={@title} title={@title} class={@class} />
 <% end %>

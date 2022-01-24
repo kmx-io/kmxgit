@@ -4,8 +4,22 @@ defmodule KmxgitWeb.UserController do
   alias Kmxgit.GitManager
   alias Kmxgit.Repo
   alias Kmxgit.UserManager
-  alias Kmxgit.UserManager.User
+  alias Kmxgit.UserManager.{Avatar, User}
   alias KmxgitWeb.ErrorView
+
+  def avatar(conn, %{"login" => login,
+                     "size" => size}) do
+    user = UserManager.get_user_by_login(login)
+    if user do
+      path = Avatar.path(user, size)
+      conn
+      |> put_resp_content_type("image/png")
+      |> send_file(200, path)
+    end
+  end
+  def avatar(conn, _) do
+    not_found(conn)
+  end
 
   def edit(conn, params) do
     current_user = conn.assigns.current_user
@@ -30,11 +44,12 @@ defmodule KmxgitWeb.UserController do
     current_user = conn.assigns.current_user
     if params["login"] == User.login(current_user) do
       user = current_user
+      avatar_param = params["user"]["avatar"]
       case Repo.transaction(fn ->
             case UserManager.update_user(user, params["user"]) do
-              {:ok, user} ->
-                if user.slug.slug != user.slug.slug do
-                  case GitManager.rename_dir(user.slug.slug, user.slug.slug) do
+              {:ok, user1} ->
+                if User.login(user1) != User.login(user) do
+                  case GitManager.rename_dir(User.login(user), User.login(user1)) do
                     :ok -> user
                     {:error, err} -> Repo.rollback(err)
                   end
@@ -50,7 +65,7 @@ defmodule KmxgitWeb.UserController do
             error -> IO.inspect(error)
           end
           conn
-          |> redirect(to: Routes.slug_path(conn, :show, user.slug.slug))
+          |> redirect(to: Routes.slug_path(conn, :show, User.login(user)))
         {:error, changeset} ->
           conn
           |> assign(:page_title, gettext("Edit user %{login}", login: user.slug.slug))
