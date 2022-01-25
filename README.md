@@ -130,6 +130,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - useless git commands (`git_put_log1`)
    - disk usage calculation
  - Admin
+   - logo
    - disk usage (repos, orgs, users)
    - pagination
    - sort by column
