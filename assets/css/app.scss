@@ -115,8 +115,9 @@ img.qrcode {
         color: black;
     }
     a:hover {
-        color: blue;
+        color: $primary;
     }
+    word-break: break-all;
 }
 table.admin-properties th {
     min-width: 8em;
