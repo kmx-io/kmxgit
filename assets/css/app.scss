@@ -118,15 +118,14 @@ img.qrcode {
 table.admin-properties th {
     min-width: 8em;
 }
-.file-content {
+.file_content {
     border: solid 1px #ccc;
-    padding: 1em;
+    padding: 0;
     margin: 0.5em 0;
 }
 .content_text {
-    border: solid 1px #ccc;
-    padding: 0.5em 0.5em 0.5em 3.5em;
     margin: 0;
+    padding: 0.5em 0.5em 0.5em 3.5em;
     position: relative;
 }
 .content_text .line_numbers {
@@ -140,6 +139,11 @@ table.admin-properties th {
         text-decoration: none;
         color: #aaa;
     }
+}
+.content_html {
+    margin: 0;
+    padding: 0.5em;
+    position: relative;
 }
 pre code {
     display: block;

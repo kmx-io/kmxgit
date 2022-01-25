@@ -5,9 +5,7 @@
         <pre><%= for ln <- @git.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
 <% end %></pre>
       </div>
-      <div class="content_html">
-        <%= raw @git.content_html %>
-      </div>
+      <%= raw @git.content_html %>
     </div>
   <% else %>
     <div class="content_text">
