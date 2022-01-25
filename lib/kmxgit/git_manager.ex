@@ -50,7 +50,7 @@ defmodule Kmxgit.GitManager do
 
   def files(repo, tree, path, parent \\ ".") do
     dir = git_dir(repo)
-    path1 = if path == "" do "." else path end
+    path1 = if path == "", do: ".", else: path
     {out, status} = System.cmd("git", ["-C", dir, "ls-tree", tree, path1], stderr_to_stdout: true)
     case status do
       0 ->

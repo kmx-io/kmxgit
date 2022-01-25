@@ -104,7 +104,7 @@ defmodule KmxgitWeb.RepositoryController do
     if repo && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
-      git = setup_git(repo, op_params.tree || "master", op_params.path, conn, op)
+      git = setup_git(repo, conn, op, op_params)
       first_tree = case Enum.at(git.trees, 0) do
                        {_, first_tree, _} -> first_tree
                        nil -> nil
@@ -178,7 +178,7 @@ defmodule KmxgitWeb.RepositoryController do
     %{tree: tree, from: nil, git: nil, org: nil, path: path3, repo: nil, to: nil, user: nil}
   end
 
-  defp setup_git(repo, tree, path, conn, op) do
+  defp setup_git(repo, conn, op, %{path: path}) do
     %{trees: [],
       content: nil,
       content_html: nil,
@@ -192,13 +192,7 @@ defmodule KmxgitWeb.RepositoryController do
       status: "",
       tags: [],
       valid: true}
-    |> git_put_branches(repo, conn, op, path)
-    |> git_put_files(repo, tree, path, conn)
-    |> git_put_content(repo, path)
-    |> git_put_readme(repo)
-    |> git_put_log1(repo, tree, path)
-    |> git_put_tags(repo, conn, op, path)
-    |> git_put_commit(repo, conn, op, tree, path)
+      |> git_put_branches(repo, conn, op, path)
   end
 
   defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
@@ -348,7 +342,9 @@ defmodule KmxgitWeb.RepositoryController do
     log
   end
 
-  defp show_op(conn, :blob, %{git: git}) do
+  defp show_op(conn, :blob, %{git: git, path: path, repo: repo}) do
+    git = git
+    |> git_put_content(repo, path)
     if (git.content) do
       conn
       |> put_resp_content_type("application/octet-stream")
@@ -358,7 +354,9 @@ defmodule KmxgitWeb.RepositoryController do
       not_found(conn)
     end
   end
-  defp show_op(conn, :commit, %{git: git, org: org, repo: repo}) do
+  defp show_op(conn, :commit = op, %{git: git, org: org, path: path, repo: repo, tree: tree}) do
+    git = git
+    |> git_put_commit(repo, conn, op, tree, path)
     IO.inspect(git)
     diff = case GitManager.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
              {:ok, diff} -> diff
@@ -396,6 +394,7 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
+    git = git
     log = git_log(repo, tree, path)
     conn
     |> assign(:tree, tree)
@@ -408,7 +407,9 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:repo, repo)
     |> render("log.html")
   end
-  defp show_op(conn, :tag, %{tree: tree, git: git, org: org, repo: repo}) do
+  defp show_op(conn, :tag = op, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
+    git = git
+    |> git_put_tags(repo, conn, op, path)
     tag = Enum.find(git.tags, fn tag -> tag.tag == tree end)
     conn
     |> assign_current_organisation(org)
@@ -417,7 +418,13 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:tag, tag)
     |> render("tag.html")
   end
-  defp show_op(conn, :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
+  defp show_op(conn, :tree = op, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
+    git = git
+    |> git_put_files(repo, tree, path, conn)
+    |> git_put_content(repo, path)
+    |> git_put_readme(repo)
+    |> git_put_log1(repo, tree, path)
+    |> git_put_tags(repo, conn, op, path)
     conn
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)

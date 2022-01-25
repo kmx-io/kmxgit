@@ -1,0 +1,7 @@
+<%= if String.match?(@git.content_type, ~r(^text/)) do %>
+  <hr/>
+  <h3><%= gettext "Source" %></h3>
+  <%= if @git.markdown_html do %>
+    <%= render("show_git_content_text.html", assigns) %>
+  <% end %>
+<% end %>

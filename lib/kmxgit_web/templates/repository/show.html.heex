@@ -1,43 +1,16 @@
 <div class="container-fluid">
-
-  <div class="row">
-    <div class="col col-12 col-md-7">
-      <%= render("show_title.html", assigns) %>
+  <%= if @git.content do %>
+    <%= render("show_title.html", assigns) %>
+    <%= render("show_git_content.html", assigns) %>
+  <% else %>
+    <div class="row">
+      <div class="col col-12 col-md-7">
+        <%= render("show_title.html", assigns) %>
+      </div>
+      <div class="col col-12 col-md-5">
+        <%= render("show_actions.html", assigns) %>
+      </div>
     </div>
-    <div class="col col-12 col-md-5">
-      <%= render("show_actions.html", assigns) %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col col-12 col-md-7">
-      <%= if @path do %>
-        <hr/>
-        <h2><%= @path %></h2>
-      <% end %>
-
-      <%= render("show_branch.html", assigns) %>
-
-      <hr/>
-      <%= if @git.log1 do %>
-        <%= render("show_commit_message.html", assigns) %>
-      <% end %>
-
-      <%= if @git.content do %>
-        <hr/>
-        <%= render("show_git_content.html", assigns) %>
-      <% else %>
-        <hr/>
-        <%= render("show_files.html", assigns) %>
-      <% end %>
-    </div>
-    <div class="col col-12 col-md-5">
-      <hr/>
-      <%= render("show_properties.html", assigns) %>
-    </div>
-  </div>
-
-  <div class="row">
-    <%= render("show_readmes.html", assigns) %>
-  </div>
+    <%= render("show_files.html", assigns) %>
+  <% end %>
 </div>
