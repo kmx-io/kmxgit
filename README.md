@@ -126,6 +126,14 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - DONE git push -u kmx branch
      - DONE git pull
      - install git
+ - Optimizations
+   - useless git commands (`git_put_log1`)
+   - disk usage calculation
+ - Admin
+   - disk usage (repos, orgs, users)
+   - pagination
+   - sort by column
+   - search
  - Releases
    - infos
    - static files
