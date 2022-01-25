@@ -3,13 +3,21 @@ const kmx_colors = {
   "kmx-blue":    "#5a60f9",
   "kmx-blue1":   "#6f72f9",
   "kmx-blue2":   "#9c99fd",
+  "kmx-blue3":   "#5a60f9",
+  "kmx-blue4":   "#6f72f9",
+  "kmx-blue5":   "#9c99fd",
   "index": [
     "kmx-black",
     "kmx-blue",
     "kmx-blue1",
     "kmx-blue2",
+    "kmx-blue3",
+    "kmx-blue4",
+    "kmx-blue5",
     "kmx-cyan",
+    "kmx-cyan1",
     "kmx-green",
+    "kmx-green1",
     "kmx-orange",
     "kmx-orange1",
     "kmx-orange2",
@@ -18,10 +26,14 @@ const kmx_colors = {
     "kmx-white1",
     "kmx-white2",
     "kmx-yellow",
-    "kmx-yellow1"
+    "kmx-yellow1",
+    "kmx-yellow2",
+    "kmx-yellow3"
   ],
   "kmx-cyan":    "#d4f3f6",
+  "kmx-cyan1":   "#d4f3f6",
   "kmx-green":   "#c4ed3a",
+  "kmx-green1":  "#c4ed3a",
   "kmx-orange":  "#f8681c",
   "kmx-orange1": "#fa7734",
   "kmx-orange2": "#ffa532",
@@ -31,5 +43,7 @@ const kmx_colors = {
   "kmx-white2":  "#ffffff",
   "kmx-yellow":  "#ecfe49",
   "kmx-yellow1": "#fff43e"
+  "kmx-yellow2":  "#ecfe49",
+  "kmx-yellow3": "#fff43e"
 };
 export default kmx_colors;
