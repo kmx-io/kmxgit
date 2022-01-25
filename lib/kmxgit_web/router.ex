@@ -45,6 +45,8 @@ defmodule KmxgitWeb.Router do
     post   "/_confirm",        UserConfirmationController, :create
     get    "/_confirm/:token", UserConfirmationController, :edit
     post   "/_confirm/:token", UserConfirmationController, :update
+
+    get "/_avatar/:login/:size/avatar.png", UserController, :avatar
   end
 
     ## Authentication routes
@@ -66,8 +68,6 @@ defmodule KmxgitWeb.Router do
 
   scope "/", KmxgitWeb do
     pipe_through [:browser, :require_authenticated_user]
-
-    get "/_avatar/:login/:size/avatar.png", UserController, :avatar
 
     get "/_settings", UserSettingsController, :edit
     put "/_settings", UserSettingsController, :update
