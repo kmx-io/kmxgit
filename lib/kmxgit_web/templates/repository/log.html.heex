@@ -34,7 +34,7 @@
                 <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: commit.author_email, size: 48, title: commit.author, class: "") %>
               </td>
               <td class="hash">
-                <%= link String.slice(commit.hash, 0..7), id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) %>
+                <%= link String.slice(commit.hash, 0..7), id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", commit.hash])) %>
               </td>
               <td class="date">
                 <%= commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>

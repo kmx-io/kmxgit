@@ -356,6 +356,7 @@ defmodule KmxgitWeb.RepositoryController do
   end
   defp show_op(conn, :commit = op, %{git: git, org: org, path: path, repo: repo, tree: tree}) do
     git = git
+    |> git_put_log1(repo, tree, path)
     |> git_put_commit(repo, conn, op, tree, path)
     IO.inspect(git)
     diff = case GitManager.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
@@ -370,10 +371,11 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:current_repository, repo)
     |> assign(:diff_html, diff_html)
     |> assign(:diff_line_numbers, diff_line_numbers)
+    |> assign(:path, path)
     |> assign(:repo, repo)
     |> render("commit.html")
   end
-  defp show_op(conn, :diff, %{from: from, org: org, repo: repo, to: to}) do
+  defp show_op(conn, :diff, %{from: from, org: org, path: path, repo: repo, to: to}) do
     case GitManager.diff(Repository.full_slug(repo), from, to) do
       {:ok, diff} ->
         diff_html = Pygmentize.html(diff, "diff.patch")
@@ -386,6 +388,7 @@ defmodule KmxgitWeb.RepositoryController do
         |> assign(:diff_html, diff_html)
         |> assign(:diff_line_numbers, diff_line_numbers)
         |> assign(:diff_to, to)
+        |> assign(:path, path)
         |> assign(:repo, repo)
         |> render("diff.html")
       {:error, e} ->
@@ -394,8 +397,8 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
-    git = git
     log = git_log(repo, tree, path)
+    IO.inspect([:log, tree: tree, git: git, path: path, log: log])
     conn
     |> assign(:tree, tree)
     |> assign(:tree_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", tree] ++ (if path, do: String.split(path, "/"), else: []))))
