@@ -53,6 +53,9 @@ a {
 .kmxgit-logo-light, .kmxgit-logo-light-lg {
     background: #fff;
     color: #000;
+    &:hover {
+        color: #000;
+    }
 }
 .kmxgit-logo-lg, .kmxgit-logo-light-lg {
     font-size: 4em;
