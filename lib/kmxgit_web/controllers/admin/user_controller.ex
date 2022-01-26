@@ -9,6 +9,7 @@ defmodule KmxgitWeb.Admin.UserController do
 
   def index(conn, _params) do
     users = UserManager.list_users
+    |> UserManager.put_disk_usage()
     conn
     |> assign(:page_title, gettext("Users"))
     |> assign(:users, users)

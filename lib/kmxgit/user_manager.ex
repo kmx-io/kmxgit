@@ -15,6 +15,14 @@ defmodule Kmxgit.UserManager do
                 :slug]
   end
 
+  def put_disk_usage(user = %User{}) do
+    %User{user | disk_usage: User.disk_usage(user)}
+  end
+  def put_disk_usage(users) when is_list(users) do
+    users
+    |> Enum.map(&put_disk_usage/1)
+  end
+
   def count_users do
     Repo.one from user in User, select: count()
   end

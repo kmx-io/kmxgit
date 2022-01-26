@@ -16,6 +16,14 @@ defmodule Kmxgit.OrganisationManager do
       order_by: s.slug
   end
 
+  def put_disk_usage(org = %Organisation{}) do
+    %Organisation{org | disk_usage: Organisation.disk_usage(org)}
+  end
+  def put_disk_usage(orgs) when is_list(orgs) do
+    orgs
+    |> Enum.map(&put_disk_usage/1)
+  end
+
   def count_organisations do
     Repo.one from org in Organisation, select: count()
   end

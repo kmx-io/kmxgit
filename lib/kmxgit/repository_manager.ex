@@ -18,8 +18,16 @@ defmodule Kmxgit.RepositoryManager do
     |> Enum.sort_by(&Repository.full_slug/1)
   end
 
+  def put_disk_usage(repo = %Repository{}) do
+    %Repository{repo | disk_usage: Repository.disk_usage(repo)}
+  end
+  def put_disk_usage(repos) when is_list(repos) do
+    repos
+    |> Enum.map(&put_disk_usage/1)
+  end
+
   def count_repositories do
-    Repo.one from org in Repository, select: count()
+    Repo.one from repo in Repository, select: count()
   end
 
   def list_contributor_repositories(user) do

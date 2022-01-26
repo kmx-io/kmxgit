@@ -295,7 +295,7 @@ defmodule Kmxgit.GitManager do
         k
       x ->
         IO.inspect(x)
-        -1
+        0
     end
   end
 

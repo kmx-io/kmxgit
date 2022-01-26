@@ -10,6 +10,7 @@ defmodule Kmxgit.OrganisationManager.Organisation do
 
   schema "organisations" do
     field :description, :string
+    field :disk_usage, :integer, virtual: true, default: 0
     field :name, :string
     has_many :owned_repositories, Repository
     many_to_many :users, User, join_through: "users_organisations", on_replace: :delete, on_delete: :delete_all

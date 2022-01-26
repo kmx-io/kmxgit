@@ -11,6 +11,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   schema "repositories" do
     field :deploy_keys, :string
     field :description, :string
+    field :disk_usage, :integer, virtual: true, default: 0
     field :fork_to, :string, virtual: true
     belongs_to :forked_from, __MODULE__
     belongs_to :organisation, Organisation, on_replace: :nilify

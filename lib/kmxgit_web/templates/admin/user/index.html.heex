@@ -14,6 +14,7 @@
       <th><%= gettext "Name" %></th>
       <th><%= gettext "Email" %></th>
       <th><%= gettext "Login" %></th>
+      <th><%= gettext "Disk usage" %></th>
       <th><%= gettext "2FA" %></th>
       <th><%= gettext "Admin" %></th>
       <th><%= gettext "Deploy" %></th>
@@ -25,6 +26,7 @@
         <td><%= link user.name, to: Routes.admin_user_path(@conn, :show, user) %></td>
         <td><%= link user.email, to: "mailto:#{user.email}" %></td>
         <td><%= link User.login(user), to: Routes.admin_user_path(@conn, :show, user) %></td>
+        <td><%= disk_usage(user.disk_usage) %></td>
         <td><%= if user.totp_last != 0, do: "TOTP", else: "none" %></td>
         <td><%= user.is_admin %></td>
         <td><%= user.deploy_only %></td>

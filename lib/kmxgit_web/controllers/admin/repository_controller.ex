@@ -10,6 +10,7 @@ defmodule KmxgitWeb.Admin.RepositoryController do
 
   def index(conn, _params) do
     repos = RepositoryManager.list_repositories
+    |> RepositoryManager.put_disk_usage()
     conn
     |> assign(:repos, repos)
     |> render("index.html")

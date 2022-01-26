@@ -8,6 +8,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
 
   def index(conn, _params) do
     orgs = OrganisationManager.list_organisations
+    |> OrganisationManager.put_disk_usage()
     conn
     |> assign(:orgs, orgs)
     |> render("index.html")

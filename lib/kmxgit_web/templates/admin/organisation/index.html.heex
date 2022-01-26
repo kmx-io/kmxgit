@@ -13,15 +13,17 @@
         <th><%= gettext "Id" %></th>
         <th><%= gettext "Name" %></th>
         <th><%= gettext "Slug" %></th>
+        <th><%= gettext "Disk usage" %></th>
         <th><%= gettext "Actions" %></th>
       </tr>
     </thead>
     <tbody>
-      <%= Enum.map @orgs, fn org -> %>
+      <%= for org <- @orgs do %>
         <tr>
           <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
           <td><%= link org.name, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
           <td><%= link org.slug.slug, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
+          <td><%= disk_usage(org.disk_usage) %></td>
           <td>
             <%= link gettext("Show"), to: Routes.slug_path(@conn, :show, org.slug.slug), class: "btn btn-sm btn-primary" %>
           </td>
