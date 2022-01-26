@@ -5,7 +5,6 @@ server written in C and Elixir / Phoenix.
 
 kmxgit started as a frontend for
 [git-auth](https://git.kmx.io/kmx.io/git-auth).
-
 Now public repositories are also supported.
 
 This branch is work in progress, for the stable branch see
@@ -13,6 +12,8 @@ This branch is work in progress, for the stable branch see
 
 For releases see the tags, latest is
 [v0.2.0](https://git.kmx.io/kmx.io/kmxgit/_tag/v0.2.0).
+
+[ChangeLog](#ChangeLog) | [TODO](#todo)
 
 
 ## Installation
@@ -62,9 +63,9 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 ```
 
 
-<h1><a id="features" href="#features">Features</a></h1>
+<h1><a id="ChangeLog" href="#ChangeLog">ChangeLog</a></h1>
 
-<h2><a id="features-0.2" href="#features-0.2">Added in kmxgit 0.2</a></h2>
+<h2><a id="v0.2" href="#v0.2">Added in kmxgit 0.2</a></h2>
 
  - auth
    - auth users using `phx.gen.auth`
