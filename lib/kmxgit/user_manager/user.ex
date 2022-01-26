@@ -2,6 +2,7 @@ defmodule Kmxgit.UserManager.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager.Slug
@@ -268,5 +269,9 @@ defmodule Kmxgit.UserManager.User do
       changeset
       |> add_error(:totp_last, "invalid token")
     end
+  end
+
+  def disk_usage(user) do
+    GitManager.dir_disk_usage(login(user))
   end
 end

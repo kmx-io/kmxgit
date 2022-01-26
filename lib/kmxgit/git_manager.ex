@@ -287,12 +287,24 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  def disk_usage(repo) do
-    dir = git_dir(repo)
-    {out, status} = System.cmd("du", ["-ks", dir], stderr_to_stdout: true)
+  defp du_ks(path) do
+    {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)
     case status do
-      0 -> {:ok, Integer.parse(out)}
-      _ -> {:error, out}
+      0 ->
+        {k, _} = Integer.parse(out)
+        k
+      x ->
+        IO.inspect(x)
+        -1
     end
+  end
+
+  def dir_disk_usage(dir) do
+    du_ks("#{@git_root}/#{dir}")
+  end
+
+  def disk_usage(repo) do
+    git_dir(repo)
+    |> du_ks()
   end
 end

@@ -206,12 +206,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   end
 
   def disk_usage(repo = %__MODULE__{}) do
-    case GitManager.disk_usage(full_slug(repo)) do
-      {:ok, {du, _}} -> du
-      x ->
-        IO.inspect(x)
-        0
-    end
+    GitManager.disk_usage(full_slug(repo))
   end
   def disk_usage(repos) when is_list(repos) do
     repos

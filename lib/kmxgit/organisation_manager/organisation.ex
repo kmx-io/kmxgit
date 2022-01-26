@@ -3,6 +3,7 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.User
@@ -36,5 +37,9 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   def owned_repositories(org) do
     org.owned_repositories
     |> Enum.sort_by(&Repository.full_slug/1)
+  end
+
+  def disk_usage(org) do
+    GitManager.dir_disk_usage(org.slug.slug)
   end
 end
