@@ -136,10 +136,10 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - Dashboard
      - DONE Stats
      - ?
-   - disk usage (repos, orgs, users)
-   - pagination
+   - DONE disk usage (repos, orgs, users)
    - sort by column
    - search
+   - pagination
  - Releases
    - infos
    - static files
