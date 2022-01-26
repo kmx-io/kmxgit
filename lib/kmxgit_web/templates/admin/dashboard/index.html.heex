@@ -2,4 +2,29 @@
 
   <h1>Admin dashboard</h1>
 
+  <h2><%= link gettext("Stats"), to: "#stats", id: "stats" %></h2>
+
+  <div class="row">
+    <div class="col col-12 col-md-5">
+      <table class="table">
+        <tr>
+          <th><%= gettext "Disk usage" %></th>
+          <td><%= disk_usage(@disk_usage) %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Users" %></th>
+          <td><%= @user_count %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Organisations" %></th>
+          <td><%= @org_count %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Repositories" %></th>
+          <td><%= @repo_count %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
 </div>

@@ -287,7 +287,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  defp du_ks(path) do
+  def du_ks(path) do
     {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)
     case status do
       0 ->
