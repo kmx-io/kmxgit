@@ -44,6 +44,8 @@ defmodule KmxgitWeb.Admin.UserController do
   def show(conn, params) do
     user = UserManager.get_user(params["id"])
     if user do
+      user = user
+      |> UserManager.put_disk_usage()
       owned_repos = User.owned_repositories(user)
       contributor_repos = RepositoryManager.list_contributor_repositories(user)
       repos = owned_repos ++ contributor_repos

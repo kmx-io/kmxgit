@@ -81,6 +81,7 @@ defmodule KmxgitWeb.Admin.RepositoryController do
 
   def show(conn, params) do
     repo = RepositoryManager.get_repository!(params["id"])
+    |> RepositoryManager.put_disk_usage()
     conn
     |> assign(:members, Repository.members(repo))
     |> assign(:repo, repo)

@@ -41,6 +41,8 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   def show(conn, params) do
     org = OrganisationManager.get_organisation(params["id"])
     if org do
+      org = org
+      |> OrganisationManager.put_disk_usage()
       conn
       |> assign(:org, org)
       |> render("show.html")
