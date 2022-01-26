@@ -121,18 +121,18 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
  - DONE Optimizations
    - DONE useless git commands (`git_put_log1`)
    - DONE disk usage calculation
- - Front page
+ - DONE Front page
    - DONE Stats
      - DONE count users, organisations, repositories
      - DONE disk usage
-   - git cli help
+   - DONE git cli help
      - DONE git clone
      - DONE git remote add kmx git@git.kmx.io:user/repo.git
      - DONE git push -u kmx branch
      - DONE git pull
-     - install git
+     - DONE install git
  - Admin
-   - logo
+   - DONE logo
    - disk usage (repos, orgs, users)
    - pagination
    - sort by column
