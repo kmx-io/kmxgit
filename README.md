@@ -117,6 +117,10 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE /_sitemap.txt
    - DONE /robots.txt
  - DONE Display markdown files as HTML
+ - DONE Bug : fix empty diff between commits and master
+ - DONE Optimizations
+   - DONE useless git commands (`git_put_log1`)
+   - DONE disk usage calculation
  - Front page
    - DONE Stats
      - DONE count users, organisations, repositories
@@ -127,9 +131,6 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - DONE git push -u kmx branch
      - DONE git pull
      - install git
- - DONE Optimizations
-   - DONE useless git commands (`git_put_log1`)
-   - DONE disk usage calculation
  - Admin
    - logo
    - disk usage (repos, orgs, users)
@@ -143,7 +144,6 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - Comments in diff
  - Issues / tickets ?
  - Static site generator
- - Bug : fix empty diff between commits and master
  - OAuth2
    - Google
    - Github
