@@ -47,7 +47,13 @@ defmodule KmxgitWeb.Router do
     post   "/_confirm/:token", UserConfirmationController, :update
 
     get "/_avatar/:login/:size/avatar.png", UserController, :avatar
-  end
+
+    scope "/_doc" do
+      scope "/git" do
+        get "/install", PageController, :doc_git_install
+      end
+    end
+end
 
     ## Authentication routes
 

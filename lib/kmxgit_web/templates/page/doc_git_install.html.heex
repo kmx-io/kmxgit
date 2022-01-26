@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <h1><%= gettext "Git installation documentation" %></h1>
+  <h2>1. <%= gettext "Install git" %></h2>
+  <p>
+    <%= gettext "Options" %> :
+    <ol>
+      <li>apt (Debian, Ubuntu)</li>
+      <li>homebrew (Linux, Mac)</li>
+      <li>pkg (OpenBSD)</li>
+      <li><%= gettext "sources" %></li>
+      <li><%= gettext "binaries" %> (Linux, Mac, Windows)</li>
+    </ol>
+  </p>
+  <h3><a href="#using-apt" id="using-apt">1.1 <%= gettext "Install git using apt" %> (Debian, Ubuntu)</a></h3>
+  <pre><code>$ sudo apt install git</code></pre>
+
+  <h3><a href="#using-homebrew" id="using-homebrew">1.2 <%= gettext "Install git using brew" %> (Linux, Mac)</a></h3>
+  <pre><code>$ brew install git</code></pre>
+
+  <h3><a href="#using-pkg" id="using-pkg">1.3 <%= gettext "Install git using pkg" %> (OpenBSD)</a></h3>
+  <pre><code>$ doas pkg_add git</code></pre>
+
+  <h3><a href="#using-sources" id="using-sources">1.4 <%= gettext "Install git from sources" %></a></h3>
+  <%= gettext "Download sources from" %> <a href="https://github.com/git/git/tags" target="_blank">https://github.com/git/git/tags</a>
+
+  <pre><code>$ tar xzf git-*.tar.gz
+$ cd git-*
+$ make
+$ sudo make install</code></pre>
+
+  <h3><a href="#using-binaries" id="using-binaries">1.5 <%= gettext "Install git from binaries" %> (Linux, Mac, Windows)</a></h3>
+  <p>
+    <%= gettext "Please see" %> <a href="https://git-scm.com/downloads" target="_blank">https://git-scm.com/downloads</a>.
+  </p>
+
+  <h2><%= link gettext("Links"), to: "#links", id: "links" %></h2>
+  <%= render("git_links.html", assigns) %>
+</div>
+
+<br/>

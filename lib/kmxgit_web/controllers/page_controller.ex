@@ -20,7 +20,12 @@ defmodule KmxgitWeb.PageController do
     conn
     |> put_resp_content_type("text/text")
     |> resp(200, a)
-  end    
+  end
+
+  def doc_git_install(conn, _) do
+    conn
+    |> render(:doc_git_install)
+  end
 
   def du_ks(path) do
     {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)

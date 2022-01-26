@@ -19,6 +19,9 @@
       <pre><%= render("ssh_keys_fingerprint.txt") %></pre>
 
       <h3><%= link gettext("Help"), to: "#help", id: "help" %></h3>
+      <p>
+        <%= link gettext("Install git"), to: Routes.page_path(@conn, :doc_git_install) %>
+      </p>
       <div class="highlight">
         <pre><code><span class="c1"># <%= gettext "Clone repository user/path/to/repo if repo does not exist" %> :</span>
 git clone <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
