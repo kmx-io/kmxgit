@@ -7,7 +7,7 @@
         <th><%= link gettext("Id"), to: Routes.admin_repository_path(@conn, :index, sort: "id#{if @sort.column == "id" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "id" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Owner"), to: Routes.admin_repository_path(@conn, :index, sort: "owner#{if @sort.column == "owner" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "owner" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Slug"), to: Routes.admin_repository_path(@conn, :index, sort: "slug#{if @sort.column == "slug" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "slug" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-        <th><%= link gettext("Disk usage"), to: Routes.admin_repository_path(@conn, :index, sort: "du#{if @sort.column == "du" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "du" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Disk usage"), to: Routes.admin_repository_path(@conn, :index, sort: "du#{if @sort.column != "du" || (@sort.column == "du" && !@sort.reverse), do: "-"}") %><%= if @sort.column == "du" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= gettext("Actions") %></th>
       </tr>
     </thead>
