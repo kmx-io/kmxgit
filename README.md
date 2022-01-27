@@ -96,6 +96,22 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - change password
    - change 2FA
 
+<h2><a id="v0.1" href="#v0.1">Added in kmxgit 0.1</a></h2>
+
+ - git-auth
+   - /_etc/git/auth.conf
+   - /_etc/ssh/authorized_keys
+   - bin/update_etc_git_auth
+   - bin/update_git_ssh_authorized_keys
+ - repository
+   - in subdirectory
+   - navigation
+     - branches
+   - tags
+   - readme.md
+ - same url slug for organisations and users
+ - user auth using Guardian
+
 
 <h1><a id="todo" href="#todo" style="text-decoration:none;color:inherit;">TODO</a></h1>
 
