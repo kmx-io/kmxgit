@@ -6,13 +6,42 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   alias Kmxgit.Repo
   alias KmxgitWeb.ErrorView
 
-  def index(conn, _params) do
-    orgs = OrganisationManager.list_organisations
+  def index(conn, params) do
+    {sort, rev} = case String.split(params["sort"], "-") do
+                    [sort, _] -> {sort, true}
+                    [sort] -> {sort, false}
+                    _ -> {nil, false}
+                  end
+    orgs = OrganisationManager.list_organisations()
     |> OrganisationManager.put_disk_usage()
+    |> sort_organisations(sort)
+    orgs = if rev, do: Enum.reverse(orgs), else: orgs
     conn
     |> assign(:orgs, orgs)
+    |> assign(:rev, rev)
+    |> assign(:sort, sort)
     |> render("index.html")
   end
+
+  defp sort_organisations(orgs, "id") do
+    orgs
+    |> Enum.sort(fn a, b -> a.id < b.id end)
+  end
+  defp sort_organisations(orgs, "name") do
+    orgs
+    |> Enum.sort_by(fn org ->
+      String.downcase(org.name || "")
+    end)
+  end
+  defp sort_organisations(orgs, "slug") do
+    orgs
+    |> Enum.sort(fn a, b -> String.downcase(a.slug.slug) < String.downcase(b.slug.slug) end)
+  end
+  defp sort_organisations(orgs, "du") do
+    orgs
+    |> Enum.sort(fn a, b -> a.disk_usage < b.disk_usage end)
+  end
+  defp sort_organisations(orgs, _), do: orgs
 
   def new(conn, _params) do
     changeset = OrganisationManager.change_organisation
