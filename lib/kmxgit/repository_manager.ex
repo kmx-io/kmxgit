@@ -115,8 +115,8 @@ defmodule Kmxgit.RepositoryManager do
   end
 
   def update_disk_usage() do
-    repos = Repo.all(from repo in Repository, preload: [organisation: :slug,
-                                                        user: :slug])
+    Repo.all(from repo in Repository, preload: [organisation: :slug,
+                                                user: :slug])
     |> Enum.map(fn repo ->
       repo
       |> Ecto.Changeset.cast(%{}, [])

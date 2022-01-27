@@ -72,7 +72,7 @@ defmodule Kmxgit.OrganisationManager do
   end
 
   def update_disk_usage() do
-    orgs = Repo.all(from org in Organisation, preload: :slug)
+    Repo.all(from org in Organisation, preload: :slug)
     |> Enum.map(fn org ->
       org
       |> Ecto.Changeset.cast(%{}, [])

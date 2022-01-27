@@ -119,7 +119,7 @@ defmodule Kmxgit.UserManager do
   end
 
   def update_disk_usage() do
-    users = Repo.all(from user in User, preload: :slug)
+    Repo.all(from user in User, preload: :slug)
     |> Enum.map(fn user ->
       user
       |> Ecto.Changeset.cast(%{}, [])

@@ -15,26 +15,6 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     |> render("index.html")
   end
 
-  defp sort_organisations(orgs, "id") do
-    orgs
-    |> Enum.sort(fn a, b -> a.id < b.id end)
-  end
-  defp sort_organisations(orgs, "name") do
-    orgs
-    |> Enum.sort_by(fn org ->
-      String.downcase(org.name || "")
-    end)
-  end
-  defp sort_organisations(orgs, "slug") do
-    orgs
-    |> Enum.sort(fn a, b -> String.downcase(a.slug.slug) < String.downcase(b.slug.slug) end)
-  end
-  defp sort_organisations(orgs, "du") do
-    orgs
-    |> Enum.sort(fn a, b -> a.disk_usage < b.disk_usage end)
-  end
-  defp sort_organisations(orgs, _), do: orgs
-
   def new(conn, _params) do
     changeset = OrganisationManager.change_organisation
     conn
