@@ -7,13 +7,71 @@ defmodule Kmxgit.OrganisationManager do
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager
 
-  def list_organisations do
+  @list_preload [:owned_repositories,
+                 :slug]
+
+  def list_organisations() do
     Repo.all from org in Organisation,
       join: s in Slug,
       on: s.organisation_id == org.id,
-      preload: [:owned_repositories,
-                :slug],
+      preload: ^@list_preload,
       order_by: s.slug
+  end
+  def list_organisations(%{sort: "du", reverse: true}) do
+    update_disk_usage()
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: [desc: :disk_usage]
+  end
+  def list_organisations(%{sort: "du"}) do
+    update_disk_usage()
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: :disk_usage
+  end
+  def list_organisations(%{sort: "id", reverse: true}) do
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: [desc: :id]
+  end
+  def list_organisations(%{sort: "id"}) do
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: :id
+  end
+  def list_organisations(%{sort: "name", reverse: true}) do
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: [desc: :name]
+  end
+  def list_organisations(%{sort: "name"}) do
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: :name
+  end
+  def list_organisations(%{sort: "slug", reverse: true}) do
+    Repo.all from org in Organisation,
+      join: s in Slug,
+      on: s.organisation_id == org.id,
+      preload: ^@list_preload,
+      order_by: [desc: s.slug]
+  end
+  def list_organisations(%{sort: "slug"}) do
+    Repo.all from org in Organisation,
+      join: s in Slug,
+      on: s.organisation_id == org.id,
+      preload: ^@list_preload,
+      order_by: s.slug
+  end
+
+  def update_disk_usage() do
+    orgs = Repo.all(from org in Organisation, preload: :slug)
+    |> Enum.map(fn org ->
+      org
+      |> Ecto.Changeset.cast(%{}, [])
+      |> Ecto.Changeset.put_change(:disk_usage, Organisation.disk_usage(org))
+      |> Repo.update!()
+    end)
   end
 
   def put_disk_usage(org = %Organisation{}) do
