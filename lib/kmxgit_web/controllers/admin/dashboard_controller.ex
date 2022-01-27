@@ -8,7 +8,7 @@ defmodule KmxgitWeb.Admin.DashboardController do
 
   def index(conn, _params) do
     conn
-    |> assign(:disk_usage, GitManager.du_ks("priv/git"))
+    |> assign(:disk_usage, GitManager.du_ks("priv/git/"))
     |> assign(:org_count, OrganisationManager.count_organisations())
     |> assign(:page_title, gettext "Dashboard")
     |> assign(:repo_count, RepositoryManager.count_repositories())
