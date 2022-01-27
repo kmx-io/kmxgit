@@ -9,10 +9,123 @@ defmodule Kmxgit.UserManager do
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
 
+  @list_preload [:owned_repositories,
+                 :slug]
+
   def list_users do
+    update_disk_usage()
     Repo.all from user in User,
-      preload: [:owned_repositories,
-                :slug]
+      preload: ^@list_preload
+  end
+  def list_users(%{column: "id", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: [desc: :id]
+  end
+  def list_users(%{column: "id"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: :id
+  end
+  def list_users(%{column: "name", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: [desc: :name]
+  end
+  def list_users(%{column: "name"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: :name
+  end
+  def list_users(%{column: "email", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: [desc: :email]
+  end
+  def list_users(%{column: "email"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: :email
+  end
+  def list_users(%{column: "login", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      join: s in Slug,
+      on: s.user_id == user.id,
+      preload: ^@list_preload,
+      order_by: [desc: s.slug]
+  end
+  def list_users(%{column: "login"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      join: s in Slug,
+      on: s.user_id == user.id,
+      preload: ^@list_preload,
+      order_by: s.slug
+  end
+  def list_users(%{column: "du", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: [desc: :disk_usage]
+  end
+  def list_users(%{column: "du"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: :disk_usage
+  end
+  def list_users(%{column: "mfa", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: [desc: user.totp_last == 0]
+  end
+  def list_users(%{column: "mfa"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: user.totp_last == 0
+  end
+  def list_users(%{column: "admin", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: [desc: :is_admin]
+  end
+  def list_users(%{column: "admin"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: :is_admin
+  end
+  def list_users(%{column: "deploy", reverse: true}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: [desc: :deploy_only]
+  end
+  def list_users(%{column: "deploy"}) do
+    update_disk_usage()
+    Repo.all from user in User,
+      preload: ^@list_preload,
+      order_by: :deploy_only
+  end
+
+  def update_disk_usage() do
+    users = Repo.all(from user in User, preload: :slug)
+    |> Enum.map(fn user ->
+      user
+      |> Ecto.Changeset.cast(%{}, [])
+      |> Ecto.Changeset.put_change(:disk_usage, User.disk_usage(user))
+      |> Repo.update!()
+    end)
   end
 
   def put_disk_usage(user = %User{}) do

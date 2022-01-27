@@ -7,11 +7,12 @@ defmodule KmxgitWeb.Admin.UserController do
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
 
-  def index(conn, _params) do
-    users = UserManager.list_users
-    |> UserManager.put_disk_usage()
+  def index(conn, params) do
+    sort = KmxgitWeb.Admin.sort_param(params["sort"])
+    users = UserManager.list_users(sort)
     conn
     |> assign(:page_title, gettext("Users"))
+    |> assign(:sort, sort)
     |> assign(:users, users)
     |> render("index.html")
   end

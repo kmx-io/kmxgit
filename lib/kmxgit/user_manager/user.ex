@@ -12,7 +12,7 @@ defmodule Kmxgit.UserManager.User do
     field :confirmed_at, :utc_datetime
     field :deploy_only, :boolean, null: false, default: false
     field :description, :string, null: true
-    field :disk_usage, :integer, virtual: true, default: 0
+    field :disk_usage, :integer, default: 0
     field :email, :string
     field :hashed_password, :string, redact: true
     field :is_admin, :boolean, null: false, default: false

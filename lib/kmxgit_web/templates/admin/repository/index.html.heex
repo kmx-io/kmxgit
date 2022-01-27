@@ -2,30 +2,34 @@
   <h1>Repositories</h1>
 
   <table class="table admin-index">
-    <tr>
-      <th><%= link gettext("Id"), to: Routes.admin_repository_path(@conn, :index, sort: "id#{if @sort.column == "id" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "id" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-      <th><%= link gettext("Owner"), to: Routes.admin_repository_path(@conn, :index, sort: "owner#{if @sort.column == "owner" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "owner" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-      <th><%= link gettext("Slug"), to: Routes.admin_repository_path(@conn, :index, sort: "slug#{if @sort.column == "slug" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "slug" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-      <th><%= link gettext("Disk usage"), to: Routes.admin_repository_path(@conn, :index, sort: "du#{if @sort.column == "du" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "du" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-      <th><%= gettext("Actions") %></th>
-    </tr>
-    <%= Enum.map @repos, fn(repo) -> %>
+    <thead>
       <tr>
-        <td><%= link repo.id, to: Routes.admin_repository_path(@conn, :show, repo) %></td>
-        <td>
-          <%= case owner = Repository.owner(repo) do %>
-            <% %Organisation{} -> %>
-              <%= link owner.name || owner.slug.slug, to: Routes.admin_organisation_path(@conn, :show, owner) %>
-            <% %User{} -> %>
-              <%= link owner.slug.slug, to: Routes.admin_user_path(@conn, :show, owner) %>
-          <% end %>
-        </td>
-        <td><%= link Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo) %></td>
-        <td><%= disk_usage(repo.disk_usage) %></td>
-        <td>
-          <%= link gettext("Show"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)), class: "btn btn-sm btn-primary" %>
-        </td>
+        <th><%= link gettext("Id"), to: Routes.admin_repository_path(@conn, :index, sort: "id#{if @sort.column == "id" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "id" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Owner"), to: Routes.admin_repository_path(@conn, :index, sort: "owner#{if @sort.column == "owner" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "owner" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Slug"), to: Routes.admin_repository_path(@conn, :index, sort: "slug#{if @sort.column == "slug" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "slug" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Disk usage"), to: Routes.admin_repository_path(@conn, :index, sort: "du#{if @sort.column == "du" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "du" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= gettext("Actions") %></th>
       </tr>
-    <% end %>
+    </thead>
+    <tbody>
+      <%= Enum.map @repos, fn(repo) -> %>
+        <tr>
+          <td><%= link repo.id, to: Routes.admin_repository_path(@conn, :show, repo) %></td>
+          <td>
+            <%= case owner = Repository.owner(repo) do %>
+              <% %Organisation{} -> %>
+                <%= link owner.name || owner.slug.slug, to: Routes.admin_organisation_path(@conn, :show, owner) %>
+              <% %User{} -> %>
+                <%= link owner.slug.slug, to: Routes.admin_user_path(@conn, :show, owner) %>
+            <% end %>
+          </td>
+          <td><%= link Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo) %></td>
+          <td><%= disk_usage(repo.disk_usage) %></td>
+          <td>
+            <%= link gettext("Show"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)), class: "btn btn-sm btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 </div>

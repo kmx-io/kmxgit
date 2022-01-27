@@ -9,30 +9,33 @@
   </div>
 
   <table class="table admin-index">
-    <tr>
-      <th><%= gettext "Id" %></th>
-      <th><%= gettext "Name" %></th>
-      <th><%= gettext "Email" %></th>
-      <th><%= gettext "Login" %></th>
-      <th><%= gettext "Disk usage" %></th>
-      <th><%= gettext "2FA" %></th>
-      <th><%= gettext "Admin" %></th>
-      <th><%= gettext "Deploy" %></th>
-      <th><%= gettext "Actions" %></th>
-    </tr>
-    <%= Enum.map @users, fn(user) -> %>
+    <thead>
       <tr>
-        <td><%= link user.id, to: Routes.admin_user_path(@conn, :show, user) %></td>
-        <td><%= link user.name, to: Routes.admin_user_path(@conn, :show, user) %></td>
-        <td><%= link user.email, to: "mailto:#{user.email}" %></td>
-        <td><%= link User.login(user), to: Routes.admin_user_path(@conn, :show, user) %></td>
-        <td><%= disk_usage(user.disk_usage) %></td>
-        <td><%= if user.totp_last != 0, do: "TOTP", else: "none" %></td>
-        <td><%= user.is_admin %></td>
-        <td><%= user.deploy_only %></td>
-        <td><%= link gettext("Show"), to: Routes.slug_path(@conn, :show, User.login(user) || ""), class: "btn btn-sm btn-primary" %></td>
+        <th><%= link gettext("Id"), to: Routes.admin_user_path(@conn, :index, sort: "id#{if @sort.column == "id" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "id" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Name"), to: Routes.admin_user_path(@conn, :index, sort: "name#{if @sort.column == "name" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "name" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Email"), to: Routes.admin_user_path(@conn, :index, sort: "email#{if @sort.column == "email" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "email" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Login"), to: Routes.admin_user_path(@conn, :index, sort: "login#{if @sort.column == "login" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "login" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Disk usage"), to: Routes.admin_user_path(@conn, :index, sort: "du#{if @sort.column == "du" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "du" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("2FA"), to: Routes.admin_user_path(@conn, :index, sort: "mfa#{if @sort.column == "mfa" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "mfa" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Admin"), to: Routes.admin_user_path(@conn, :index, sort: "admin#{if @sort.column == "admin" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "admin" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Deploy"), to: Routes.admin_user_path(@conn, :index, sort: "deploy#{if @sort.column == "deploy" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "deploy" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= gettext "Actions" %></th>
       </tr>
-    <% end %>
+    </thead>
+    <tbody>
+      <%= Enum.map @users, fn(user) -> %>
+        <tr>
+          <td><%= link user.id, to: Routes.admin_user_path(@conn, :show, user) %></td>
+          <td><%= link user.name, to: Routes.admin_user_path(@conn, :show, user) %></td>
+          <td><%= link user.email, to: "mailto:#{user.email}" %></td>
+          <td><%= link User.login(user), to: Routes.admin_user_path(@conn, :show, user) %></td>
+          <td><%= disk_usage(user.disk_usage) %></td>
+          <td><%= if user.totp_last != 0, do: "TOTP", else: "none" %></td>
+          <td><%= user.is_admin %></td>
+          <td><%= user.deploy_only %></td>
+          <td><%= link gettext("Show"), to: Routes.slug_path(@conn, :show, User.login(user) || ""), class: "btn btn-sm btn-primary" %></td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
-
 </div>
