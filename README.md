@@ -153,7 +153,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - DONE Stats
      - ?
    - DONE disk usage (repos, orgs, users)
-   - sort by column
+   - DONE sort by column
    - search
    - pagination
  - Releases
