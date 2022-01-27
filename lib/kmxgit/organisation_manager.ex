@@ -11,52 +11,59 @@ defmodule Kmxgit.OrganisationManager do
                  :slug]
 
   def list_organisations() do
+    update_disk_usage()
     Repo.all from org in Organisation,
       join: s in Slug,
       on: s.organisation_id == org.id,
       preload: ^@list_preload,
       order_by: s.slug
   end
-  def list_organisations(%{sort: "du", reverse: true}) do
+  def list_organisations(%{column: "du", reverse: true}) do
     update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
       order_by: [desc: :disk_usage]
   end
-  def list_organisations(%{sort: "du"}) do
+  def list_organisations(%{column: "du"}) do
     update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
       order_by: :disk_usage
   end
-  def list_organisations(%{sort: "id", reverse: true}) do
+  def list_organisations(%{column: "id", reverse: true}) do
+    update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
       order_by: [desc: :id]
   end
-  def list_organisations(%{sort: "id"}) do
+  def list_organisations(%{column: "id"}) do
+    update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
       order_by: :id
   end
-  def list_organisations(%{sort: "name", reverse: true}) do
+  def list_organisations(%{column: "name", reverse: true}) do
+    update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
       order_by: [desc: :name]
   end
-  def list_organisations(%{sort: "name"}) do
+  def list_organisations(%{column: "name"}) do
+    update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
       order_by: :name
   end
-  def list_organisations(%{sort: "slug", reverse: true}) do
+  def list_organisations(%{column: "slug", reverse: true}) do
+    update_disk_usage()
     Repo.all from org in Organisation,
       join: s in Slug,
       on: s.organisation_id == org.id,
       preload: ^@list_preload,
       order_by: [desc: s.slug]
   end
-  def list_organisations(%{sort: "slug"}) do
+  def list_organisations(%{column: "slug"}) do
+    update_disk_usage()
     Repo.all from org in Organisation,
       join: s in Slug,
       on: s.organisation_id == org.id,

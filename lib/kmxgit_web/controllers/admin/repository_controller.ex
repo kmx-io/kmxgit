@@ -8,11 +8,12 @@ defmodule KmxgitWeb.Admin.RepositoryController do
   alias Kmxgit.SlugManager
   alias KmxgitWeb.ErrorView
 
-  def index(conn, _params) do
-    repos = RepositoryManager.list_repositories
-    |> RepositoryManager.put_disk_usage()
+  def index(conn, params) do
+    sort = KmxgitWeb.Admin.sort_param(params["sort"])
+    repos = RepositoryManager.list_repositories(sort)
     conn
     |> assign(:repos, repos)
+    |> assign(:sort, sort)
     |> render("index.html")
   end
 

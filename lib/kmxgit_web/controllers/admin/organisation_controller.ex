@@ -7,21 +7,10 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   alias KmxgitWeb.ErrorView
 
   def index(conn, params) do
-    sort = params["sort"]
-    {sort, rev} = if sort do
-      case String.split(sort, "-") do
-        [sort, _] -> {sort, true}
-        [sort] -> {sort, false}
-        _ -> {nil, false}
-      end
-    else
-      {nil, false}
-    end
-    sort = sort || "id"
-    orgs = OrganisationManager.list_organisations(%{sort: sort, reverse: rev})
+    sort = KmxgitWeb.Admin.sort_param(params["sort"])
+    orgs = OrganisationManager.list_organisations(sort)
     conn
     |> assign(:orgs, orgs)
-    |> assign(:rev, rev)
     |> assign(:sort, sort)
     |> render("index.html")
   end

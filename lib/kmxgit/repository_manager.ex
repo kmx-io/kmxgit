@@ -10,12 +10,109 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
+  @list_preload [members: :slug,
+                 organisation: [:slug, users: :slug],
+                 user: :slug]
+
   def list_repositories do
     Repo.all(from r in Repository,
-      preload: [members: :slug,
-                organisation: [:slug, users: :slug],
-                user: :slug])
+      preload: ^@list_preload)
     |> Enum.sort_by(&Repository.full_slug/1)
+  end
+  def list_repositories(%{column: "du", reverse: true}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      preload: ^@list_preload,
+      order_by: [desc: :disk_usage]
+  end
+  def list_repositories(%{column: "du"}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      preload: ^@list_preload,
+      order_by: :disk_usage
+  end
+  def list_repositories(%{column: "id", reverse: true}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      preload: ^@list_preload,
+      order_by: [desc: :id]
+  end
+  def list_repositories(%{column: "id"}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      preload: ^@list_preload,
+      order_by: :id
+  end
+  def list_repositories(%{column: "owner", reverse: true}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      full_join: o in Organisation,
+      on: o.id == r.organisation_id,
+      full_join: os in Slug,
+      on: os.organisation_id == o.id,
+      full_join: u in User,
+      on: u.id == r.user_id,
+      full_join: us in Slug,
+      on: us.user_id == u.id,
+      where: not is_nil(r),
+      preload: ^@list_preload,
+      order_by: [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug)]
+  end
+  def list_repositories(%{column: "owner"}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      full_join: o in Organisation,
+      on: o.id == r.organisation_id,
+      full_join: os in Slug,
+      on: os.organisation_id == o.id,
+      full_join: u in User,
+      on: u.id == r.user_id,
+      full_join: us in Slug,
+      on: us.user_id == u.id,
+      where: not is_nil(r),
+      preload: ^@list_preload,
+      order_by: fragment("concat(lower(?), lower(?))", os.slug, us.slug)
+  end
+  def list_repositories(%{column: "slug", reverse: true}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      full_join: o in Organisation,
+      on: o.id == r.organisation_id,
+      full_join: os in Slug,
+      on: os.organisation_id == o.id,
+      full_join: u in User,
+      on: u.id == r.user_id,
+      full_join: us in Slug,
+      on: us.user_id == u.id,
+      where: not is_nil(r),
+      preload: ^@list_preload,
+      order_by: [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug), desc: :slug]
+  end
+  def list_repositories(%{column: "slug"}) do
+    update_disk_usage()
+    Repo.all from r in Repository,
+      full_join: o in Organisation,
+      on: o.id == r.organisation_id,
+      full_join: os in Slug,
+      on: os.organisation_id == o.id,
+      full_join: u in User,
+      on: u.id == r.user_id,
+      full_join: us in Slug,
+      on: us.user_id == u.id,
+      where: not is_nil(r),
+      preload: ^@list_preload,
+      order_by: [fragment("concat(lower(?), lower(?))", os.slug, us.slug), :slug]
+  end
+
+  def update_disk_usage() do
+    repos = Repo.all(from repo in Repository, preload: [organisation: :slug,
+                                                        user: :slug])
+    |> Enum.map(fn repo ->
+      repo
+      |> Ecto.Changeset.cast(%{}, [])
+      |> Ecto.Changeset.put_change(:disk_usage, Repository.disk_usage(repo))
+      |> Repo.update!()
+    end)
   end
 
   def put_disk_usage(repo = %Repository{}) do

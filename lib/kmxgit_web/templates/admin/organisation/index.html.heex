@@ -10,10 +10,10 @@
   <table class="table admin-index">
     <thead>
       <tr>
-        <th><%= link gettext("Id"), to: Routes.admin_organisation_path(@conn, :index, sort: "id#{if @sort == "id" && !@rev, do: "-"}") %><%= if @sort == "id" do %><%= if @rev do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-        <th><%= link gettext("Name"), to: Routes.admin_organisation_path(@conn, :index, sort: "name#{if @sort == "name" && !@rev, do: "-"}") %><%= if @sort == "name" do %><%= if @rev do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-        <th><%= link gettext("Slug"), to: Routes.admin_organisation_path(@conn, :index, sort: "slug#{if @sort == "slug" && !@rev, do: "-"}") %><%= if @sort == "slug" do %><%= if @rev do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-        <th><%= link gettext("Disk usage"), to: Routes.admin_organisation_path(@conn, :index, sort: "du#{if @sort != "du" || (@sort == "du" && !@rev), do: "-"}") %><%= if @sort == "du" do %><%= if @rev do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Id"), to: Routes.admin_organisation_path(@conn, :index, sort: "id#{if @sort.column == "id" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "id" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Name"), to: Routes.admin_organisation_path(@conn, :index, sort: "name#{if @sort.column == "name" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "name" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Slug"), to: Routes.admin_organisation_path(@conn, :index, sort: "slug#{if @sort.column == "slug" && !@sort.reverse, do: "-"}") %><%= if @sort.column == "slug" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
+        <th><%= link gettext("Disk usage"), to: Routes.admin_organisation_path(@conn, :index, sort: "du#{if @sort.column != "du" || (@sort.column == "du" && !@sort.reverse), do: "-"}") %><%= if @sort.column == "du" do %><%= if @sort.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= gettext("Actions") %></th>
       </tr>
     </thead>
