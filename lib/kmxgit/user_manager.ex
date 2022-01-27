@@ -33,25 +33,25 @@ defmodule Kmxgit.UserManager do
     update_disk_usage()
     Repo.all from user in User,
       preload: ^@list_preload,
-      order_by: [desc: :name]
+      order_by: [desc_nulls_last: fragment("lower(?)", user.name)]
   end
   def list_users(%{column: "name"}) do
     update_disk_usage()
     Repo.all from user in User,
       preload: ^@list_preload,
-      order_by: :name
+      order_by: [asc_nulls_last: fragment("lower(?)", user.name)]
   end
   def list_users(%{column: "email", reverse: true}) do
     update_disk_usage()
     Repo.all from user in User,
       preload: ^@list_preload,
-      order_by: [desc: :email]
+      order_by: [desc_nulls_last: fragment("lower(?)", user.email)]
   end
   def list_users(%{column: "email"}) do
     update_disk_usage()
     Repo.all from user in User,
       preload: ^@list_preload,
-      order_by: :email
+      order_by: [asc_nulls_last: fragment("lower(?)", user.email)]
   end
   def list_users(%{column: "login", reverse: true}) do
     update_disk_usage()
@@ -59,7 +59,7 @@ defmodule Kmxgit.UserManager do
       join: s in Slug,
       on: s.user_id == user.id,
       preload: ^@list_preload,
-      order_by: [desc: s.slug]
+      order_by: [desc_nulls_last: fragment("lower(?)", s.slug)]
   end
   def list_users(%{column: "login"}) do
     update_disk_usage()
@@ -67,7 +67,7 @@ defmodule Kmxgit.UserManager do
       join: s in Slug,
       on: s.user_id == user.id,
       preload: ^@list_preload,
-      order_by: s.slug
+      order_by: [asc_nulls_last: fragment("lower(?)", s.slug)]
   end
   def list_users(%{column: "du", reverse: true}) do
     update_disk_usage()

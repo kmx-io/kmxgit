@@ -16,19 +16,7 @@ defmodule Kmxgit.OrganisationManager do
       join: s in Slug,
       on: s.organisation_id == org.id,
       preload: ^@list_preload,
-      order_by: s.slug
-  end
-  def list_organisations(%{column: "du", reverse: true}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: [desc: :disk_usage]
-  end
-  def list_organisations(%{column: "du"}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: :disk_usage
+      order_by: [asc_nulls_last: fragment("lower(?)", s.slug)]
   end
   def list_organisations(%{column: "id", reverse: true}) do
     update_disk_usage()
@@ -46,13 +34,13 @@ defmodule Kmxgit.OrganisationManager do
     update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
-      order_by: [desc: :name]
+      order_by: [desc_nulls_last: fragment("lower(?)", org.name)]
   end
   def list_organisations(%{column: "name"}) do
     update_disk_usage()
     Repo.all from org in Organisation,
       preload: ^@list_preload,
-      order_by: :name
+      order_by: [asc_nulls_last: fragment("lower(?)", org.name)]
   end
   def list_organisations(%{column: "slug", reverse: true}) do
     update_disk_usage()
@@ -60,7 +48,7 @@ defmodule Kmxgit.OrganisationManager do
       join: s in Slug,
       on: s.organisation_id == org.id,
       preload: ^@list_preload,
-      order_by: [desc: s.slug]
+      order_by: [desc_nulls_last: fragment("lower(?)", s.slug)]
   end
   def list_organisations(%{column: "slug"}) do
     update_disk_usage()
@@ -68,7 +56,19 @@ defmodule Kmxgit.OrganisationManager do
       join: s in Slug,
       on: s.organisation_id == org.id,
       preload: ^@list_preload,
-      order_by: s.slug
+      order_by: [asc_nulls_last: fragment("lower(?)", s.slug)]
+  end
+  def list_organisations(%{column: "du", reverse: true}) do
+    update_disk_usage()
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: [desc: :disk_usage]
+  end
+  def list_organisations(%{column: "du"}) do
+    update_disk_usage()
+    Repo.all from org in Organisation,
+      preload: ^@list_preload,
+      order_by: :disk_usage
   end
 
   def update_disk_usage() do
