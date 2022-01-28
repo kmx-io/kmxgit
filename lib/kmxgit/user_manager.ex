@@ -15,9 +15,17 @@ defmodule Kmxgit.UserManager do
     from(u in User)
     |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
     |> preload([:owned_repositories, :slug])
+    |> search(params)
     |> index_order_by(params)
     |> Repo.all()
   end
+
+  def search(query, %IndexParams{search: search}) do
+    expr = "%#{search}%"
+    query
+    |> where([u, s], ilike(u.name, ^expr) or ilike(s.slug, ^expr) or ilike(u.email, ^expr))
+  end
+
   def index_order_by(query, %IndexParams{column: "id", reverse: true}) do
     order_by(query, [desc: :id])
   end
