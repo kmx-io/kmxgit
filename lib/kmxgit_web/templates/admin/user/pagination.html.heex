@@ -1,0 +1,21 @@
+<%= if @pagination.first_page do %>
+  <%= page_link @conn, raw("<i class=\"fa fa-angle-double-left\"></i>"), @pagination.first_page %>
+<% end %>
+<%= if @pagination.prev_page do %>
+  <%= page_link @conn, raw("<i class=\"fa fa-angle-left\"></i>"), @pagination.prev_page %>
+<% end %>
+<span class="btn btn-primary disabled">
+  <%= @pagination.page %>
+</span>
+<%= if @pagination.next_page do %>
+  <%= page_link @conn, raw("<i class=\"fa fa-angle-right\"></i>"), @pagination.next_page %>
+<% end %>
+<%= if @pagination.last_page do %>
+  <%= page_link @conn, raw("<i class=\"fa fa-angle-double-right\"></i>"), @pagination.last_page %>
+<% end %>
+&nbsp;
+<%= @pagination.first %>
+-
+<%= @pagination.last %>
+<%= gettext("out of") %>
+<%= @pagination.count %>

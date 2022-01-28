@@ -10,15 +10,17 @@ defmodule KmxgitWeb.Admin.UserController do
 
   def index(conn, params) do
     index_params = %IndexParams{}
-    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    |> KmxgitWeb.Admin.page_params(params["page"], params["per"])
     |> KmxgitWeb.Admin.search_param(params["search"])
-    users = UserManager.list_users(index_params)
+    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    pagination = UserManager.list_users(index_params)
     conn
     |> assign(:index, index_params)
     |> assign(:page_title, gettext("Users"))
+    |> assign(:pagination, pagination)
     |> assign(:search, params["search"])
     |> assign(:search_action, Routes.admin_user_path(conn, :index, sort: params["sort"], search: params["search"]))
-    |> assign(:users, users)
+    |> assign(:sort, params["sort"])
     |> render("index.html")
   end
 

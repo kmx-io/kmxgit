@@ -6,6 +6,7 @@ defmodule Kmxgit.UserManager do
   import Ecto.Query, warn: false
 
   alias Kmxgit.IndexParams
+  alias Kmxgit.Pagination
   alias Kmxgit.Repo
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
@@ -14,10 +15,9 @@ defmodule Kmxgit.UserManager do
     update_disk_usage()
     from(u in User)
     |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
-    |> preload([:owned_repositories, :slug])
     |> search(params)
     |> index_order_by(params)
-    |> Repo.all()
+    |> Pagination.page(params, preload: [:owned_repositories, :slug])
   end
 
   def search(query, %IndexParams{search: search}) do
