@@ -147,7 +147,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - DONE git push -u kmx branch
      - DONE git pull
      - DONE install git
- - Admin
+ - DONE Admin
    - DONE logo
    - DONE Dashboard
      - DONE Stats
@@ -155,7 +155,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE sort by column
    - DONE search
    - DONE pagination
-   - link to livedashboard
+   - DONE link to livedashboard
  - Releases
    - infos
    - static files
