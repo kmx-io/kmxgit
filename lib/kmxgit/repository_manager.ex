@@ -4,6 +4,7 @@ defmodule Kmxgit.RepositoryManager do
 
   alias Kmxgit.IndexParams
   alias Kmxgit.OrganisationManager.Organisation
+  alias Kmxgit.Pagination
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
@@ -19,12 +20,11 @@ defmodule Kmxgit.RepositoryManager do
     |> join(:full, [r, o, os], u in User, on: u.id == r.user_id)
     |> join(:full, [r, o, os, u], us in Slug, on: us.user_id == u.id)
     |> where([r, o, os, u, us], not is_nil(r))
-    |> preload([members: :slug,
-               organisation: [:slug, users: :slug],
-               user: :slug])
     |> search(params)
     |> index_order_by(params)
-    |> Repo.all()
+    |> Pagination.page(params, preload: [members: :slug,
+                                        organisation: [:slug, users: :slug],
+                                        user: :slug])
   end
 
   def search(query, %IndexParams{search: search}) do

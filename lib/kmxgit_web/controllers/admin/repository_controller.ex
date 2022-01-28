@@ -11,14 +11,16 @@ defmodule KmxgitWeb.Admin.RepositoryController do
 
   def index(conn, params) do
     index_params = %IndexParams{}
-    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    |> KmxgitWeb.Admin.page_params(params["page"], params["per"])
     |> KmxgitWeb.Admin.search_param(params["search"])
-    repos = RepositoryManager.list_repositories(index_params)
+    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    pagination = RepositoryManager.list_repositories(index_params)
     conn
-    |> assign(:repos, repos)
     |> assign(:index, index_params)
+    |> assign(:pagination, pagination)
     |> assign(:search, params["search"])
     |> assign(:search_action, Routes.admin_repository_path(conn, :index, sort: params["sort"], search: params["search"]))
+    |> assign(:sort, params["sort"])
     |> render("index.html")
   end
 

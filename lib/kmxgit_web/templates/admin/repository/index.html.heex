@@ -1,6 +1,7 @@
 <div class="container-fluid">
   <h1>Repositories</h1>
   <%= render(KmxgitWeb.LayoutView, "search.html", assigns) %>
+  <%= render(KmxgitWeb.LayoutView, "pagination.html", assigns) %>
   <table class="table admin-index">
     <thead>
       <tr>
@@ -12,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <%= Enum.map @repos, fn(repo) -> %>
+      <%= Enum.map @pagination.result, fn repo -> %>
         <tr>
           <td><%= link repo.id, to: Routes.admin_repository_path(@conn, :show, repo) %></td>
           <td>
@@ -32,4 +33,5 @@
       <% end %>
     </tbody>
   </table>
+  <%= render(KmxgitWeb.LayoutView, "pagination.html", assigns) %>
 </div>
