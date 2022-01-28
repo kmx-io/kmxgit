@@ -154,7 +154,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - ?
    - DONE disk usage (repos, orgs, users)
    - DONE sort by column
-   - search
+   - DONE search
    - pagination
  - Releases
    - infos
