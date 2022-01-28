@@ -152,9 +152,10 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE Dashboard
      - DONE Stats
    - DONE disk usage (repos, orgs, users)
+   - DONE pipeline queries
    - DONE sort by column
    - DONE search
-   - DONE pagination
+   - DONE pagination (50 per page)
    - DONE link to livedashboard
  - Releases
    - infos
