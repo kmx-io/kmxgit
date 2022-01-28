@@ -1,17 +1,19 @@
 defmodule KmxgitWeb.Admin.OrganisationController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.IndexParams
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager
   alias Kmxgit.Repo
   alias KmxgitWeb.ErrorView
 
   def index(conn, params) do
-    sort = KmxgitWeb.Admin.sort_param(params["sort"])
-    orgs = OrganisationManager.list_organisations(sort)
+    index_params = %IndexParams{}
+    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    orgs = OrganisationManager.list_organisations(index_params)
     conn
+    |> assign(:index, index_params)
     |> assign(:orgs, orgs)
-    |> assign(:sort, sort)
     |> render("index.html")
   end
 

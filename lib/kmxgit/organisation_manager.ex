@@ -2,6 +2,7 @@ defmodule Kmxgit.OrganisationManager do
 
   import Ecto.Query, warn: false
 
+  alias Kmxgit.IndexParams
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.Repo
   alias Kmxgit.SlugManager.Slug
@@ -10,65 +11,37 @@ defmodule Kmxgit.OrganisationManager do
   @list_preload [:owned_repositories,
                  :slug]
 
-  def list_organisations() do
+  def list_organisations(params \\ %IndexParams{}) do
     update_disk_usage()
-    Repo.all from org in Organisation,
-      join: s in Slug,
-      on: s.organisation_id == org.id,
-      preload: ^@list_preload,
-      order_by: [asc_nulls_last: fragment("lower(?)", s.slug)]
+    from(org in Organisation)
+    |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id,)
+    |> preload(^@list_preload)
+    |> index_order_by(params)
+    |> Repo.all()
   end
-  def list_organisations(%{column: "id", reverse: true}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: [desc: :id]
+  def index_order_by(query, %{column: "id", reverse: true}) do
+    order_by(query, [desc: :id])
   end
-  def list_organisations(%{column: "id"}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: :id
+  def index_order_by(query, %{column: "id"}) do
+    order_by(query, :id)
   end
-  def list_organisations(%{column: "name", reverse: true}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: [desc_nulls_last: fragment("lower(?)", org.name)]
+  def index_order_by(query, %{column: "name", reverse: true}) do
+    order_by(query, [org, s], [desc_nulls_last: fragment("lower(?)", org.name)])
   end
-  def list_organisations(%{column: "name"}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: [asc_nulls_last: fragment("lower(?)", org.name)]
+  def index_order_by(query, %{column: "name"}) do
+    order_by(query, [org, s], [asc_nulls_last: fragment("lower(?)", org.name)])
   end
-  def list_organisations(%{column: "slug", reverse: true}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      join: s in Slug,
-      on: s.organisation_id == org.id,
-      preload: ^@list_preload,
-      order_by: [desc_nulls_last: fragment("lower(?)", s.slug)]
+  def index_order_by(query, %{column: "slug", reverse: true}) do
+    order_by(query, [org, s], [desc_nulls_last: fragment("lower(?)", s.slug)])
   end
-  def list_organisations(%{column: "slug"}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      join: s in Slug,
-      on: s.organisation_id == org.id,
-      preload: ^@list_preload,
-      order_by: [asc_nulls_last: fragment("lower(?)", s.slug)]
+  def index_order_by(query, %{column: "slug"}) do
+    order_by(query, [org, s], [asc_nulls_last: fragment("lower(?)", s.slug)])
   end
-  def list_organisations(%{column: "du", reverse: true}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: [desc: :disk_usage]
+  def index_order_by(query, %{column: "du", reverse: true}) do
+    order_by(query, [desc: :disk_usage])
   end
-  def list_organisations(%{column: "du"}) do
-    update_disk_usage()
-    Repo.all from org in Organisation,
-      preload: ^@list_preload,
-      order_by: :disk_usage
+  def index_order_by(query, %{column: "du"}) do
+    order_by(query, :disk_usage)
   end
 
   def update_disk_usage() do
