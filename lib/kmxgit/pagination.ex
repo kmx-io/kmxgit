@@ -25,12 +25,13 @@ defmodule Kmxgit.Pagination do
     count = Repo.one(from(t in subquery(query), select: count("*")))
     count_pages = Float.ceil(count / per) |> trunc()
     last_page = if (page < count_pages - 1), do: count_pages
-    first = (page - 1) * per + 1
+    first = if count > 0, do: (page - 1) * per + 1, else: 0
+    last = if count > 0, do: first + length(result) - 1, else: 0
     %{count: count,
       count_pages: count_pages,
       first: first,
       first_page: first_page,
-      last: first + length(result) - 1,
+      last: last,
       last_page: last_page,
       next_page: next_page,
       page: page,
