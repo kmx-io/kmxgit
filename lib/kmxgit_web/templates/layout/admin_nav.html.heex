@@ -21,6 +21,9 @@
           <%= link gettext("Users"), to: Routes.admin_user_path(@conn, :index), class: "nav-link" %>
         </li>
         <li class="navbar-item">
+          <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home), class: "nav-link" %>
+        </li>
+        <li class="navbar-item">
           <%= link "kmx git", to: "/", class: "nav-link" %>
         </li>
         <li class="navbar-item">
