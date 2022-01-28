@@ -8,14 +8,11 @@ defmodule Kmxgit.OrganisationManager do
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager
 
-  @list_preload [:owned_repositories,
-                 :slug]
-
   def list_organisations(params \\ %IndexParams{}) do
     update_disk_usage()
     from(org in Organisation)
-    |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id,)
-    |> preload(^@list_preload)
+    |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id)
+    |> preload([:owned_repositories, :slug])
     |> index_order_by(params)
     |> Repo.all()
   end

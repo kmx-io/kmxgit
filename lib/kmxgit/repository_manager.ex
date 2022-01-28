@@ -11,10 +11,6 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
-  @list_preload [members: :slug,
-                 organisation: [:slug, users: :slug],
-                 user: :slug]
-
   def list_repositories(params \\ %IndexParams{}) do
     update_disk_usage()
     from(r in Repository)
@@ -23,7 +19,9 @@ defmodule Kmxgit.RepositoryManager do
     |> join(:full, [r, o, os], u in User, on: u.id == r.user_id)
     |> join(:full, [r, o, os, u], us in Slug, on: us.user_id == u.id)
     |> where([r, o, os, u, us], not is_nil(r))
-    |> preload(^@list_preload)
+    |> preload([members: :slug,
+               organisation: [:slug, users: :slug],
+               user: :slug])
     |> index_order_by(params)
     |> Repo.all()
   end

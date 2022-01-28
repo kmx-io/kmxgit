@@ -5,117 +5,66 @@ defmodule Kmxgit.UserManager do
 
   import Ecto.Query, warn: false
 
+  alias Kmxgit.IndexParams
   alias Kmxgit.Repo
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
 
-  @list_preload [:owned_repositories,
-                 :slug]
-
-  def list_users do
+  def list_users(params \\ %IndexParams{}) do
     update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload
+    from(u in User)
+    |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
+    |> preload([:owned_repositories, :slug])
+    |> index_order_by(params)
+    |> Repo.all()
   end
-  def list_users(%{column: "id", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [desc: :id]
+  def index_order_by(query, %IndexParams{column: "id", reverse: true}) do
+    order_by(query, [desc: :id])
   end
-  def list_users(%{column: "id"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: :id
+  def index_order_by(query, %IndexParams{column: "id"}) do
+    order_by(query, :id)
   end
-  def list_users(%{column: "name", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [desc_nulls_last: fragment("lower(?)", user.name)]
+  def index_order_by(query, %IndexParams{column: "name", reverse: true}) do
+    order_by(query, [u, s], [desc_nulls_last: fragment("lower(?)", u.name)])
   end
-  def list_users(%{column: "name"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [asc_nulls_last: fragment("lower(?)", user.name)]
+  def index_order_by(query, %IndexParams{column: "name"}) do
+    order_by(query, [u, s], [asc_nulls_last: fragment("lower(?)", u.name)])
   end
-  def list_users(%{column: "email", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [desc_nulls_last: fragment("lower(?)", user.email)]
+  def index_order_by(query, %IndexParams{column: "email", reverse: true}) do
+    order_by(query, [u, s], [desc_nulls_last: fragment("lower(?)", u.email)])
   end
-  def list_users(%{column: "email"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [asc_nulls_last: fragment("lower(?)", user.email)]
+  def index_order_by(query, %IndexParams{column: "email"}) do
+    order_by(query, [u, s], [asc_nulls_last: fragment("lower(?)", u.email)])
   end
-  def list_users(%{column: "login", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      join: s in Slug,
-      on: s.user_id == user.id,
-      preload: ^@list_preload,
-      order_by: [desc_nulls_last: fragment("lower(?)", s.slug)]
+  def index_order_by(query, %IndexParams{column: "login", reverse: true}) do
+    order_by(query, [u, s], [desc_nulls_last: fragment("lower(?)", s.slug)])
   end
-  def list_users(%{column: "login"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      join: s in Slug,
-      on: s.user_id == user.id,
-      preload: ^@list_preload,
-      order_by: [asc_nulls_last: fragment("lower(?)", s.slug)]
+  def index_order_by(query, %IndexParams{column: "login"}) do
+    order_by(query, [u, s], [asc_nulls_last: fragment("lower(?)", s.slug)])
   end
-  def list_users(%{column: "du", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [desc: :disk_usage]
+  def index_order_by(query, %IndexParams{column: "du", reverse: true}) do
+    order_by(query, [desc: :disk_usage])
   end
-  def list_users(%{column: "du"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: :disk_usage
+  def index_order_by(query, %IndexParams{column: "du"}) do
+    order_by(query, :disk_usage)
   end
-  def list_users(%{column: "mfa", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [desc: user.totp_last == 0]
+  def index_order_by(query, %IndexParams{column: "mfa", reverse: true}) do
+    order_by(query, [u], [desc: u.totp_last == 0])
   end
-  def list_users(%{column: "mfa"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: user.totp_last == 0
+  def index_order_by(query, %IndexParams{column: "mfa"}) do
+    order_by(query, [u], u.totp_last == 0)
   end
-  def list_users(%{column: "admin", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [desc: :is_admin]
+  def index_order_by(query, %IndexParams{column: "admin", reverse: true}) do
+    order_by(query, :is_admin)
   end
-  def list_users(%{column: "admin"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: :is_admin
+  def index_order_by(query, %IndexParams{column: "admin"}) do
+    order_by(query, [desc: :is_admin])
   end
-  def list_users(%{column: "deploy", reverse: true}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: [desc: :deploy_only]
+  def index_order_by(query, %IndexParams{column: "deploy", reverse: true}) do
+    order_by(query, :deploy_only)
   end
-  def list_users(%{column: "deploy"}) do
-    update_disk_usage()
-    Repo.all from user in User,
-      preload: ^@list_preload,
-      order_by: :deploy_only
+  def index_order_by(query, %IndexParams{column: "deploy"}) do
+    order_by(query, [desc: :deploy_only])
   end
 
   def update_disk_usage() do

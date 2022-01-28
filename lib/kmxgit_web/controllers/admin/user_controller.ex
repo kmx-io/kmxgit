@@ -1,6 +1,7 @@
 defmodule KmxgitWeb.Admin.UserController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.IndexParams
   alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager
   alias Kmxgit.UserManager
@@ -8,11 +9,12 @@ defmodule KmxgitWeb.Admin.UserController do
   alias KmxgitWeb.ErrorView
 
   def index(conn, params) do
-    sort = KmxgitWeb.Admin.sort_param(params["sort"])
-    users = UserManager.list_users(sort)
+    index_params = %IndexParams{}
+    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    users = UserManager.list_users(index_params)
     conn
+    |> assign(:index, index_params)
     |> assign(:page_title, gettext("Users"))
-    |> assign(:sort, sort)
     |> assign(:users, users)
     |> render("index.html")
   end
