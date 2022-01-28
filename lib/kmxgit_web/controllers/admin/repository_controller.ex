@@ -1,6 +1,7 @@
 defmodule KmxgitWeb.Admin.RepositoryController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.IndexParams
   alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
@@ -9,11 +10,13 @@ defmodule KmxgitWeb.Admin.RepositoryController do
   alias KmxgitWeb.ErrorView
 
   def index(conn, params) do
-    sort = KmxgitWeb.Admin.sort_param(params["sort"])
-    repos = RepositoryManager.list_repositories(sort)
+    index_params = %IndexParams{}
+    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    |> KmxgitWeb.Admin.search_param(params["search"])
+    repos = RepositoryManager.list_repositories(index_params)
     conn
     |> assign(:repos, repos)
-    |> assign(:sort, sort)
+    |> assign(:index, index_params)
     |> render("index.html")
   end
 

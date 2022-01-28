@@ -2,6 +2,7 @@ defmodule Kmxgit.RepositoryManager do
 
   import Ecto.Query, warn: false
 
+  alias Kmxgit.IndexParams
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager.Repository
@@ -14,104 +15,42 @@ defmodule Kmxgit.RepositoryManager do
                  organisation: [:slug, users: :slug],
                  user: :slug]
 
-  def list_repositories do
+  def list_repositories(params \\ %IndexParams{}) do
     update_disk_usage()
-    Repo.all from r in Repository,
-      full_join: o in Organisation,
-      on: o.id == r.organisation_id,
-      full_join: os in Slug,
-      on: os.organisation_id == o.id,
-      full_join: u in User,
-      on: u.id == r.user_id,
-      full_join: us in Slug,
-      on: us.user_id == u.id,
-      where: not is_nil(r),
-      preload: ^@list_preload,
-      order_by: [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug), desc: :slug]
+    from(r in Repository)
+    |> join(:full, [r], o in Organisation, on: o.id == r.organisation_id)
+    |> join(:full, [r, o], os in Slug, on: os.organisation_id == o.id)
+    |> join(:full, [r, o, os], u in User, on: u.id == r.user_id)
+    |> join(:full, [r, o, os, u], us in Slug, on: us.user_id == u.id)
+    |> where([r, o, os, u, us], not is_nil(r))
+    |> preload(^@list_preload)
+    |> index_order_by(params)
+    |> Repo.all()
   end
-  def list_repositories(%{column: "id", reverse: true}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      preload: ^@list_preload,
-      order_by: [desc: :id]
+
+  def index_order_by(query, %IndexParams{column: "id", reverse: true}) do
+    order_by(query, [desc: :id])
   end
-  def list_repositories(%{column: "id"}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      preload: ^@list_preload,
-      order_by: :id
+  def index_order_by(query, %IndexParams{column: "id"}) do
+    order_by(query, :id)
   end
-  def list_repositories(%{column: "owner", reverse: true}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      full_join: o in Organisation,
-      on: o.id == r.organisation_id,
-      full_join: os in Slug,
-      on: os.organisation_id == o.id,
-      full_join: u in User,
-      on: u.id == r.user_id,
-      full_join: us in Slug,
-      on: us.user_id == u.id,
-      where: not is_nil(r),
-      preload: ^@list_preload,
-      order_by: [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug)]
+  def index_order_by(query, %{column: "owner", reverse: true}) do
+    order_by(query, [r, o, os, u, us], [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug)])
   end
-  def list_repositories(%{column: "owner"}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      full_join: o in Organisation,
-      on: o.id == r.organisation_id,
-      full_join: os in Slug,
-      on: os.organisation_id == o.id,
-      full_join: u in User,
-      on: u.id == r.user_id,
-      full_join: us in Slug,
-      on: us.user_id == u.id,
-      where: not is_nil(r),
-      preload: ^@list_preload,
-      order_by: fragment("concat(lower(?), lower(?))", os.slug, us.slug)
+  def index_order_by(query, %{column: "owner"}) do
+    order_by(query, [r, o, os, u, us], fragment("concat(lower(?), lower(?))", os.slug, us.slug))
   end
-  def list_repositories(%{column: "slug", reverse: true}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      full_join: o in Organisation,
-      on: o.id == r.organisation_id,
-      full_join: os in Slug,
-      on: os.organisation_id == o.id,
-      full_join: u in User,
-      on: u.id == r.user_id,
-      full_join: us in Slug,
-      on: us.user_id == u.id,
-      where: not is_nil(r),
-      preload: ^@list_preload,
-      order_by: [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug), desc: :slug]
+  def index_order_by(query, %{column: "slug", reverse: true}) do
+    order_by(query, [r, o, os, u, us], [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug), desc: :slug])
   end
-  def list_repositories(%{column: "slug"}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      full_join: o in Organisation,
-      on: o.id == r.organisation_id,
-      full_join: os in Slug,
-      on: os.organisation_id == o.id,
-      full_join: u in User,
-      on: u.id == r.user_id,
-      full_join: us in Slug,
-      on: us.user_id == u.id,
-      where: not is_nil(r),
-      preload: ^@list_preload,
-      order_by: [fragment("concat(lower(?), lower(?))", os.slug, us.slug), :slug]
+  def index_order_by(query, %{column: "slug"}) do
+    order_by(query, [r, o, os, u, us], [fragment("concat(lower(?), lower(?))", os.slug, us.slug), :slug])
   end
-  def list_repositories(%{column: "du", reverse: true}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      preload: ^@list_preload,
-      order_by: [desc: :disk_usage]
+  def index_order_by(query, %{column: "du", reverse: true}) do
+    order_by(query, [desc: :disk_usage])
   end
-  def list_repositories(%{column: "du"}) do
-    update_disk_usage()
-    Repo.all from r in Repository,
-      preload: ^@list_preload,
-      order_by: :disk_usage
+  def index_order_by(query, %{column: "du"}) do
+    order_by(query, :disk_usage)
   end
 
   def update_disk_usage() do

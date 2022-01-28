@@ -42,7 +42,7 @@ const kmx_colors = {
   "kmx-white1":  "#fff9f2",
   "kmx-white2":  "#ffffff",
   "kmx-yellow":  "#ecfe49",
-  "kmx-yellow1": "#fff43e"
+  "kmx-yellow1": "#fff43e",
   "kmx-yellow2":  "#ecfe49",
   "kmx-yellow3": "#fff43e"
 };
