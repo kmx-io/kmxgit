@@ -17,6 +17,8 @@ defmodule KmxgitWeb.Admin.RepositoryController do
     conn
     |> assign(:repos, repos)
     |> assign(:index, index_params)
+    |> assign(:search, params["search"])
+    |> assign(:search_action, Routes.admin_repository_path(conn, :index, sort: params["sort"], search: params["search"]))
     |> render("index.html")
   end
 

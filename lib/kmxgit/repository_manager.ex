@@ -22,8 +22,16 @@ defmodule Kmxgit.RepositoryManager do
     |> preload([members: :slug,
                organisation: [:slug, users: :slug],
                user: :slug])
+    |> search(params)
     |> index_order_by(params)
     |> Repo.all()
+  end
+
+  def search(query, %IndexParams{search: search}) do
+    query
+    |> where([r, o, os, u, us],
+         ilike(fragment("concat(?, ?, '/', ?)", os.slug, us.slug, r.slug),
+           ^"%#{search}%"))
   end
 
   def index_order_by(query, %IndexParams{column: "id", reverse: true}) do
