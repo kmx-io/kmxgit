@@ -149,13 +149,13 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - DONE install git
  - Admin
    - DONE logo
-   - Dashboard
+   - DONE Dashboard
      - DONE Stats
-     - ?
    - DONE disk usage (repos, orgs, users)
    - DONE sort by column
    - DONE search
-   - pagination
+   - DONE pagination
+   - link to livedashboard
  - Releases
    - infos
    - static files
