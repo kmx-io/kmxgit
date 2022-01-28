@@ -13,9 +13,17 @@ defmodule Kmxgit.OrganisationManager do
     from(org in Organisation)
     |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id)
     |> preload([:owned_repositories, :slug])
+    |> search(params)
     |> index_order_by(params)
     |> Repo.all()
   end
+
+  def search(query, %IndexParams{search: search}) do
+    expr = "%#{search}%"
+    query
+    |> where([org, s], ilike(org.name, ^expr) or ilike(s.slug, ^expr))
+  end
+
   def index_order_by(query, %{column: "id", reverse: true}) do
     order_by(query, [desc: :id])
   end
