@@ -4,6 +4,7 @@ defmodule Kmxgit.OrganisationManager do
 
   alias Kmxgit.IndexParams
   alias Kmxgit.OrganisationManager.Organisation
+  alias Kmxgit.Pagination
   alias Kmxgit.Repo
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager
@@ -12,10 +13,9 @@ defmodule Kmxgit.OrganisationManager do
     update_disk_usage()
     from(org in Organisation)
     |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id)
-    |> preload([:owned_repositories, :slug])
     |> search(params)
     |> index_order_by(params)
-    |> Repo.all()
+    |> Pagination.page(params, preload: [:owned_repositories, :slug])
   end
 
   def search(query, %IndexParams{search: search}) do

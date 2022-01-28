@@ -8,6 +8,7 @@
     </div>
   </div>
   <%= render(KmxgitWeb.LayoutView, "search.html", assigns) %>
+  <%= render("pagination.html", assigns) %>
   <table class="table admin-index">
     <thead>
       <tr>
@@ -19,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <%= for org <- @orgs do %>
+      <%= for org <- @pagination.result do %>
         <tr>
           <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
           <td><%= link org.name, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
@@ -32,4 +33,5 @@
       <% end %>
     </tbody>
   </table>
+  <%= render("pagination.html", assigns) %>
 </div>

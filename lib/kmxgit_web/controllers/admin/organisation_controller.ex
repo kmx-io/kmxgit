@@ -9,14 +9,16 @@ defmodule KmxgitWeb.Admin.OrganisationController do
 
   def index(conn, params) do
     index_params = %IndexParams{}
-    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    |> KmxgitWeb.Admin.page_params(params["page"], params["per"])
     |> KmxgitWeb.Admin.search_param(params["search"])
-    orgs = OrganisationManager.list_organisations(index_params)
+    |> KmxgitWeb.Admin.sort_param(params["sort"])
+    pagination = OrganisationManager.list_organisations(index_params)
     conn
     |> assign(:index, index_params)
-    |> assign(:orgs, orgs)
+    |> assign(:pagination, pagination)
     |> assign(:search, params["search"])
     |> assign(:search_action, Routes.admin_organisation_path(conn, :index, sort: params["sort"], search: params["search"]))
+    |> assign(:sort, params["sort"])
     |> render("index.html")
   end
 

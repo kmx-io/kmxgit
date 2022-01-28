@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h1>Repositories</h1>
   <%= render(KmxgitWeb.LayoutView, "search.html", assigns) %>
-  <%= render(KmxgitWeb.LayoutView, "pagination.html", assigns) %>
+  <%= render("pagination.html", assigns) %>
   <table class="table admin-index">
     <thead>
       <tr>
@@ -33,5 +33,5 @@
       <% end %>
     </tbody>
   </table>
-  <%= render(KmxgitWeb.LayoutView, "pagination.html", assigns) %>
+  <%= render("pagination.html", assigns) %>
 </div>

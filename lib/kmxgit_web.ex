@@ -63,10 +63,6 @@ defmodule KmxgitWeb do
         |> FileSize.to_string()
       end
 
-      def page_link(conn, title \\ nil, page) do
-        link title || page, to: Routes.admin_repository_path(conn, :index, page: page, per: conn.assigns.pagination.per, search: conn.assigns.search, sort: conn.assigns.sort), class: "btn btn-primary"
-      end
-
       def recaptcha_site_key do
         Application.get_env :kmxgit, :recaptcha_site_key
       end
