@@ -27,6 +27,7 @@ config :kmxgit, Kmxgit.UserManager.Guardian,
   secret_key: File.read!("config/.guardian.secret_key")
 
 config :dart_sass,
+  path: "sass",
   version: "1.39.0",
   default: [
     args: ~w(css/app.scss ../priv/static/_assets/app.css),
