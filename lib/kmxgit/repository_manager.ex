@@ -82,13 +82,15 @@ defmodule Kmxgit.RepositoryManager do
     Repo.one from repo in Repository, select: count()
   end
 
-  def list_contributor_repositories(user) do
-    list_repositories()
+  def list_contributor_repositories(user, params = %IndexParams{} \\ %IndexParams{per: 1000000}) do
+    pagination = list_repositories(params)
+    result = pagination.result
     |> Enum.filter(fn repo ->
       (!repo.user || repo.user.id != user.id) &&
       (Repository.members(repo)
        |> Enum.find(fn u -> u.id == user.id end))
     end)
+    result
   end
 
   def change_repository() do

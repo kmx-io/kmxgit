@@ -29,18 +29,26 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   end
 
   def owner?(org, user) do
-    org.users
-    |> Enum.find(fn u ->
-      u.id == user.id
-    end)
+    if user do
+      org.users
+      |> Enum.find(fn u ->
+        u.id == user.id
+      end)
+    end
   end
 
   def owned_repositories(org) do
-    org.owned_repositories
-    |> Enum.sort_by(&Repository.full_slug/1)
+    if org do
+      org.owned_repositories
+      |> Enum.sort_by(&Repository.full_slug/1)
+    end
   end
 
   def disk_usage(org) do
-    GitManager.dir_disk_usage(org.slug.slug)
+    if org do
+      GitManager.dir_disk_usage(org.slug.slug)
+    else
+      0
+    end
   end
 end
