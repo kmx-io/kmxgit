@@ -251,7 +251,7 @@ defmodule KmxgitWeb.RepositoryController do
                         end
           content_html = Pygmentize.html(content, filename(name))
           line_numbers = line_numbers(content)
-          markdown_html = if String.match?(ext, ~r/md/i) do
+          markdown_html = if ext && String.match?(ext, ~r/md/i) do
             Earmark.as_html!(content)
           end
           IO.inspect(path: path, name: name, type: type)
