@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="Li0hOxVLPAsTPCN3BjY0HQchNRwWBHZnbXwLosnHkXs0BrlNrUQJFw97" name="csrf-token">
+
+<title>kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="../_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="../_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="../_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="../_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="../index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="../_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col col-12 col-md-7">
+<h1 id="repo_title"><a href="../s0ca">s0ca</a>/<a href="Aciduino">Aciduino</a></h1>
+
+      </div>
+      <div class="col col-12 col-md-5">
+
+
+
+      </div>
+    </div>
+<div class="row">
+  <div class="col col-12 col-md-7">
+
+
+    <p>
+Branch
+<select class="tree" id="repository_tree" name="repository[tree]"><option value="">- branch -</option><option selected value="/s0ca/Aciduino/_tree/master">master</option></select>
+    </p>
+
+
+
+<div class="log1">
+
+
+  <img src="https://secure.gravatar.com/avatar/87a15bffde182a1edd9b2d0ab616dda9?s=48" alt="Mathias" title="Mathias" class="commit-avatar">
+
+  <span class="hash">
+<a href="https://git.kmx.io/s0ca/Aciduino/_log/master#880440dbf44fe404d135515a3afe591585e4ea64">880440dbf</a>
+  </span>
+  <span class="date">
+2022-01-17 15:57:44 +01:00
+  </span>
+  <br>
+  <span class="message" %>
+	nouveau fichier : AcidStepSequencer.ino 	nouveau fichier : AcidTHarmonizer.ino 	nouveau fichier : Aciduino.ino 	nouveau fichier : HardwareInterface.ino 	nouveau fichier : PageGenerative.ino 	nouveau fichier : PageLive.ino 	nouveau fichier : PageSequencer.ino 	nouveau fichier : UserInterface.ino 	nouveau fichier : config.h 	nouveau fichier : uClock.cpp 	nouveau fichier : uClock.h
+  </span>
+</div>
+<div class="clear"></div>
+
+
+    <hr>
+    <h2>Files</h2>
+    <ul>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/AcidStepSequencer.ino">AcidStepSequencer.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/AcidTHarmonizer.ino">AcidTHarmonizer.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/Aciduino.ino">Aciduino.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/HardwareInterface.ino">HardwareInterface.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/PageGenerative.ino">PageGenerative.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/PageLive.ino">PageLive.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/PageSequencer.ino">PageSequencer.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/UserInterface.ino">UserInterface.ino</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/config.h">config.h</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/uClock.cpp">uClock.cpp</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/s0ca/Aciduino/_tree/master/uClock.h">uClock.h</a>
+
+        </li>
+
+    </ul>
+  </div>
+  <div class="col col-12 col-md-5">
+    <hr>
+<h2>Properties</h2>
+<table class="table admin-properties">
+
+    <tr>
+      <th>Git HTTP</th>
+      <td>https://git.kmx.io/s0ca/Aciduino.git</td>
+    </tr>
+
+  <tr>
+    <th>Git SSH</th>
+    <td>git@git.kmx.io:s0ca/Aciduino.git</td>
+  </tr>
+  <tr>
+    <th>Public access ?</th>
+    <td>
+
+public
+
+    </td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td>
+
+    </td>
+  </tr>
+  <tr>
+    <th>
+Users<br>
+
+    </th>
+    <td>
+
+
+
+
+<a href="../s0ca"><img src="https://secure.gravatar.com/avatar/3200c0abf3ac2f7fc7a3cab55e7e0769?s=48" alt="s0ca" title="s0ca" class=""></a>
+
+
+    </td>
+  </tr>
+
+    <tr>
+      <th>Tags</th>
+      <td>
+        <ul>
+
+        </ul>
+      </td>
+    </tr>
+
+  <tr>
+    <th>Disk usage</th>
+    <td>0.456 MB</td>
+  </tr>
+</table>
+
+  </div>
+</div>
+
+<div class="row">
+
+
+
+</div>
+
+
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://git.kmx.io/_sitemap.txt

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="JBocQhJxZRsxNhZ_BQ91KRIdETJlHgMRhoJ5hI7XIRF8AK-zgiud5mLA" name="csrf-token">
+
+<title>kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="../_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="../_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="../_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="../_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="../index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="../_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col col-12 col-md-7">
+<h1 id="repo_title"><a href="https://git.kmx.io/kmx.io">kmx.io</a>/<a href="kmxgit">kmxgit</a></h1>
+
+      </div>
+      <div class="col col-12 col-md-5">
+
+
+
+      </div>
+    </div>
+<div class="row">
+  <div class="col col-12 col-md-7">
+
+
+    <p>
+Branch
+<select class="tree" id="repository_tree" name="repository[tree]"><option value="">- branch -</option><option selected value="/kmx.io/kmxgit/_tree/master">master</option><option value="/kmx.io/kmxgit/_tree/v0.1">v0.1</option><option value="/kmx.io/kmxgit/_tree/v0.2">v0.2</option><option value="">- tag -</option><option value="/kmx.io/kmxgit/_tree/v0.2.0">v0.2.0</option><option value="/kmx.io/kmxgit/_tree/v0.1.1">v0.1.1</option><option value="/kmx.io/kmxgit/_tree/v0.1.0">v0.1.0</option><option value="/kmx.io/kmxgit/_tree/v0">v0</option></select>
+    </p>
+
+
+
+<div class="log1">
+
+
+
+<a href="../thodg"><img alt="Thomas de Grivel" class="commit-avatar" src="../_avatar/thodg/48/avatar.png" title="Thomas de Grivel"></a>
+
+  <span class="hash">
+<a href="https://git.kmx.io/kmx.io/kmxgit/_log/master#6dfea693c77f276f552a8421aa5d78f65ccba0e8">6dfea693c</a>
+  </span>
+  <span class="date">
+2022-01-29 13:43:50 +01:00
+  </span>
+  <br>
+  <span class="message" %>
+fix 500
+  </span>
+</div>
+<div class="clear"></div>
+
+
+    <hr>
+    <h2>Files</h2>
+    <ul>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/.formatter.exs">.formatter.exs</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/.gitignore">.gitignore</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/README.md">README.md</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/assets">assets/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/bin">bin/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/config">config/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/gfx-refs.md">gfx-refs.md</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/lib">lib/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/mix.exs">mix.exs</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/mix.lock">mix.lock</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/priv">priv/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/master/test">test/</a>
+
+        </li>
+
+    </ul>
+  </div>
+  <div class="col col-12 col-md-5">
+    <hr>
+<h2>Properties</h2>
+<table class="table admin-properties">
+
+    <tr>
+      <th>Git HTTP</th>
+      <td>https://git.kmx.io/kmx.io/kmxgit.git</td>
+    </tr>
+
+  <tr>
+    <th>Git SSH</th>
+    <td>git@git.kmx.io:kmx.io/kmxgit.git</td>
+  </tr>
+  <tr>
+    <th>Public access ?</th>
+    <td>
+
+public
+
+    </td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td>
+
+<p>
+Git server administration web application.</p>
+
+
+    </td>
+  </tr>
+  <tr>
+    <th>
+Users<br>
+
+    </th>
+    <td>
+
+
+
+
+<a href="../thodg"><img alt="thodg" class="" src="../_avatar/thodg/48/avatar.png" title="thodg"></a>
+
+
+    </td>
+  </tr>
+
+    <tr>
+      <th>Tags</th>
+      <td>
+        <ul>
+
+            <li>
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tag/v0.2.0">v0.2.0</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tag/v0.1.1">v0.1.1</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tag/v0.1.0">v0.1.0</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tag/v0">v0</a>
+            </li>
+
+        </ul>
+      </td>
+    </tr>
+
+  <tr>
+    <th>Disk usage</th>
+    <td>44.792 MB</td>
+  </tr>
+</table>
+
+  </div>
+</div>
+
+<div class="row">
+
+
+    <hr>
+    <h3>README.md</h3>
+    <div class="container-fluid">
+      <div class="container-fluid file_content">
+        <div class="content_html">
+
+<h1>
+kmxgit 0.3</h1>
+<p>
+<a href="kmxgit">kmxgit</a> is a web interface and a Git
+server written in C and Elixir / Phoenix.</p>
+<p>
+kmxgit started as a frontend for
+<a href="git-auth">git-auth</a>.
+Now public repositories are also supported.</p>
+<p>
+This branch is work in progress, for the stable branch see
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tree/v0.2">v0.2</a>.</p>
+<p>
+For releases see the tags, latest is
+<a href="https://git.kmx.io/kmx.io/kmxgit/_tag/v0.2.0">v0.2.0</a>.</p>
+<p>
+<a href="kmxgit#ChangeLog">ChangeLog</a> | <a href="kmxgit#todo">TODO</a></p>
+<h2>
+Installation</h2>
+<h3>
+git-auth installation</h3>
+<p>
+git-auth handles all permissions for a single git user accessible
+through SSH with just one config file (<code class="inline">/etc/git/auth.conf</code>).</p>
+<p>
+Please see <a href="git-auth">git-auth README.md</a>.</p>
+<h3>
+Phoenix installation</h3>
+<ul>
+  <li>
+Clone repo with <code class="inline">git clone https://git.kmx.io/kmx.io/kmxgit.git</code>  </li>
+  <li>
+Change directory with <code class="inline">cd kmxgit</code>  </li>
+  <li>
+Install dependencies with <code class="inline">mix deps.get</code>  </li>
+  <li>
+Create and migrate your database with <code class="inline">mix ecto.setup</code>  </li>
+  <li>
+Install <code class="inline">bin/*</code> into <code class="inline">/usr/local/bin</code>  </li>
+  <li>
+Start Phoenix endpoint with <code class="inline">mix phx.server</code> or inside IEx with
+<code class="inline">iex -S mix phx.server</code>  </li>
+</ul>
+<p>
+Now you can visit <a href="http://localhost:4000"><code class="inline">localhost:4000</code></a> from your browser.</p>
+<h3>
+Public access</h3>
+<p>
+To setup public access repositories on HTTP or HTTPS you need to setup
+your web server to serve certain requests with
+<a href="https://git-scm.com/docs/git-http-backend">git-http-backend</a>.</p>
+<h4>
+Nginx setup</h4>
+<p>
+First you need to setup
+<a href="https://www.nginx.com/resources/wiki/start/topics/examples/fcgiwrap/">fcgiwrap</a> to serve on <code class="inline">127.0.0.1:9001</code>.</p>
+<p>
+Then in your nginx server config :</p>
+<pre><code>location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
+    fastcgi_pass  127.0.0.1:9001;
+    include       fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME  /usr/local/libexec/git/git-http-backend;
+    fastcgi_param GIT_PROJECT_ROOT ~git;
+    fastcgi_param PATH_INFO        $1;        
+}</code></pre>
+<h1>
+  <a id="ChangeLog" href="kmxgit#ChangeLog">ChangeLog</a></h1>
+<h2>
+  <a id="v0.2" href="kmxgit#v0.2">Added in kmxgit 0.2</a></h2>
+<ul>
+  <li>
+auth    <ul>
+      <li>
+auth users using <code class="inline">phx.gen.auth</code>      </li>
+      <li>
+change password in separate form      </li>
+      <li>
+session timeout (60 days)      </li>
+      <li>
+auth with login      </li>
+      <li>
+2FA TOTP (Google Authenticator)      </li>
+    </ul>
+  </li>
+  <li>
+public repositories    <ul>
+      <li>
+option “public access ?”      </li>
+      <li>
+routes      </li>
+      <li>
+permissions      </li>
+      <li>
+git-http-backend      </li>
+    </ul>
+  </li>
+  <li>
+front    <ul>
+      <li>
+source code coloration      </li>
+      <li>
+line numbers      </li>
+    </ul>
+  </li>
+  <li>
+admin    <ul>
+      <li>
+create organisation without members      </li>
+    </ul>
+  </li>
+  <li>
+Git features    <ul>
+      <li>
+diff        <ul>
+          <li>
+sub-route, controller, view          </li>
+          <li>
+links          </li>
+          <li>
+line numbers          </li>
+        </ul>
+      </li>
+      <li>
+log      </li>
+      <li>
+tags      </li>
+    </ul>
+  </li>
+  <li>
+notification e-mails    <ul>
+      <li>
+change login      </li>
+      <li>
+change e-mail      </li>
+      <li>
+change password      </li>
+      <li>
+change 2FA      </li>
+    </ul>
+  </li>
+</ul>
+<h2>
+  <a id="v0.1" href="kmxgit#v0.1">Added in kmxgit 0.1</a></h2>
+<ul>
+  <li>
+git-auth    <ul>
+      <li>
+/_etc/git/auth.conf      </li>
+      <li>
+/_etc/ssh/authorized_keys      </li>
+      <li>
+bin/update_etc_git_auth      </li>
+      <li>
+bin/update_git_ssh_authorized_keys      </li>
+    </ul>
+  </li>
+  <li>
+repository    <ul>
+      <li>
+in subdirectory      </li>
+      <li>
+navigation        <ul>
+          <li>
+branches          </li>
+        </ul>
+      </li>
+      <li>
+tags      </li>
+      <li>
+readme.md      </li>
+    </ul>
+  </li>
+  <li>
+same url slug for organisations and users  </li>
+  <li>
+user auth using Guardian  </li>
+</ul>
+<h1>
+  <a id="todo" href="kmxgit#todo" style="text-decoration:none;color:inherit;">TODO</a></h1>
+<h2>
+kmxgit 0.3</h2>
+<ul>
+  <li>
+DONE Disk usage    <ul>
+      <li>
+DONE Per repo      </li>
+      <li>
+DONE Per user      </li>
+      <li>
+DONE Per organisation      </li>
+      <li>
+DONE Server-wise      </li>
+    </ul>
+  </li>
+  <li>
+DONE Footer    <ul>
+      <li>
+DONE environment variable      </li>
+    </ul>
+  </li>
+  <li>
+DONE Fonts : Inter &amp; Courier New  </li>
+  <li>
+DONE Dark navbar  </li>
+  <li>
+DONE Users    <ul>
+      <li>
+DONE Profile picture      </li>
+      <li>
+DONE Link user in git log and commits      </li>
+    </ul>
+  </li>
+  <li>
+DONE SEO    <ul>
+      <li>
+DONE /_sitemap.txt      </li>
+      <li>
+DONE /robots.txt      </li>
+    </ul>
+  </li>
+  <li>
+DONE Display markdown files as HTML  </li>
+  <li>
+DONE Bug : fix empty diff between commits and master  </li>
+  <li>
+DONE Optimizations    <ul>
+      <li>
+DONE useless git commands (<code class="inline">git_put_log1</code>)      </li>
+      <li>
+DONE disk usage calculation      </li>
+    </ul>
+  </li>
+  <li>
+DONE Front page    <ul>
+      <li>
+DONE Stats        <ul>
+          <li>
+DONE count users, organisations, repositories          </li>
+          <li>
+DONE disk usage          </li>
+        </ul>
+      </li>
+      <li>
+DONE git cli help        <ul>
+          <li>
+DONE git clone          </li>
+          <li>
+DONE git remote add kmx git@git.kmx.io:user/repo.git          </li>
+          <li>
+DONE git push -u kmx branch          </li>
+          <li>
+DONE git pull          </li>
+          <li>
+DONE install git          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+DONE Admin    <ul>
+      <li>
+DONE logo      </li>
+      <li>
+DONE Dashboard        <ul>
+          <li>
+DONE Stats          </li>
+        </ul>
+      </li>
+      <li>
+DONE disk usage (repos, orgs, users)      </li>
+      <li>
+DONE pipeline queries      </li>
+      <li>
+DONE sort by column      </li>
+      <li>
+DONE search      </li>
+      <li>
+DONE pagination (50 per page)      </li>
+      <li>
+DONE link to livedashboard      </li>
+    </ul>
+  </li>
+  <li>
+Releases    <ul>
+      <li>
+infos      </li>
+      <li>
+static files      </li>
+    </ul>
+  </li>
+  <li>
+Pull requests    <ul>
+      <li>
+Comments in diff      </li>
+    </ul>
+  </li>
+  <li>
+Issues / tickets ?  </li>
+  <li>
+Static site generator  </li>
+  <li>
+OAuth2    <ul>
+      <li>
+Google      </li>
+      <li>
+Github      </li>
+      <li>
+Gitlab ?      </li>
+    </ul>
+  </li>
+</ul>
+<h1>
+  <a href="kmxgit#copyright" id="copyright">Copyright</a></h1>
+<p>
+kmxgit - git server administration</p>
+<p>
+Copyright 2021,2022 Thomas de Grivel <a href="mailto:thoxdg@gmail.com">thoxdg@gmail.com</a></p>
+<p>
+Permission to use, copy, modify, and distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.</p>
+<p>
+THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p>
+
+
+        </div>
+      </div>
+    </div>
+
+
+</div>
+
+
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

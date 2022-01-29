@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="OR0YLQx8IHcKHiYPCnE9Kz8kSTcpHi4guhNZvDr4rzvHN5exJP-aymap" name="csrf-token">
+
+<title data-suffix=" - kmx git">User exwm_deploy - kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-12 col-sm-7">
+      <h1>exwm_deploy</h1>
+    </div>
+    <div class="col col-12 col-sm-4">
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-12">
+      <hr>
+
+
+
+<a href="exwm_deploy"><img src="https://secure.gravatar.com/avatar/adf556d8fd0ebc9ddbd4612cfb15f108?s=256" alt="exwm_deploy" title="exwm_deploy" class="avatar-lg"></a>
+
+      <h1>exwm deploy</h1>
+      <div class="col col-12 col-md-8">
+
+<p>
+exwm deploy user</p>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <hr>
+      <h2>Repositories</h2>
+      <ul>
+
+          <li>
+<a href="https://git.kmx.io/exwm/exwm">exwm/exwm</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/exwm/exwm_smtp">exwm/exwm_smtp</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/exwm/exwm_web">exwm/exwm_web</a>
+          </li>
+
+      </ul>
+    </div>
+    <div class="col col-12 col-md-4">
+      <hr>
+      <h2>Properties</h2>
+      <table class="table admin-properties">
+        <tr>
+          <th>Name</th>
+          <td>exwm deploy</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td><a href="mailto:exwm@kmx.io">exwm@kmx.io</a></td>
+        </tr>
+        <tr>
+          <th>Login</th>
+          <td>exwm_deploy</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <th>Deploy only</th>
+          <td>true</td>
+        </tr>
+        <tr>
+          <th>
+Organisations<br>
+
+          </th>
+          <td>
+            <ul>
+
+                <li>
+<a class="org" href="exwm">exwm</a>
+                </li>
+
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>SSH keys</th>
+          <td class="scroll-x">
+            <pre class="ssh_keys">
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCUukNUSPkHlBTJgBOvqwN5ZnkAgfFO8UiLfiic0H+vaOymD/G0SDbvGnO+uLtfQ7tH0g33teXQ5L9riDIi14pTOIYg9wLARNFVyMaCUY6PAy1jhFl1KgTmS3W6TuapPM24peP7hhFwth2UzXP+fsbOEIePZKSUlCjREb13T185UvdyC/0w9ltvGxNkNtr40FuOZuTUvnNBUgxEgRv0s7NolprxNrAbK7ovt+oWCDYyDUuo602Rg2bvoT56P7Qk1l0XZ7qZi8pqV9wGztuA4YZx/8hcfVRaXythmbC65nTtCfQRk16sUhmSwvfPzgrxpve1cGqZzvn8XsF/I2p3Rq/mWHejCj5L9tyUuBricmPM/YJhrjQAxOrALrAxYVNbpmnK2W9/pP3Aiz7q62rX1G4lb1xpHHiIz5wxrIL41XZ8Qz4iDbGXWdBurwDgKWDFYldzX4yjJeqjZbPRreLUzS8sKPz5BMMHQYRmJP7FQQTyu09Y99h5YJT8M9JJoIKMEuk= exwm_smtp@vu
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC8xc7INt0ZTO5Fwwbu7IgRT7p8rwHR0ZujkCD/47fejsLOjwUg6lmn6XqhMYtpUjy02tORLncyujrP5ZH6I8LkuDFLSq3ZPeyM16CJi/aOnArx02+nWZVUE7AIXBHimLW89U4aheTdIpa0Jn03DcRgEzT8VUqNwta7b+WBIEajjuUUybPJBpqRddtGyQsB+SqNYzwPWRT2kdrIunVJTTV45DXLBSWgEgrp/Ml2EwcU3fQ/b+45CSwMWOcEDim299y1JQ6SNdtOq8NgrdWyQoYvctCgRdQS6w3UcwzF9WAByVrFFiRMOrx0UENXAUC+scJmBQvC+3d7DFsBoSzJ/28TdwgGdEIXDhuoqaK+kZhJ9hQQAtrFn5Z2MEUvtmtmul0xWPdDh9YIJ8LbqWRmfzyJOrSmmI8+T4lcbwxipymO1NwyxYI4KKND34k7KMqMQ8JLxN70H5558Gy+1UlTMrdz3yZTVzI5Sx9iz1CtMuW3frTZqQ1yyolrkkpyE5JdaKs= exwm_web@vu
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDpHM29DlrGJTuuUqt8mysOvCzBDW7yiBKttoewgak5b9W/uSqVj1ktBS2gAddx06yVtT64m68lEii9aIJmVwbcmEeGMM9/VR2qHFh6YlBRWMd5Ticsm6fMNLnrsgOfoHSxLrGDwSZ3/CQB4i+h4IaUtU4/aVumQ3ONhlhJgsQ4/A9RHfTSEWqWZG8qTxIovAId+D3+GlNYfXjEysqAJ87XmNJ96NyJEIeHSpDgXBCgivKu55pzF33OhQuA4Lx7J66UpErDQDSreym/XPf3qw3dn7VdbsaDPM9l/GMr+tg8l2N49sLkGPYxIToFolmY2TtyHSyXReXy9btYJwPASxVMYnZw3e5IELIRKf4cS3AaxsmH6TF0DUZ46Y65xhxtfN0FYsWVzjDOEiceNyCw0fELnL19d5ndbRHRQRTkWRrOqpcZTaVN3olQqbqSNRznOyg+RXymLRSzG/qqGxjXWFOhzoc32iiYfeRAXxDVoPljd50K4Cqa41tb3d1Pkk3mVRk= exwm_web@otter.kmx.io
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCv851Xk+O8pDlyexO1On3chY6Q8YdxoGftkhrSbrnd9VyG48aFQbCYLD5pq+lQ6q/AEU4ljdbIl+czTX9FoculphUYqAIlDZxsreVDCKLmH1okNmdZw7dL5D8vmmL+aF/bupF8HfWZX9XneoeNOULSAIfReeL7yGXqHKpl42aFJyc9yE5xxBB6nRovShfYYyCHGnrXqBBkKjzZeSVnPH92vo5NI53i/joVFuFP5mpPhQjY6FG1csMRyUd3/z8TISHWRPvbxO4R8Kv9XpbiR9BB0NkL6WdtH3SlmZiKjZoRgrf5BcgexkIy37hl3s1EQTV7qRMtypODTQDDjWiOmBcKJwtzY6bZlr8eN6ALIphyIzeMnZ0+mLW6bIurBh3jczYjiE+Q5fMgoHQjrI3cZdAtChzQLcl2E2jARwOfsg/iijPgTZoDtHOCVc7AKl43o8KtfnRQnkuSQITcXo1WkR3cQBSvLa9/WQapL0hZdrbDvBlm/OYsO8bqK7MpcE/cYFs= exwm_smtp@otter.kmx.io
+            </pre>
+          </td>
+        </tr>
+        <tr>
+          <th>Disk usage</th>
+          <td>0 MB</td>
+        </tr>
+        <tr>
+          <th>Accessible</th>
+          <td>23.992 MB</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <p>
+  </p>
+
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

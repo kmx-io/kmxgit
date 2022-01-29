@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="FkQwGExfKwEzMGcEJXQXOjEAKA5oQH8-Z1fo6gyBKT7Ca0OiDtLX830n" name="csrf-token">
+
+<title data-suffix=" - kmx git">do-language - kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-12 col-sm-7">
+      <h1>do-language</h1>
+    </div>
+    <div class="col col-12 col-sm-4">
+
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <hr>
+      <h2>Repositories</h2>
+      <ul>
+
+          <li>
+<a href="https://git.kmx.io/do-language/do">do-language/do</a>
+          </li>
+
+      </ul>  
+    </div>
+    <div class="col col-12 col-md-4">
+      <hr>
+      <h2>Properties</h2>
+      <table class="table admin-properties">
+        <tr>
+          <th>Name</th>
+          <td></td>
+        </tr>
+        <tr>
+          <th>Slug</th>
+          <td>do-language</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>
+
+<p>
+following Kernighan and Ritchie in their footsteps</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <th>
+Users<br>
+
+          </th>
+          <td>
+
+
+
+
+<a href="thodg"><img alt="thodg" class="" src="_avatar/thodg/48/avatar.png" title="thodg"></a>
+
+
+          </td>
+        </tr>
+        <tr>
+          <th>Disk usage</th>
+          <td>0.984 MB</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

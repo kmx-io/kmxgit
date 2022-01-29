@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="dTsvQjBRBys5NCUucgsPKTNGITIRJzoE9Ny5JiUhAPui6OWzF2EdATuT" name="csrf-token">
+
+<title>kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="../_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="../_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="../_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="../_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="../index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="../_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col col-12 col-md-7">
+<h1 id="repo_title"><a href="https://git.kmx.io/kmx.io">kmx.io</a>/<a href="git-auth">git-auth</a></h1>
+
+      </div>
+      <div class="col col-12 col-md-5">
+
+
+
+      </div>
+    </div>
+<div class="row">
+  <div class="col col-12 col-md-7">
+
+
+    <p>
+Branch
+<select class="tree" id="repository_tree" name="repository[tree]"><option value="">- branch -</option><option selected value="/kmx.io/git-auth/_tree/master">master</option><option value="/kmx.io/git-auth/_tree/v0.2">v0.2</option><option value="">- tag -</option><option value="/kmx.io/git-auth/_tree/v0.2">v0.2</option><option value="/kmx.io/git-auth/_tree/v0.1">v0.1</option></select>
+    </p>
+
+
+
+<div class="log1">
+
+
+
+<a href="../thodg"><img alt="Thomas de Grivel" class="commit-avatar" src="../_avatar/thodg/48/avatar.png" title="Thomas de Grivel"></a>
+
+  <span class="hash">
+<a href="https://git.kmx.io/kmx.io/git-auth/_log/master#715f7c80606f01f033b1b640b7331b25502d772d">715f7c806</a>
+  </span>
+  <span class="date">
+2022-01-22 09:25:25 +01:00
+  </span>
+  <br>
+  <span class="message" %>
+update man page
+  </span>
+</div>
+<div class="clear"></div>
+
+
+    <hr>
+    <h2>Files</h2>
+    <ul>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/git-auth/_tree/master/.gitignore">.gitignore</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/git-auth/_tree/master/Makefile">Makefile</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/git-auth/_tree/master/README.md">README.md</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/git-auth/_tree/master/git-auth.1">git-auth.1</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/git-auth/_tree/master/git-auth.c">git-auth.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/git-auth/_tree/master/rule.c">rule.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/git-auth/_tree/master/rule.h">rule.h</a>
+
+        </li>
+
+    </ul>
+  </div>
+  <div class="col col-12 col-md-5">
+    <hr>
+<h2>Properties</h2>
+<table class="table admin-properties">
+
+    <tr>
+      <th>Git HTTP</th>
+      <td>https://git.kmx.io/kmx.io/git-auth.git</td>
+    </tr>
+
+  <tr>
+    <th>Git SSH</th>
+    <td>git@git.kmx.io:kmx.io/git-auth.git</td>
+  </tr>
+  <tr>
+    <th>Public access ?</th>
+    <td>
+
+public
+
+    </td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td>
+
+<p>
+Authentication and ACL system for git.</p>
+
+
+    </td>
+  </tr>
+  <tr>
+    <th>
+Users<br>
+
+    </th>
+    <td>
+
+
+
+
+<a href="../thodg"><img alt="thodg" class="" src="../_avatar/thodg/48/avatar.png" title="thodg"></a>
+
+
+    </td>
+  </tr>
+
+    <tr>
+      <th>Tags</th>
+      <td>
+        <ul>
+
+            <li>
+<a href="https://git.kmx.io/kmx.io/git-auth/_tag/v0.2">v0.2</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/kmx.io/git-auth/_tag/v0.1">v0.1</a>
+            </li>
+
+        </ul>
+      </td>
+    </tr>
+
+  <tr>
+    <th>Disk usage</th>
+    <td>1.584 MB</td>
+  </tr>
+</table>
+
+  </div>
+</div>
+
+<div class="row">
+
+
+    <hr>
+    <h3>README.md</h3>
+    <div class="container-fluid">
+      <div class="container-fluid file_content">
+        <div class="content_html">
+
+<h1>
+GIT-AUTH</h1>
+<h2>
+Synopsis</h2>
+<pre><code>GIT_AUTH_ID=ID git-auth COMMAND [ARGS ...]</code></pre>
+<h2>
+Description</h2>
+<p>
+<strong>git-auth</strong> starts by reading rules from /etc/git/auth.conf, one rule
+per line. Empty lines and lines starting with # are ignored. Each rule
+is made of tokens separated by one or more spaces.</p>
+<p>
+<strong>git-auth</strong> executes COMMAND and ARGS using execvp if the requested ID,
+COMMAND and ARGS match any of the rules defined in /etc/git/auth.conf.</p>
+<p>
+<strong>git-auth</strong> matches a rule by matching all the rule’s tokens with ID,
+COMMAND and ARGS in order. Comparison is case sensitive.</p>
+<p>
+A wildcard token “*” matches any string.</p>
+<h2>
+Environment</h2>
+<ul>
+  <li>
+<strong>GIT_AUTH_ID</strong> : an arbitrary token to match with the rules.
+This is usually set for each public key in /home/git/.ssh/authorized_keys
+with
+ environment=”GIT_AUTH_ID=…” ssh-rsa …  </li>
+</ul>
+<h2>
+Configuration</h2>
+<p>
+Access control rules for each git repository go into
+<code class="inline">/etc/git/auth.conf</code>.</p>
+<p>
+The syntax of this file is one rule per line.
+Each rule is composed of symbols separated by spaces.
+In order :</p>
+<ul>
+  <li>
+A <strong>GIT_AUTH_ID</strong> value that was set in
+<code class="inline">/home/git/.ssh/authorized_keys</code>.  </li>
+  <li>
+Permissions, either <code class="inline">rw</code> or <code class="inline">r</code>.  </li>
+  <li>
+A repository path, relative to <code class="inline">/home/git</code>,
+example: <code class="inline">cl-adams/adams.git</code>  </li>
+</ul>
+<h2>
+Files</h2>
+<ul>
+  <li>
+/etc/git/auth.conf  </li>
+  <li>
+/home/git/.ssh/authorized_keys  </li>
+</ul>
+<h1>
+See also</h1>
+<p>
+<a href="kmxgit">kmxgit</a>
+is a web interface on top of git-auth written in Elixir / Phoenix.</p>
+<h1>
+Copying</h1>
+<p>
+git-auth - restrict git commands</p>
+<p>
+Copyright 2012,2021 Thomas de Grivel <a href="mailto:thoxdg@gmail.com">thoxdg@gmail.com</a></p>
+<p>
+Permission to use, copy, modify, and distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.</p>
+<p>
+THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p>
+
+
+        </div>
+      </div>
+    </div>
+
+
+</div>
+
+
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

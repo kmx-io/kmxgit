@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="FCcSJiUKYRwMCB4GMXQ8ZDwOFwM9BwgXXRDQ_23_tlNAu0d7IzsUmtGG" name="csrf-token">
+
+<title>kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="../_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="../_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="../_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="../_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="../index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="../_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col col-12 col-md-7">
+<h1 id="repo_title"><a href="https://git.kmx.io/cl-adams">cl-adams</a>/<a href="adams">adams</a></h1>
+
+      </div>
+      <div class="col col-12 col-md-5">
+
+
+
+      </div>
+    </div>
+<div class="row">
+  <div class="col col-12 col-md-7">
+
+
+    <p>
+Branch
+<select class="tree" id="repository_tree" name="repository[tree]"><option value="">- branch -</option><option selected value="/cl-adams/adams/_tree/master">master</option><option value="/cl-adams/adams/_tree/0.1-stable">0.1-stable</option><option value="/cl-adams/adams/_tree/0.2-stable">0.2-stable</option><option value="">- tag -</option><option value="/cl-adams/adams/_tree/adams-0.3.2">adams-0.3.2</option><option value="/cl-adams/adams/_tree/adams-0.3.1">adams-0.3.1</option><option value="/cl-adams/adams/_tree/adams-0.3">adams-0.3</option><option value="/cl-adams/adams/_tree/adams-0.2">adams-0.2</option><option value="/cl-adams/adams/_tree/adams-0.1">adams-0.1</option></select>
+    </p>
+
+
+
+<div class="log1">
+
+
+
+<a href="../thodg"><img alt="Thomas de Grivel" class="commit-avatar" src="../_avatar/thodg/48/avatar.png" title="Thomas de Grivel"></a>
+
+  <span class="hash">
+<a href="https://git.kmx.io/cl-adams/adams/_log/master#fec285d175f00a20e7f78e7b0fc6bd329f00ff53">fec285d17</a>
+  </span>
+  <span class="date">
+2021-11-26 15:43:15 +01:00
+  </span>
+  <br>
+  <span class="message" %>
+darwin
+  </span>
+</div>
+<div class="clear"></div>
+
+
+    <hr>
+    <h2>Files</h2>
+    <ul>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/.github">.github/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/.gitignore">.gitignore</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/LICENSE.md">LICENSE.md</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/Makefile">Makefile</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/README.md">README.md</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/adams.asd">adams.asd</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/build.lisp">build.lisp</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/config.lisp">config.lisp</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/core">core/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/package.lisp">package.lisp</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/prepare-build.lisp">prepare-build.lisp</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/shell">shell/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/test.lisp">test.lisp</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/toplevel.lisp">toplevel.lisp</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/cl-adams/adams/_tree/master/unix">unix/</a>
+
+        </li>
+
+    </ul>
+  </div>
+  <div class="col col-12 col-md-5">
+    <hr>
+<h2>Properties</h2>
+<table class="table admin-properties">
+
+    <tr>
+      <th>Git HTTP</th>
+      <td>https://git.kmx.io/cl-adams/adams.git</td>
+    </tr>
+
+  <tr>
+    <th>Git SSH</th>
+    <td>git@git.kmx.io:cl-adams/adams.git</td>
+  </tr>
+  <tr>
+    <th>Public access ?</th>
+    <td>
+
+public
+
+    </td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td>
+
+<p>
+UNIX system administration in Common Lisp</p>
+
+
+    </td>
+  </tr>
+  <tr>
+    <th>
+Users<br>
+
+    </th>
+    <td>
+
+
+
+
+<a href="../thodg"><img alt="thodg" class="" src="../_avatar/thodg/48/avatar.png" title="thodg"></a>
+
+
+    </td>
+  </tr>
+
+    <tr>
+      <th>Tags</th>
+      <td>
+        <ul>
+
+            <li>
+<a href="https://git.kmx.io/cl-adams/adams/_tag/adams-0.3.2">adams-0.3.2</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/cl-adams/adams/_tag/adams-0.3.1">adams-0.3.1</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/cl-adams/adams/_tag/adams-0.3">adams-0.3</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/cl-adams/adams/_tag/adams-0.2">adams-0.2</a>
+            </li>
+
+            <li>
+<a href="https://git.kmx.io/cl-adams/adams/_tag/adams-0.1">adams-0.1</a>
+            </li>
+
+        </ul>
+      </td>
+    </tr>
+
+  <tr>
+    <th>Disk usage</th>
+    <td>0.528 MB</td>
+  </tr>
+</table>
+
+  </div>
+</div>
+
+<div class="row">
+
+
+    <hr>
+    <h3>README.md</h3>
+    <div class="container-fluid">
+      <div class="container-fluid file_content">
+        <div class="content_html">
+
+<h1>
+Adams 0.3.2</h1>
+<p>
+Adams is a UNIX system administration tool written in Common Lisp.</p>
+<p>
+You describe your systems (hosts) using resources having properties.</p>
+<p>
+The properties are then probed and synchronized by Adams using only
+<code class="inline">/bin/sh</code> on the remote host, and <code class="inline">/usr/bin/ssh</code> on the control host.</p>
+<h2>
+Configuration example</h2>
+<p>
+Check out
+<a href="https://github.com/kmx-io/kmx-io/">https://github.com/kmx-io/kmx-io/</a>
+for a detailed example of Adams usage.</p>
+<h2>
+Current status</h2>
+<p>
+Adams is currently able to use a local shell or connect to remote hosts
+via ssh.</p>
+<p>
+Adams is this hardcore hacker using only <code class="inline">/bin/sh</code> commands.
+This makes <code class="inline">ksh</code> and <code class="inline">bash</code> suitable shells for adams as they are
+compatible with <code class="inline">/bin/sh</code>.</p>
+<p>
+Supported resource types :</p>
+<ul>
+  <li>
+Host (hostname)  </li>
+  <li>
+User (useradd, usermod, userdel)  </li>
+  <li>
+Group (groupadd, groupmod, groupdel)  </li>
+  <li>
+File (owner, group, permissions, content)  </li>
+  <li>
+Directory (owner, group, permissions)  </li>
+  <li>
+Package (Debian, OpenBSD)  </li>
+</ul>
+<h2>
+Security design</h2>
+<p>
+You should only allow Adams what you would allow your system operators :</p>
+<ul>
+  <li>
+a shell accessible through SSH using a public key  </li>
+  <li>
+apropriate sudo permissions  </li>
+</ul>
+<p>
+All commands issued to the remote hosts can be logged.</p>
+<p>
+Adams does not grant the hosts access to its workstation while it works.
+Adams does not grant access to data belonging to any host.
+Adams does not send any data that is not of direct concern to the host.
+In short, all UNIX permissions are respected, Adams is a regular UNIX user.</p>
+<h2>
+Usage</h2>
+<h3>
+1. Install <a href="https://github.com/common-lisp-repo/repo">repo</a>.</h3>
+<h3>
+2. Fetch adams sources.</h3>
+<pre><code class="shell">  $ sbcl --eval &#39;(repo:install :adams)&#39;</code></pre>
+<h3>
+3. Build and install the <code class="inline">adams</code> binary</h3>
+<pre><code class="shell">  $ cd ~/common-lisp/cl-adams/adams
+  $ make
+  $ sudo cp build/adams /usr/local/bin/adams</code></pre>
+<h3>
+4. Configure emacs (optional)</h3>
+<p>
+In your <code class="inline">~/.emacs</code> file :</p>
+<pre><code class="emacs-lisp">  ;;  Adams
+  (add-to-list &#39;auto-mode-alist &#39;(&quot;\\.adams\\&#39;&quot; . lisp-mode))</code></pre>
+<h3>
+5. Write some resources in a <code class="inline">.adams</code> script</h3>
+<p>
+In the <code class="inline">tutorial.adams</code> file :</p>
+<pre><code class="common-lisp">  #!/usr/local/bin/adams --script
+
+  (resource &#39;host &quot;adams.kmx.io&quot;
+            :user &quot;adams&quot;
+            (resource &#39;user &quot;adams&quot;
+                      :shell &quot;/bin/sh&quot;
+                      :ensure :present))
+
+  (with-host &quot;adams.kmx.io&quot;
+    (sync *host*))</code></pre>
+<h3>
+6. Profit.</h3>
+<pre><code class="shell">  $ chmod 755 tutorial.adams
+  $ ./tutorial.adams</code></pre>
+<p>
+The <code class="inline">tutorial.adams</code> script will synchronize the host “adams.kmx.io”
+according to the resource specifications given in the file.</p>
+<h3>
+7. DRY up your scripts using <code class="inline">#.(include &quot;file&quot;)</code></h3>
+<p>
+In the <code class="inline">user/dx.adams</code> file :</p>
+<pre><code class="common-lisp">  ;; Thomas de Grivel (kmx.io)
+  (resource &#39;group &quot;dx&quot;
+            :gid 19256
+            :ensure :present)
+  (resource &#39;user &quot;dx&quot;
+            :uid 19256
+            :gid 19256
+            :home &quot;/home/dx&quot;
+            :ensure :present)</code></pre>
+<p>
+In your main script :</p>
+<pre><code class="common-lisp">  #!/usr/local/bin/adams --script
+
+  (resource &#39;host &quot;adams.kmx.io&quot;
+            :user &quot;adams&quot;
+            (resource &#39;user &quot;adams&quot;
+                      :shell &quot;/bin/sh&quot;
+                      :ensure :present)
+            #.(include &quot;user/dx&quot;))
+
+  (with-host &quot;adams.kmx.io&quot;
+    (sync *host*))</code></pre>
+<h2>
+ISC License</h2>
+<pre><code>;;  Copyright YEAR AUTHOR &lt;EMAIL&gt;
+;;
+;;  Permission to use, copy, modify, and distribute this software for any
+;;  purpose with or without fee is hereby granted, provided that the above
+;;  copyright notice and this permission notice appear in all copies.
+;;
+;;  THE SOFTWARE IS PROVIDED &quot;AS IS&quot; AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+;;  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+;;  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+;;  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+;;  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+;;  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+;;  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+;;</code></pre>
+<h2>
+Contribute</h2>
+<p>
+To contribute, fork this repository and send us a pull request.</p>
+<p>
+Please publish under the
+<a href="https://en.wikipedia.org/wiki/ISC_license">ISC License</a>
+terms.</p>
+<h2>
+Authors</h2>
+<p>
+Thomas de Grivel <a href="mailto:thoxdg@gmail.com">thoxdg@gmail.com</a></p>
+
+
+        </div>
+      </div>
+    </div>
+
+
+</div>
+
+
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

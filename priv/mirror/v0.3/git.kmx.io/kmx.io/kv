@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="CTsfEkh7ZSAUVjRwNzECFjkWNwI8ARtmENIe2C7cl2d7suZELbSTlrT6" name="csrf-token">
+
+<title>kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="../_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="../_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="../_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="../_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="../index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="../_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col col-12 col-md-7">
+<h1 id="repo_title"><a href="https://git.kmx.io/kmx.io">kmx.io</a>/<a href="kv">kv</a></h1>
+
+      </div>
+      <div class="col col-12 col-md-5">
+
+
+
+      </div>
+    </div>
+<div class="row">
+  <div class="col col-12 col-md-7">
+
+
+    <p>
+Branch
+<select class="tree" id="repository_tree" name="repository[tree]"><option value="">- branch -</option><option selected value="/kmx.io/kv/_tree/master">master</option></select>
+    </p>
+
+
+
+<div class="log1">
+
+
+
+<a href="../thodg"><img alt="Thomas de Grivel" class="commit-avatar" src="../_avatar/thodg/48/avatar.png" title="Thomas de Grivel"></a>
+
+  <span class="hash">
+<a href="https://git.kmx.io/kmx.io/kv/_log/master#832d58a31c313bae5bc7aab60ff7e43e6d354b3c">832d58a31</a>
+  </span>
+  <span class="date">
+2022-01-06 07:52:22 +01:00
+  </span>
+  <br>
+  <span class="message" %>
+spec
+  </span>
+</div>
+<div class="clear"></div>
+
+
+    <hr>
+    <h2>Files</h2>
+    <ul>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/.gitignore">.gitignore</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/Makefile">Makefile</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/README.md">README.md</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/buffer.c">buffer.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/buffer.h">buffer.h</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/doc">doc/</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv.c">kv.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv.h">kv.h</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv_chars.c">kv_chars.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv_parse.c">kv_parse.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv_path.c">kv_path.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv_path.h">kv_path.h</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv_quote.c">kv_quote.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/kv_unquote.c">kv_unquote.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/rope.c">rope.c</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/rope.h">rope.h</a>
+
+        </li>
+
+        <li>
+
+<a href="https://git.kmx.io/kmx.io/kv/_tree/master/test">test/</a>
+
+        </li>
+
+    </ul>
+  </div>
+  <div class="col col-12 col-md-5">
+    <hr>
+<h2>Properties</h2>
+<table class="table admin-properties">
+
+    <tr>
+      <th>Git HTTP</th>
+      <td>https://git.kmx.io/kmx.io/kv.git</td>
+    </tr>
+
+  <tr>
+    <th>Git SSH</th>
+    <td>git@git.kmx.io:kmx.io/kv.git</td>
+  </tr>
+  <tr>
+    <th>Public access ?</th>
+    <td>
+
+public
+
+    </td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td>
+
+<p>
+Key-value text file format.</p>
+
+
+    </td>
+  </tr>
+  <tr>
+    <th>
+Users<br>
+
+    </th>
+    <td>
+
+
+
+
+<a href="../thodg"><img alt="thodg" class="" src="../_avatar/thodg/48/avatar.png" title="thodg"></a>
+
+
+    </td>
+  </tr>
+
+    <tr>
+      <th>Tags</th>
+      <td>
+        <ul>
+
+        </ul>
+      </td>
+    </tr>
+
+  <tr>
+    <th>Disk usage</th>
+    <td>5.312 MB</td>
+  </tr>
+</table>
+
+  </div>
+</div>
+
+<div class="row">
+
+
+    <hr>
+    <h3>README.md</h3>
+    <div class="container-fluid">
+      <div class="container-fluid file_content">
+        <div class="content_html">
+
+<h1>
+kv 1.0</h1>
+<p>
+Status : development.</p>
+<h2>
+Synopsis</h2>
+<p>
+  <img src="https://git.kmx.io/kmx.io/kv/_blob/master/doc/kv-1.0.jpg" alt="kv-1.0.jpg" />
+</p>
+<h2>
+Specification</h2>
+<pre><code>     KV : SP* K SP* &#39;:&#39; SP* V SP*
+
+     M1 : KV (&#39;,&#39; KV)* &#39;,&#39;? SP*
+
+     M2 : SP* &#39;{&#39; M1 &#39;}&#39; SP*
+
+     M3 : SP*
+
+      M : M2 | M1 | M3
+
+K1 = V1 : ([^&lt;{}:,&quot;\s][^{}:,&quot;\s]*)
+
+K2 = V2 : &#39;&quot;&#39; (Q | [^&quot;\\\s])* &#39;&quot;&#39;
+
+      Q : &#39;\&quot;&#39; | &#39;\\&#39; | &#39;\n&#39; | &#39;\r&#39; | &#39;\t&#39; | &#39;\v&#39; | &#39;\0&#39;
+
+K3 = V3 : &#39;&quot;&quot;&quot;&#39; \n (.*?) &#39;&quot;&quot;&quot;&#39;
+
+K4 = V4 : &#39;&lt;&lt;&#39; D \s (.*?) D
+
+     V5 : M2
+
+      K : K1 | K2 | K3 | K4
+      
+      V : V1 | V2 | V3 | V4 | V5</code></pre>
+<h2>
+Parser</h2>
+<p>
+The parser will emit events for KV.</p>
+<h2>
+Command line interface</h2>
+<h3>
+Usage</h3>
+<pre><code>kv --get FILE [...] &lt;&lt;EOF
+A, B.B1, C.&quot;C1&quot;.C2
+EOF</code></pre>
+<p>
+Will output concatenated values of files for keys A, B.B1 and C.C1.C2.
+Keys must be quoted according to K1 or K2.</p>
+<pre><code>  kv --quote FILE [...]</code></pre>
+<p>
+Will quote files according to (K1 | K2 | K3 | K4) whichever is best.</p>
+<pre><code>  kv --unquote FILE [...]</code></pre>
+<p>
+Will unquote files according to (K1 | K2 | K3 | K4).</p>
+<h2>
+Reference implementation</h2>
+<p>
+The reference implementation of kv is implemented in ANSI C.</p>
+<h2>
+Other implementations</h2>
+<h3>
+TODO</h3>
+<ul>
+  <li>
+Common Lisp  </li>
+  <li>
+Elixir  </li>
+  <li>
+Go  </li>
+  <li>
+Python  </li>
+  <li>
+Ruby  </li>
+  <li>
+Rust  </li>
+  <li>
+Java  </li>
+  <li>
+Javascript  </li>
+</ul>
+
+
+        </div>
+      </div>
+    </div>
+
+
+</div>
+
+
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="CUc1RhxvGCcXPQMgIhUeNxYBC2U3KRYZE2c1fWJdoYSgfQFdcuo3gZYI" name="csrf-token">
+
+<title>kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+  <h1>Log in</h1>
+
+  <form action="_log_in" method="post">
+  
+  
+    <input name="_csrf_token" type="hidden" value="CUc1RhxvGCcXPQMgIhUeNxYBC2U3KRYZE2c1fWJdoYSgfQFdcuo3gZYI">
+  
+  
+
+    <div class="mb-3">
+<label class="form-label" for="user_login">Login</label>
+<input class="form-control" id="user_login" name="user[login]" required type="text">
+
+    </div>
+
+    <div class="mb-3">
+<label class="form-label" for="user_password">Password</label>
+<input class="form-control" id="user_password" name="user[password]" required type="password">
+
+    </div>
+
+    <div class="mb-3 form-check">
+<input name="user[remember_me]" type="hidden" value="false"><input class="form-check-input" id="user_remember_me" name="user[remember_me]" type="checkbox" value="true">
+<label class="form-check-label" for="user_remember_me">Keep me logged in for 60 days</label>
+    </div>
+<input name="recaptcha" type="hidden">
+<script src="https://www.google.com/recaptcha/api.js?render=6LdQhGUdAAAAALqgzc9QGBkFDYqxYLHHz7ZflJjc"></script>
+<script>
+ grecaptcha.ready(function() {
+   grecaptcha.execute('6LdQhGUdAAAAALqgzc9QGBkFDYqxYLHHz7ZflJjc', {action: 'login'}).then(function(token) {
+     $('input[name="recaptcha"]').val(token);
+   });
+ });
+</script>
+
+    <div>
+<button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+  
+</form>
+
+
+  <p>
+<a href="_register">Register</a>
+<a href="_reset_password">Forgot your password ?</a>
+  </p>
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>

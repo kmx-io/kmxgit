@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="AUYyGj0BGQQbIigwNSoMOyAcMhtmAh1nM3dmG9KGcFxwqnThUhVM6qR7" name="csrf-token">
+
+<title data-suffix=" - kmx git">User vrizzt - kmx git</title>
+
+    <link phx-track-static rel="stylesheet" href="_assets/app-bed61e4049c985c027fe7cdee125ed2d.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="_assets/app-0a4c856cc804832195122aace4c50516.js?vsn=d"></script>
+    <link rel="icon" type="image/png" sizes="128x128" href="_images/kmxgit.logo.black.128.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="_images/kmxgit.logo.black.64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="_images/kmxgit.logo.black.32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://git.kmx.io/_images/kmxgit.logo.black.16.png">
+  </head>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">
+      <div class="kmxgit-logo">
+        <span><i class="fa fa-square"></i></span> kmx git
+      </div>
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+<li class="nav-item">
+<a class="nav-link" href="_log_in">login</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="_register">register</a>
+</li>
+
+
+        </ul>
+      </div>
+
+  </div>
+</nav>
+
+<div class="container-fluid center">
+
+
+
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-12 col-sm-7">
+      <h1>vrizzt</h1>
+    </div>
+    <div class="col col-12 col-sm-4">
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-12">
+      <hr>
+
+
+
+<a href="vrizzt"><img src="https://secure.gravatar.com/avatar/7fff4de96a38bd16cfe51ebefe1ee1d8?s=256" alt="vrizzt" title="vrizzt" class="avatar-lg"></a>
+
+      <h1>Thibaut Poullain</h1>
+      <div class="col col-12 col-md-8">
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-12 col-md-7">
+      <hr>
+      <h2>Repositories</h2>
+      <ul>
+
+          <li>
+<a href="https://git.kmx.io/vrizzt/test/test">vrizzt/test/test</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/vrizzt/unac_webdesign">vrizzt/unac_webdesign</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/seuldanslenoir/sdln_server">seuldanslenoir/sdln_server</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/seuldanslenoir/sdln_flutter">seuldanslenoir/sdln_flutter</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/kmx.io/kmx.io">kmx.io/kmx.io</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/dalloz/mini-ours">dalloz/mini-ours</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/dalloz/moodle_api">dalloz/moodle_api</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/seuldanslenoir/seuldanslenoir">seuldanslenoir/seuldanslenoir</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/dalloz/ours">dalloz/ours</a>
+          </li>
+
+          <li>
+<a href="https://git.kmx.io/thodg/dmesg-collection">thodg/dmesg-collection</a>
+          </li>
+
+      </ul>
+    </div>
+    <div class="col col-12 col-md-4">
+      <hr>
+      <h2>Properties</h2>
+      <table class="table admin-properties">
+        <tr>
+          <th>Name</th>
+          <td>Thibaut Poullain</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td><a href="mailto:thibaut.poullain@ydrazil.fr">thibaut.poullain@ydrazil.fr</a></td>
+        </tr>
+        <tr>
+          <th>Login</th>
+          <td>vrizzt</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <th>Deploy only</th>
+          <td>false</td>
+        </tr>
+        <tr>
+          <th>
+Organisations<br>
+
+          </th>
+          <td>
+            <ul>
+
+                <li>
+<a class="org" href="dalloz">Dalloz</a>
+                </li>
+
+                <li>
+<a class="org" href="seuldanslenoir">SeulDansLeNoir</a>
+                </li>
+
+                <li>
+<a class="org" href="test">test</a>
+                </li>
+
+                <li>
+<a class="org" href="ydrazil.fr">Ydrazil.fr</a>
+                </li>
+
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>SSH keys</th>
+          <td class="scroll-x">
+            <pre class="ssh_keys">
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL/oyzPSzL+R1jLvSAk5xSac0cjMrdkk2452iop2rd0H thibaut@BlackBird.local
+            </pre>
+          </td>
+        </tr>
+        <tr>
+          <th>Disk usage</th>
+          <td>70.488 MB</td>
+        </tr>
+        <tr>
+          <th>Accessible</th>
+          <td>122.96 MB</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <p>
+  </p>
+
+</div>
+
+<div class="footer bg-light">
+<a href="https://www.kmx.io/" target="_blank">kmx.io</a>
+</div>
+
+  </body>
+</html>
