@@ -1,33 +1,25 @@
 <div class="row">
   <div class="col col-12 col-md-7">
     <%= render("show_branch.html", assigns) %>
-
-    <hr/>
     <%= if @git.log1 do %>
       <%= render("show_commit_message.html", assigns) %>
     <% end %>
-
-    <%= if @git.content do %>
-      <hr/>
-      <%= render("show_git_content.html", assigns) %>
-    <% else %>
-      <hr/>
-      <h2><%= gettext("Files") %></h2>
-      <ul>
-        <%= for file <- @git.files do %>
-          <li>
-            <%= case file.type do %>
-              <% "blob" -> %>
-                <%= link file.name, to: file.url %>
-              <% "tree" -> %>
-                <%= link "#{file.name}/", to: file.url %>
-              <% _ -> %>
-                <%= "#{file.type} #{file.name}" %>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
+    <hr/>
+    <h2><%= gettext("Files") %></h2>
+    <ul>
+      <%= for file <- @git.files do %>
+        <li>
+          <%= case file.type do %>
+            <% "blob" -> %>
+              <%= link file.name, to: file.url %>
+            <% "tree" -> %>
+              <%= link "#{file.name}/", to: file.url %>
+            <% _ -> %>
+              <%= "#{file.type} #{file.name}" %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
   </div>
   <div class="col col-12 col-md-5">
     <hr/>

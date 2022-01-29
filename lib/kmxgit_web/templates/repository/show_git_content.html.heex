@@ -1,9 +1,7 @@
 <%= render("show_branch.html", assigns) %>
 <%= if @git.log1 do %>
-  <hr/>
   <%= render("show_commit_message.html", assigns) %>
 <% end %>
-<hr/>
 <%= if String.match?(@git.content_type, ~r(^text/)) do %>
   <%= if @git.markdown_html do %>
     <div class="content_html">
