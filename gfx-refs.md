@@ -48,7 +48,7 @@
  - Organisation (200€)
    - [Show](/kmx.io) (100€)
    - [Edit](/_edit/organisation/kmx.io) (100€)
- - Repository
+ - Repository (700€)
    - [Tree](/kmx.io/kmxgit/_tree/master) (100€)
    - [Edit](/_edit/repository/kmx.io/kmxgit) (100€)
    - [Fork](/_fork/kmx.io/kmxgit) (50€)
@@ -72,5 +72,9 @@
      - [Repositories](/_admin/repositories/58/edit) (50€)
      - [Organisations](/_admin/organisations/4/edit) (50€)
      - [Users](/_admin/users/1/edit) (50€)
+
+---
+
+Total : 1950€
 
 ---
