@@ -22,12 +22,7 @@ config :kmxgit, KmxgitWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "DnUNl8ID5LfnhB1FJ4lp2iPfytLPC6/CnoKVNE42d/G4VC1MCQZ6kOxRq6T+Pqb0",
   watchers: [
-    sass: {
-      DartSass,
-      :run,
-      [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]
-    },
-    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
+    sass: {DartSass, :run, [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]},
     esbuild: {Esbuild, :run, [:default, ~w(--sourcemap=inline --watch)]}
   ]
 
