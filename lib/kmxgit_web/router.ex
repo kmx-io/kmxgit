@@ -62,7 +62,7 @@ end
 
     get "/_log_in", UserSessionController, :new
     get "/_register", UserRegistrationController, :new
-    get "/_reset_password", UserResetPasswordController, :new
+    get "/_reset_password",        UserResetPasswordController, :new
     get "/_reset_password/:token", UserResetPasswordController, :edit
     put "/_reset_password/:token", UserResetPasswordController, :update
 

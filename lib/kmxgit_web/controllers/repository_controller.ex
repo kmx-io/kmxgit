@@ -211,6 +211,9 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
+  defp git_put_files(git, repo, nil, subdir, conn) do
+    git
+  end
   defp git_put_files(git = %{valid: true}, repo, tree, subdir, conn) do
     case GitManager.files(Repository.full_slug(repo), tree, subdir || "") do
       {:ok, []} -> git
