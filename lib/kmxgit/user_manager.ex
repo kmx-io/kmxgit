@@ -15,6 +15,8 @@ defmodule Kmxgit.UserManager do
     from(u in User)
     |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
     |> order_by([u, s], fragment("lower(?)", s.slug))
+    |> preload(:slug)
+    |> Repo.all()
   end
 
   def list_users(params \\ %IndexParams{}) do

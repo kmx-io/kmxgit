@@ -23,6 +23,7 @@ defmodule Kmxgit.RepositoryManager do
     |> preload([members: :slug,
                organisation: [:slug, users: :slug],
                user: :slug])
+    |> Repo.all()
   end
 
   def list_repositories(params \\ %IndexParams{}) do
