@@ -35,6 +35,12 @@
 
 [Pipeline](https://themes.getbootstrap.com/preview/?theme_id=4974)
 
+## Fonts
+
+- [Inter](https://rsms.me/inter/)
+- [Courier New](https://fontzone.net/font-details/courier-new)
+
+
 <h1><a href="#inte" id="inte">Intégration</a></h1>
 
  - [Front page](/) (100€)
