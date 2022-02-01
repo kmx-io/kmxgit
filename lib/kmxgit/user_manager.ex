@@ -11,6 +11,12 @@ defmodule Kmxgit.UserManager do
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
 
+  def list_all_users() do
+    from(u in User)
+    |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
+    |> order_by([u, s], fragment("lower(?)", s.slug))
+  end
+
   def list_users(params \\ %IndexParams{}) do
     update_disk_usage()
     from(u in User)

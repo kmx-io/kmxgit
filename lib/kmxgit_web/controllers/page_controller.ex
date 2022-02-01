@@ -12,7 +12,7 @@ defmodule KmxgitWeb.PageController do
   alias Kmxgit.UserManager.{Guardian, User}
 
   def auth(conn, _params) do
-    a = RepositoryManager.list_repositories
+    a = RepositoryManager.list_all_repositories()
     |> Enum.sort(fn a, b ->
       Repository.full_slug(a) < Repository.full_slug(b)
     end)
@@ -43,9 +43,9 @@ defmodule KmxgitWeb.PageController do
   end
 
   def keys(conn, _params) do
-    k1 = UserManager.list_users
+    k1 = UserManager.list_all_users
     |> Enum.map(&User.ssh_keys_with_env/1)
-    k2 = RepositoryManager.list_repositories
+    k2 = RepositoryManager.list_all_repositories
     |> Enum.map(&Repository.deploy_keys_with_env/1)
     k = (k1 ++ k2) |> Enum.join("\n")
     conn

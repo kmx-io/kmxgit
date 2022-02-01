@@ -12,6 +12,19 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
+  def list_all_repositories() do
+    from(r in Repository)
+    |> join(:full, [r], o in Organisation, on: o.id == r.organisation_id)
+    |> join(:full, [r, o], os in Slug, on: os.organisation_id == o.id)
+    |> join(:full, [r, o, os], u in User, on: u.id == r.user_id)
+    |> join(:full, [r, o, os, u], us in Slug, on: us.user_id == u.id)
+    |> where([r, o, os, u, us], not is_nil(r))
+    |> order_by([r, o, os, u, us], [fragment("concat(lower(?), lower(?))", os.slug, us.slug), :slug])
+    |> preload([members: :slug,
+               organisation: [:slug, users: :slug],
+               user: :slug])
+  end
+
   def list_repositories(params \\ %IndexParams{}) do
     update_disk_usage()
     from(r in Repository)

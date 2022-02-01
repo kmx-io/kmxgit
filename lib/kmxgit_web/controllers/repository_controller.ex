@@ -211,7 +211,7 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_put_files(git, repo, nil, subdir, conn) do
+  defp git_put_files(git, _, nil, _, _) do
     git
   end
   defp git_put_files(git = %{valid: true}, repo, tree, subdir, conn) do
