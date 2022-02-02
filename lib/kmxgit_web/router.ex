@@ -53,6 +53,10 @@ defmodule KmxgitWeb.Router do
         get "/install", PageController, :doc_git_install
       end
     end
+
+    scope "/_error" do
+      get "/*code", ErrorController, :show
+    end
 end
 
     ## Authentication routes
@@ -142,20 +146,14 @@ end
         get "/password/edit", UserController, :edit_password, as: :""
         put "/password",      UserController, :update_password, as: :""
       end
-
       import Phoenix.LiveDashboard.Router
       live_dashboard "/dashboard", metrics: KmxgitWeb.Telemetry
     end
   end
 
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
   if Mix.env() == :dev do
     scope "/_dev" do
       pipe_through :browser
-
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
@@ -166,8 +164,12 @@ end
     get "/:owner/*slug", RepositoryController, :show
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", KmxgitWeb do
-  #   pipe_through :api
-  # end
+  if Mix.env() != :dev do
+    use Plug.ErrorHandler
+    @impl Plug.ErrorHandler
+    def handle_errors(conn, params) do
+      IO.inspect(params)
+      send_resp(conn, conn.status, "Error ! We have been notified, please retry later.")
+    end
+  end
 end
