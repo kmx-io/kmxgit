@@ -33,6 +33,7 @@ defmodule KmxgitWeb.PageController do
       redirect(conn, to: Routes.page_path(conn, :new_admin))
     else
       conn
+      |> assign(:discord, Application.get_env(:kmxgit, :discord))
       |> assign(:disk_usage, GitManager.du_ks("priv/git/"))
       |> assign(:git_ssh_url, Application.get_env(:kmxgit, :git_ssh_url))
       |> assign(:org_count, OrganisationManager.count_organisations())

@@ -10,8 +10,9 @@ $font-family-monospace: "courier_new", "Courier New", monospace;
 @import "./courier_new.scss";
 $code-font-size: $font-size-base;
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
-$fa-font-path: "/_fonts";
-@import "../node_modules/font-awesome/scss/font-awesome.scss";
+@import "./fontawesome-5.15.4-free.scss";
+@import "./fontawesome-5.15.4-free-v4-shims.scss";
+@import "./fontawesome-5.15.4-free-v4-font-face.scss";
 
 @import "./flash.scss";
 @import "./pygments.scss";

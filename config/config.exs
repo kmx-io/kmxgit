@@ -8,6 +8,7 @@
 import Config
 
 config :kmxgit,
+  discord: "https://discord.gg/nUAr57YKsh",
   ecto_repos: [Kmxgit.Repo],
   footer: "<a href=\"https://www.kmx.io/\" target=\"_blank\">kmx.io</a>",
   git_ssh_url: "git@git.kmx.io",

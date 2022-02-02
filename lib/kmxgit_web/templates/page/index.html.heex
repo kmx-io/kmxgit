@@ -14,6 +14,13 @@
       <p>
         <%= gettext "Anyone can register and create public and private Git repositories." %>
       </p>
+      <%= if @discord do %>
+        <p>
+          <%= link to: @discord, class: "btn btn-primary" do %>
+            <i class="fab fa-discord"></i>&nbsp;&nbsp;<%= gettext "Join us on Discord !" %>
+          <% end %>
+        </p>
+      <% end %>
 
       <h3><%= link gettext("SSH keys fingerprint"), to: "#ssh-keys", id: "ssh-keys" %></h3>
       <pre><%= render("ssh_keys_fingerprint.txt") %></pre>
