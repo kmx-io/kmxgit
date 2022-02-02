@@ -63,7 +63,11 @@ a {
 }
 /* footer */
 .footer {
+    background: $dark;
     padding: 1em;
+    a, a:hover {
+        color: $kmx_orange;
+    }
 }
 /* misc */
 .avatar-lg {

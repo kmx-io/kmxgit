@@ -10,7 +10,11 @@ import Config
 config :kmxgit,
   discord: "https://discord.gg/nUAr57YKsh",
   ecto_repos: [Kmxgit.Repo],
-  footer: "<a href=\"https://www.kmx.io/\" target=\"_blank\">kmx.io</a>",
+  footer: """
+<a href="https://www.kmx.io/" target="_blank"><i class="fas fa-circle"></i> kmx.io</a> &nbsp; &nbsp;
+<a href="mailto:contact@kmx.io"><i class="fas fa-envelope"></i> mail</a> &nbsp; &nbsp;
+<a href="https://discord.gg/nUAr57YKsh" target="_blank"><i class="fab fa-discord"></i> discord</a>
+""",
   git_ssh_url: "git@git.kmx.io",
   mail_from: "git@kmx.io",
   recaptcha_secret: System.get_env("RECAPTCHA_SECRET"),
