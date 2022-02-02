@@ -9,6 +9,7 @@ import Config
 
 config :kmxgit,
   discord: "https://discord.gg/nUAr57YKsh",
+  discord_errors_channel: "938563631480725544",
   ecto_repos: [Kmxgit.Repo],
   footer: """
 <a href="https://www.kmx.io/" target="_blank"><i class="fas fa-circle"></i> kmx.io</a> &nbsp; &nbsp;

@@ -168,7 +168,7 @@ end
     use Plug.ErrorHandler
     @impl Plug.ErrorHandler
     def handle_errors(conn, params) do
-      IO.inspect(params)
+      Discord.error(params)
       send_resp(conn, conn.status, "Error ! We have been notified, please retry later.")
     end
   end
