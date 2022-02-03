@@ -4,7 +4,7 @@ defmodule Stack do
 
   def to_string([], acc), do: acc |> Enum.reverse() |> Enum.join("\n")
   def to_string([{module, fun, arity, [file: file, line: line]} | rest], acc) do
-    str = "#{module}.#{fun}/#{arity} in #{file}:#{line}"
+    str = "#{module}.#{fun}/#{arity}\n    #{file}:#{line}"
     to_string(rest, [str | acc])
   end
   def to_string([{module, fun, arity, _} | rest], acc) do
