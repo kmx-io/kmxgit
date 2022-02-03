@@ -8,7 +8,7 @@ defmodule Discord do
     else
       inspect(params.reason)
     end
-    stack = Stack.to_string(stack)
+    stack = Stack.to_string(params.stack)
     message = %{content: "```#{params.kind} #{reason}\n\n#{stack}```"}
     json = Jason.encode!(message)
     HTTPoison.post(url, json, [{"Content-Type", "application/json"}])
