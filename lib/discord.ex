@@ -34,5 +34,6 @@ Headers :
     IO.inspect(message)
     json = Jason.encode!(message)
     HTTPoison.post(webhook, json, [{"Content-Type", "application/json"}])
+    |> IO.inspect()
   end
 end
