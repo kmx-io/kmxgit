@@ -263,8 +263,8 @@ defmodule Kmxgit.UserManager.User do
   end
 
   defp verify_totp_last(changeset) do
-    otp_last = changeset |> get_field(:otp_last) |> Integer.to_string()
-    if totp_verify(changeset.data, otp_last) do
+    totp_last = changeset |> get_field(:totp_last) |> Integer.to_string()
+    if totp_verify(changeset.data, totp_last) do
       changeset
     else
       changeset
