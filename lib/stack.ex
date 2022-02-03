@@ -11,6 +11,10 @@ defmodule Stack do
     str = "#{module |> Enum.join(".")}.#{fun}/#{arity}"
     to_string(rest, [str | acc])
   end
+  def to_string([{module, fun, arity, _} | rest], acc) when is_list(module) do
+    str = "#{module |> Enum.join(".")}.#{fun}/#{arity}"
+    to_string(rest, [str | acc])
+  end
   def to_string([elt | rest], acc) do
     to_string(rest, [inspect(elt) | acc])
   end
