@@ -133,6 +133,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     String.split("#{repo.slug}.git", "/") ++ rest
   end
 
+  def owners(nil), do: []
   def owners(repo) do
     if repo.user do
       [repo.user]
@@ -152,6 +153,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     end
   end
 
+  def members(nil), do: []
   def members(repo) do
     repo
     |> owners()
