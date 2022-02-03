@@ -28,8 +28,6 @@ User : `#{user}`
 ```#{params.kind} #{reason}
 
 #{stack}```
-Headers :
-```#{headers}```
 """}
     IO.inspect(message)
     json = Jason.encode!(message)
