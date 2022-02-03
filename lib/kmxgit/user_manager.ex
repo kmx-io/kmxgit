@@ -292,7 +292,7 @@ defmodule Kmxgit.UserManager do
 
   def admin_create_user(attrs \\ %{}) do
     %User{}
-    |> User.admin_changeset(attrs)
+    |> User.admin_create_user_changeset(attrs)
     |> Repo.insert()
   end
 
