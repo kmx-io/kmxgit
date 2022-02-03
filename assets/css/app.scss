@@ -14,7 +14,9 @@ $code-font-size: $font-size-base;
 @import "./fontawesome-5.15.4-free-v4-shims.scss";
 @import "./fontawesome-5.15.4-free-v4-font-face.scss";
 
+@import "./admin.scss";
 @import "./flash.scss";
+@import "./footer.scss"
 @import "./pygments.scss";
 
 a {
@@ -60,14 +62,6 @@ a {
 }
 .kmxgit-logo-lg, .kmxgit-logo-light-lg {
     font-size: 4em;
-}
-/* footer */
-.footer {
-    background: $dark;
-    padding: 1em;
-    a, a:hover {
-        color: $kmx_orange;
-    }
 }
 /* misc */
 .avatar-lg {
