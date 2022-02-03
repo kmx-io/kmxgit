@@ -70,12 +70,11 @@ defmodule KmxgitWeb.PageController do
   def new_admin_post(conn, params) do
     if ! UserManager.admin_user_present? do
       user_params = Map.merge(params["user"], %{"is_admin" => true})
-      Repo.transaction fn ->
-        case UserManager.admin_create_user(user_params) do
-          {:ok, user} ->
-            conn
-            |> Guardian.Plug.sign_in(user)
-            |> redirect(to: "/")
+      case UserManager.admin_create_user(user_params) do
+        {:ok, user} ->
+          conn
+          |> UserAuth.log_in_user(user, user_params)
+          |> redirect(to: "/")
           {:error, changeset} ->
             conn
             |> assign(:no_navbar_links, true)
