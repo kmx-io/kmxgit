@@ -2,7 +2,7 @@ defmodule Discord do
 
   def error(params) do
     url = Application.get_env(:kmxgit, :discord_errors_webhook)
-    reason = if (params.reason.message rescue nil) do
+    reason = if (try do params.reason.message rescue _ -> nil end) do
       type = params.reason.__struct__
       "#{type}: #{params.reason.message}"
     else
