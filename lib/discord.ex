@@ -7,7 +7,6 @@ defmodule Discord do
   end
 
   def error(conn, params) do
-    IO.inspect(conn)
     req_path = conn.request_path
     user = if conn.assigns[:current_user] do
       conn.assigns.current_user.slug.slug
@@ -32,6 +31,7 @@ User : `#{user}`
 Headers :
 ```#{headers}```
 """}
+    IO.inspect(message)
     json = Jason.encode!(message)
     HTTPoison.post(webhook, json, [{"Content-Type", "application/json"}])
   end
