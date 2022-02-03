@@ -5,6 +5,6 @@ defmodule Discord do
     url = "/channels/#{channel}/messages"
     message = %{content: inspect(params)}
     json = Jason.encode!(message)
-    HTTPoison.post url json [{"Content-Type", "application/json"}]
+    HTTPoison.post(url, json, [{"Content-Type", "application/json"}])
   end
 end
