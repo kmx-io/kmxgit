@@ -143,6 +143,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     end
   end
 
+  def owner?(_, nil), do: false
   def owner?(repo, user) do
     if user do
       repo
@@ -158,6 +159,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     |> Enum.uniq
   end
 
+  def member?(_, nil), do: false
   def member?(repo, user) do
     if user do
       repo
