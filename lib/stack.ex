@@ -7,12 +7,8 @@ defmodule Stack do
     str = "#{module}.#{fun}/#{arity}\n    #{file}:#{line}"
     to_string(rest, [str | acc])
   end
-  def to_string([{module, fun, arity, _} | rest], acc) when is_list(module) do
-    str = "#{module |> Enum.join(".")}.#{fun}/#{arity}"
-    to_string(rest, [str | acc])
-  end
   def to_string([{module, fun, arity, _} | rest], acc) do
-    str = "#{module}.#{fun}/#{arity}"
+    str = "#{inspect(module)}.#{inspect(fun)}/#{inspect(arity)}"
     to_string(rest, [str | acc])
   end
   def to_string([elt | rest], acc) do
