@@ -8,7 +8,7 @@ defmodule Discord do
 
   def error(conn, params) do
     IO.inspect(conn)
-    uri = conn.request_uri
+    req_path = conn.request_path
     user = if conn.assigns[:current_user] do
       conn.assigns.current_user.slug.slug
     else
@@ -24,7 +24,7 @@ defmodule Discord do
     stack = Stack.to_string(params.stack)
     headers = headers_to_string(conn.req_headers)
     message = %{content: """
-#{uri}
+#{req_path}
 #{user.slug.slug}
 ```#{params.kind} #{reason}
 
