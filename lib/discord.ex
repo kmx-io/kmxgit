@@ -24,12 +24,11 @@ defmodule Discord do
     stack = Stack.to_string(params.stack)
     headers = headers_to_string(conn.req_headers)
     message = %{content: """
-#{req_path}
-#{user.slug.slug}
+URI : #{req_path}
+User : #{user}
 ```#{params.kind} #{reason}
 
 #{stack}```
-User : #{user}
 Headers :
 ```#{headers}```
 """}
