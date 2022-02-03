@@ -81,7 +81,6 @@ defmodule KmxgitWeb.PageController do
             |> assign(:changeset, changeset)
             |> assign(:action, Routes.page_path(conn, :new_admin))
             |> render("new_admin.html")
-        end
       end
     else
       redirect(conn, to: "/")
