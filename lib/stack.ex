@@ -8,7 +8,7 @@ defmodule Stack do
     to_string(rest, [str | acc])
   end
   def to_string([{module, fun, arity, _} | rest], acc) do
-    str = "#{module}.#{fun}/#{arity}"
+    str = "#{module |> Enum.join(".")}.#{fun}/#{arity}"
     to_string(rest, [str | acc])
   end
   def to_string([elt | rest], acc) do
