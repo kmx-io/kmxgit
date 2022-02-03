@@ -1,6 +1,7 @@
 defmodule Discord do
 
   def error(conn, params) do
+    IO.inspect(conn)
     uri = conn.request_uri
     user = conn.assigns[:current_user]
     webhook = Application.get_env(:kmxgit, :discord_errors_webhook)
