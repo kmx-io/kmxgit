@@ -54,6 +54,7 @@ config :swoosh, :api_client, false
 
 # Configure esbuild (the version is required)
 config :esbuild,
+  path: "esbuild",
   version: "0.12.18",
   default: [
     args:
