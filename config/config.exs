@@ -28,10 +28,6 @@ config :kmxgit, KmxgitWeb.Endpoint,
   pubsub_server: Kmxgit.PubSub,
   live_view: [signing_salt: "0HhihW2z"]
 
-config :kmxgit, Kmxgit.UserManager.Guardian,
-  issuer: "kmxgit",
-  secret_key: File.read!("config/.guardian.secret_key")
-
 config :dart_sass,
   path: "sass",
   version: "1.39.0",

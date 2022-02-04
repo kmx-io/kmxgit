@@ -20,17 +20,31 @@ defmodule Discord do
     else
       inspect(params.reason)
     end
-    stack = Stack.to_string(params.stack)
-    headers = headers_to_string(conn.req_headers)
-    message = %{content: """
-URI : `#{req_path}`
-User : `#{user}`
-#{params.kind}
-```#{reason}```
-"""}
+    stack = Errors.stack_to_string(params.stack)
+    no_reason = error_message(req_path, user, params, "", nil)
+    reason_max_len = 2000 - String.length(no_reason)
+    discord_reason = reason |> String.slice(0..reason_max_len)
+    no_stack = error_message(req_path, user, params, discord_reason, nil)
+    stack_max_len = 2000 - String.length(no_stack) - 8
+    content = if stack_max_len > 0 do
+      stack = stack |> String.slice(0..stack_max_len)
+      error_message(req_path, user, params, discord_reason, stack)
+    else
+      no_stack
+    end
+    message = %{content: content}
     IO.inspect(message)
     json = Jason.encode!(message)
     HTTPoison.post(webhook, json, [{"Content-Type", "application/json"}])
     |> IO.inspect()
+  end
+
+  def error_message(req_path, user, params, reason, stack) do
+    """
+URI : `#{req_path}`
+User : `#{user}`
+#{params.kind}
+```#{reason}```#{if stack do "\n\n```#{stack}```" end}
+"""
   end
 end

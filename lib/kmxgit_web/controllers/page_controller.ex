@@ -5,11 +5,10 @@ defmodule KmxgitWeb.PageController do
 
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager
-  alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.UserManager
-  alias Kmxgit.UserManager.{Guardian, User}
+  alias Kmxgit.UserManager.User
   alias KmxgitWeb.UserAuth
 
   def auth(conn, _params) do

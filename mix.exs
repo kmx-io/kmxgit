@@ -44,7 +44,6 @@ defmodule Kmxgit.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:gen_smtp, "~> 1.1"},
       {:gettext, "~> 0.18"},
-      {:guardian, "~> 2.0"},
       {:jason, "~> 1.2"},
       {:mogrify, "~> 0.9.1"},
       {:phoenix, "~> 1.6.2"},
