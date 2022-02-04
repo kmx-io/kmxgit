@@ -100,8 +100,8 @@ defmodule KmxgitWeb.PageController do
 
   def sitemap(conn, _params) do
     conn
-    |> assign(:orgs, OrganisationManager.list_organisations())
-    |> assign(:users, UserManager.list_users())
+    |> assign(:orgs, OrganisationManager.list_all_organisations())
+    |> assign(:users, UserManager.list_all_users())
     |> put_resp_content_type("text/plain")
     |> render("sitemap.txt")
   end
