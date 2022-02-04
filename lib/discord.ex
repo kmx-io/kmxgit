@@ -43,8 +43,8 @@ defmodule Discord do
     """
 URI : `#{req_path}`
 User : `#{user}`
-#{params.kind}
-```#{reason}```#{if stack do "\n\n```#{stack}```" end}
+#{params.kind} :
+```#{reason}```#{if stack do "\n\nStack : ```#{stack}```" end}
 """
   end
 end
