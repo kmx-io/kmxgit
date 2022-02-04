@@ -9,7 +9,7 @@ defmodule Kmxgit.OrganisationManager do
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager
 
-  def list_all_organisations(params \\ %IndexParams{}) do
+  def list_all_organisations() do
     from(org in Organisation)
     |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id)
     |> order_by([org, s], [asc_nulls_last: fragment("lower(?)", s.slug)])
