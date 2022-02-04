@@ -13,5 +13,5 @@ $(function() {
     const x = (getRandomInt(99) - 48) * 0.002;
     $("a").css("text-shadow", "0 0 0");
     $("a:hover").css("text-shadow", x + "em 0 0 " + color);
-  }, 20);
+  }, 200);
 });
