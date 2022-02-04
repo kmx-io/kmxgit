@@ -44,7 +44,7 @@ defmodule Discord do
 URI : `#{req_path}`
 User : `#{user}`
 #{params.kind} :
-```#{reason}```#{if stack do "\n\nStack : ```#{stack}```" end}
+```#{reason}```#{if stack do "\nStack : ```#{stack}```" end}
 """
   end
 end
