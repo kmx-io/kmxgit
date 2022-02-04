@@ -25,9 +25,8 @@ defmodule Discord do
     message = %{content: """
 URI : `#{req_path}`
 User : `#{user}`
-```#{params.kind} #{reason}
-
-#{stack}```
+#{params.kind}
+```#{reason}```
 """}
     IO.inspect(message)
     json = Jason.encode!(message)
