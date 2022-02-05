@@ -47,10 +47,6 @@
           <td><%= @user.name %></td>
         </tr>
         <tr>
-          <th><%= gettext "Email" %></th>
-          <td><%= link @user.email, to: "mailto:#{@user.email}" %></td>
-        </tr>
-        <tr>
           <th><%= gettext "Login" %></th>
           <td><%= @user.slug.slug %></td>
         </tr>
