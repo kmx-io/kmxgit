@@ -252,13 +252,14 @@ defmodule KmxgitWeb.RepositoryController do
                           [_, ext] -> {mime_type(content, ext), ext}
                           _ -> {mime_type(content), nil}
                         end
-          content_html = Pygmentize.html(content, filename(name))
+          filename = filename(name)
+          content_html = Pygmentize.html(content, filename)
           line_numbers = line_numbers(content)
           markdown_html = if ext && String.match?(ext, ~r/md/i) do
             Earmark.as_html!(content)
           end
           IO.inspect(path: path, name: name, type: type)
-          %{git | content: content, content_html: content_html, content_type: type, filename: name, line_numbers: line_numbers, markdown_html: markdown_html}
+          %{git | content: content, content_html: content_html, content_type: type, filename: filename, line_numbers: line_numbers, markdown_html: markdown_html}
         {:error, error} -> %{git | status: error}
       end
     else
@@ -345,8 +346,9 @@ defmodule KmxgitWeb.RepositoryController do
     log
   end
 
-  defp show_op(conn, :blob, %{git: git, path: path, repo: repo}) do
+  defp show_op(conn, :blob, %{git: git, path: path, repo: repo, tree: tree}) do
     git = git
+    |> git_put_files(repo, tree, path, conn)
     |> git_put_content(repo, path)
     if (git.content) do
       conn
@@ -354,6 +356,7 @@ defmodule KmxgitWeb.RepositoryController do
       |> put_resp_header("Content-Disposition", "attachment; filename=#{git.filename |> URI.encode()}")
       |> resp(200, git.content)
     else
+      IO.inspect(:no_content)
       not_found(conn)
     end
   end
