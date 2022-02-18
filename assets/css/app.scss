@@ -23,6 +23,10 @@ a {
     text-decoration: none;
     color: var(--bs-primary);
 }
+pre.wrap {
+    word-break: break-all;
+    white-space: pre-wrap;
+}
 /* navbar */
 .navbar {
     padding-top: 0.3rem;
