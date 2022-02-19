@@ -113,7 +113,7 @@ defmodule Kmxgit.UserManager do
   def get_user(id) do
     Repo.one from user in User,
       where: [id: ^id],
-      preload: @user_preload
+      preload: ^@user_preload
   end
 
   def get_user!(id) do
@@ -126,7 +126,7 @@ defmodule Kmxgit.UserManager do
       on: s.user_id == u.id,
       where: fragment("lower(?)", s.slug) == ^String.downcase(login),
       limit: 1,
-      preload: @user_preload
+      preload: ^@user_preload
   end
 
   def get_user_by_login_and_password(login, password)
@@ -139,7 +139,7 @@ defmodule Kmxgit.UserManager do
     Repo.one from u in User,
       where: u.email == ^email,
       limit: 1,
-      preload: @user_preload
+      preload: ^@user_preload
   end
  
   def register_user(attrs) do
