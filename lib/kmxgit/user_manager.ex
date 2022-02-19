@@ -11,6 +11,11 @@ defmodule Kmxgit.UserManager do
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
 
+  @user_preload [:slug,
+                 organisations: :slug,
+                 owned_repositories: [members: :slug,
+                                      organisation: :slug,
+                                      user: :slug]]
   def list_all_users() do
     from(u in User)
     |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
@@ -108,11 +113,7 @@ defmodule Kmxgit.UserManager do
   def get_user(id) do
     Repo.one from user in User,
       where: [id: ^id],
-      preload: [organisations: :slug],
-      preload: [owned_repositories: [members: :slug,
-                                     organisation: :slug,
-                                     user: :slug]],
-      preload: :slug
+      preload: @user_preload
   end
 
   def get_user!(id) do
@@ -125,10 +126,7 @@ defmodule Kmxgit.UserManager do
       on: s.user_id == u.id,
       where: fragment("lower(?)", s.slug) == ^String.downcase(login),
       limit: 1,
-      preload: [:slug,
-                organisations: :slug,
-                owned_repositories: [organisation: :slug,
-                                     user: :slug]]
+      preload: @user_preload
   end
 
   def get_user_by_login_and_password(login, password)
@@ -141,10 +139,7 @@ defmodule Kmxgit.UserManager do
     Repo.one from u in User,
       where: u.email == ^email,
       limit: 1,
-      preload: [:slug,
-                organisations: :slug,
-                owned_repositories: [organisation: :slug,
-                                     user: :slug]]
+      preload: @user_preload
   end
  
   def register_user(attrs) do
