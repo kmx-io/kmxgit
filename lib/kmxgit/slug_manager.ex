@@ -31,7 +31,8 @@ defmodule Kmxgit.SlugManager do
                                users: :slug],
                 user: [:slug,
                        organisations: :slug,
-                       owned_repositories: [organisation: :slug,
+                       owned_repositories: [members: :slug,
+                                            organisation: :slug,
                                             user: :slug]]],
       limit: 1
   end
