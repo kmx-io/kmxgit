@@ -35,7 +35,7 @@ defmodule KmxgitWeb.SlugController do
       else
         org = slug.organisation
         if org do
-          repos = org.repositories
+          repos = org.owned_repositories
           |> Enum.filter(fn repo ->
             repo.public_access || Repository.member?(repo, current_user)
           end)
