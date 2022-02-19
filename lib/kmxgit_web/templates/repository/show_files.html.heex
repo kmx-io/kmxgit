@@ -4,7 +4,7 @@
     <%= if @git.log1 do %>
       <%= render("show_commit_message.html", assigns) %>
     <% end %>
-    <hr/>
+    <br/>
     <h2><%= gettext("Files") %></h2>
     <ul>
       <%= for file <- @git.files do %>
@@ -22,7 +22,6 @@
     </ul>
   </div>
   <div class="col col-12 col-md-5">
-    <hr/>
     <%= render("show_properties.html", assigns) %>
   </div>
 </div>

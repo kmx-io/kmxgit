@@ -1,9 +1,8 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col col-12 col-sm-7">
-      <h1><%= @user.slug.slug %></h1>
-    </div>
-    <div class="col col-12 col-sm-4">
+    <div class="col col-12">
+      <%= render("avatar.html", conn: @conn, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %>
+      <h1><%= @user.name %> (<%= @user.slug.slug %>)</h1>
       <%= if @current_user && @user.id == @current_user.id do %>
         <%= link gettext("New repository"),
             to: Routes.repository_path(@conn, :new, @user.slug.slug),
@@ -12,13 +11,6 @@
             to: Routes.user_path(@conn, :edit, @user.slug.slug),
             class: "btn btn-primary" %>
       <% end %>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col col-12">
-      <hr/>
-      <%= render("avatar.html", conn: @conn, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %>
-      <h1><%= @user.name %></h1>
       <div class="col col-12 col-md-8">
         <%= if @user.description do %>
           <%= raw Earmark.as_html!(@user.description) %>
@@ -28,7 +20,6 @@
   </div>
   <div class="row">
     <div class="col col-12 col-md-7">
-      <hr/>
       <h2><%= gettext "Repositories" %></h2>
       <ul>
         <%= for repo <- @repos do %>
@@ -39,7 +30,6 @@
       </ul>
     </div>
     <div class="col col-12 col-md-4">
-      <hr/>
       <h2><%= gettext "Properties" %></h2>
       <table class="table admin-properties">
         <tr>
