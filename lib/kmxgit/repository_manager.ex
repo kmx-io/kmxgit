@@ -21,8 +21,8 @@ defmodule Kmxgit.RepositoryManager do
     |> where([r, o, os, u, us], not is_nil(r))
     |> order_by([r, o, os, u, us], [fragment("concat(lower(?), lower(?))", os.slug, us.slug), :slug])
     |> preload([members: :slug,
-               organisation: [:slug, users: :slug],
-               user: :slug])
+                organisation: [:slug, users: :slug],
+                user: :slug])
     |> Repo.all()
   end
 

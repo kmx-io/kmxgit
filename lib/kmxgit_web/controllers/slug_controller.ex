@@ -35,11 +35,16 @@ defmodule KmxgitWeb.SlugController do
       else
         org = slug.organisation
         if org do
+          repos = org.repositories
+          |> Enum.filter(fn repo ->
+            repo.public_access || Repository.member?(repo, current_user)
+          end)
           conn
           |> assign(:current_organisation, org)
           |> assign(:disk_usage, Organisation.disk_usage(org))
           |> assign(:org, org)
           |> assign(:page_title, org.name || org.slug.slug)
+          |> assign(:repos, repos)
           |> put_view(OrganisationView)
           |> render("show.html")
         else

@@ -109,7 +109,9 @@ defmodule Kmxgit.UserManager do
     Repo.one from user in User,
       where: [id: ^id],
       preload: [organisations: :slug],
-      preload: [owned_repositories: [organisation: :slug, user: :slug]],
+      preload: [owned_repositories: [members: :slug,
+                                     organisation: :slug,
+                                     user: :slug]],
       preload: :slug
   end
 
