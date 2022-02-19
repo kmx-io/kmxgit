@@ -1,9 +1,7 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col col-12 col-sm-7">
+    <div class="col col-12">
       <h1><%= @org.name || @org.slug.slug %></h1>
-    </div>
-    <div class="col col-12 col-sm-4">
       <%= if Organisation.owner?(@org, @current_user) do %>
         <%= link gettext("New repository"),
             to: Routes.repository_path(@conn, :new, @org.slug.slug),
@@ -11,14 +9,12 @@
         <%= link gettext("Edit"),
             to: Routes.organisation_path(@conn, :edit, @org.slug.slug),
             class: "btn btn-primary" %>
-        <% end %>
+      <% end %>
     </div>
-
   </div>
 
   <div class="row">
     <div class="col col-12 col-md-7">
-      <hr/>
       <h2><%= gettext "Repositories" %></h2>
       <ul>
         <%= for repo <- @repos do %>
@@ -29,7 +25,6 @@
       </ul>  
     </div>
     <div class="col col-12 col-md-4">
-      <hr/>
       <h2><%= gettext "Properties" %></h2>
       <table class="table admin-properties">
         <tr>
