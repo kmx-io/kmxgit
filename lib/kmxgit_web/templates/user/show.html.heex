@@ -3,6 +3,11 @@
     <div class="col col-12">
       <%= render("avatar.html", conn: @conn, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %>
       <h1><%= @user.name %> (<%= @user.slug.slug %>)</h1>
+      <div class="col col-12 col-md-8">
+        <%= if @user.description do %>
+          <%= raw Earmark.as_html!(@user.description) %>
+        <% end %>
+      </div>
       <%= if @current_user && @user.id == @current_user.id do %>
         <%= link gettext("New repository"),
             to: Routes.repository_path(@conn, :new, @user.slug.slug),
@@ -11,11 +16,6 @@
             to: Routes.user_path(@conn, :edit, @user.slug.slug),
             class: "btn btn-primary" %>
       <% end %>
-      <div class="col col-12 col-md-8">
-        <%= if @user.description do %>
-          <%= raw Earmark.as_html!(@user.description) %>
-        <% end %>
-      </div>
     </div>
   </div>
   <div class="row">
