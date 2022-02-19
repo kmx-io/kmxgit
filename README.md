@@ -157,6 +157,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE search
    - DONE pagination (50 per page)
    - DONE link to livedashboard
+ - DONE Hide private repos from public index
  - Releases
    - infos
    - static files

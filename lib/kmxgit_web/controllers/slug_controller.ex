@@ -11,6 +11,7 @@ defmodule KmxgitWeb.SlugController do
   alias KmxgitWeb.UserView
 
   def show(conn, params) do
+    current_user = conn.assigns.current_user
     slug = SlugManager.get_slug(params["slug"])
     if !slug do
       not_found(conn)
@@ -20,6 +21,9 @@ defmodule KmxgitWeb.SlugController do
         owned_repos = User.owned_repositories(user)
         contributor_repos = RepositoryManager.list_contributor_repositories(user)
         repos = owned_repos ++ contributor_repos
+        |> Enum.filter(fn repo ->
+          repo.public_access || Repository.member?(repo, current_user)
+        end)
         conn
         |> assign(:disk_usage, User.disk_usage(user))
         |> assign(:disk_usage_all, Repository.disk_usage(repos))
