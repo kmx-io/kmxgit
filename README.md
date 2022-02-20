@@ -65,6 +65,52 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 <h1><a id="ChangeLog" href="#ChangeLog">ChangeLog</a></h1>
 
+<h2><a id="v0.3" href="#v0.3">Added in kmxgit 0.3</a></h2>
+
+ - Disk usage
+   - Per repo
+   - Per user
+   - Per organisation
+   - Server-wise
+ - Footer
+   - environment variable
+ - Fonts : Inter & Courier New
+ - Dark navbar
+ - Users
+   - Profile picture
+   - Link user in git log and commits
+ - SEO
+   - /_sitemap.txt
+   - /robots.txt
+ - Display markdown files as HTML
+ - Bug : fix empty diff between commits and master
+ - Optimizations
+   - useless git commands (`git_put_log1`)
+   - disk usage calculation
+ - Front page
+   - Stats
+     - count users, organisations, repositories
+     - disk usage
+   - git cli help
+     - git clone
+     - git remote add kmx git@git.kmx.io:user/repo.git
+     - git push -u kmx branch
+     - git pull
+     - install git
+ - Admin
+   - logo
+   - Dashboard
+     - Stats
+   - disk usage (repos, orgs, users)
+   - pipeline queries
+   - sort by column
+   - search
+   - pagination (50 per page)
+   - link to livedashboard
+ - Hide private repos from public index
+ - Less hr
+
+
 <h2><a id="v0.2" href="#v0.2">Added in kmxgit 0.2</a></h2>
 
  - auth
@@ -115,49 +161,8 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 <h1><a id="todo" href="#todo" style="text-decoration:none;color:inherit;">TODO</a></h1>
 
-## kmxgit 0.3
+## kmxgit 0.4
 
- - DONE Disk usage
-   - DONE Per repo
-   - DONE Per user
-   - DONE Per organisation
-   - DONE Server-wise
- - DONE Footer
-   - DONE environment variable
- - DONE Fonts : Inter & Courier New
- - DONE Dark navbar
- - DONE Users
-   - DONE Profile picture
-   - DONE Link user in git log and commits
- - DONE SEO
-   - DONE /_sitemap.txt
-   - DONE /robots.txt
- - DONE Display markdown files as HTML
- - DONE Bug : fix empty diff between commits and master
- - DONE Optimizations
-   - DONE useless git commands (`git_put_log1`)
-   - DONE disk usage calculation
- - DONE Front page
-   - DONE Stats
-     - DONE count users, organisations, repositories
-     - DONE disk usage
-   - DONE git cli help
-     - DONE git clone
-     - DONE git remote add kmx git@git.kmx.io:user/repo.git
-     - DONE git push -u kmx branch
-     - DONE git pull
-     - DONE install git
- - DONE Admin
-   - DONE logo
-   - DONE Dashboard
-     - DONE Stats
-   - DONE disk usage (repos, orgs, users)
-   - DONE pipeline queries
-   - DONE sort by column
-   - DONE search
-   - DONE pagination (50 per page)
-   - DONE link to livedashboard
- - DONE Hide private repos from public index
  - Releases
    - infos
    - static files
@@ -168,7 +173,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
  - OAuth2
    - Google
    - Github
-   - Gitlab ?
+   - Gitlab
 
 
 <h1><a href="#copyright" id="copyright">Copyright</a></h1>
