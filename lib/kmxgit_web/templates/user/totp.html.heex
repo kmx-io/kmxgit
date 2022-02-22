@@ -5,9 +5,9 @@
 
   <%= form_for @changeset, Routes.user_path(@conn, :totp_update, User.login(@user)), fn f -> %>
     <div class="mb-3">
-      <%= label f, :otp_last, gettext("Token"), class: "form-label" %>
-      <%= number_input f, :otp_last, class: "form-control" %>
-      <%= error_tag f, :otp_last %>
+      <%= label f, :totp_last, gettext("Token"), class: "form-label" %>
+      <%= number_input f, :totp_last, class: "form-control" %>
+      <%= error_tag f, :totp_last %>
     </div>
 
     <div class="mb-3">

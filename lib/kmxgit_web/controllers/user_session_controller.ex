@@ -18,7 +18,7 @@ defmodule KmxgitWeb.UserSessionController do
       %{"login" => login, "password" => password} = user_params
       UserManager.get_user_by_login_and_password(login, password)
     end
-    totp = user_params["totp"]
+    totp = user_params["totp_last"]
     if user do
       if user.totp_last == 0 || totp && UserManager.verify_user_totp(user, totp) do
         UserAuth.log_in_user(conn, user, user_params)
