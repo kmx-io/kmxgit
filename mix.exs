@@ -5,6 +5,7 @@ defmodule Kmxgit.MixProject do
     [
       app: :kmxgit,
       version: "0.4.0",
+      version_url: "https://git.kmx.io/kmx.io/kmxgit/_tree/master",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:gettext] ++ Mix.compilers(),
