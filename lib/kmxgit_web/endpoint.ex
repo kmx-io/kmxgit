@@ -19,7 +19,7 @@ defmodule KmxgitWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :kmxgit,
-    gzip: false,
+    gzip: true,
     only: ~w(_assets _fonts _images robots.txt)
 
   # Code reloading can be explicitly enabled under the
