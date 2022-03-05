@@ -100,9 +100,9 @@ defmodule KmxgitWeb.RepositoryController do
     chunks = params["slug"] |> chunk_path()
     slug = chunks |> Enum.at(0) |> Enum.join("/")
     op = get_op(chunks)
-    op_params = get_op_params(op, chunks)
-    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if op_params && repo && repo.public_access || Repository.member?(repo, current_user) do
+    if op_params = get_op_params(op, chunks)
+    && repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
       git = setup_git(repo, conn, op, op_params)
