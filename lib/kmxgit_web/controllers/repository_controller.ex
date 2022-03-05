@@ -8,6 +8,7 @@ defmodule KmxgitWeb.RepositoryController do
   alias Kmxgit.SlugManager
   alias Kmxgit.UserManager.User
   alias Kmxgit.Repo
+  alias KmxgitWeb.OpParams
 
   def new(conn, params) do
     action = Routes.repository_path(conn, :create, params["owner"])
@@ -99,9 +100,9 @@ defmodule KmxgitWeb.RepositoryController do
     chunks = params["slug"] |> chunk_path()
     slug = chunks |> Enum.at(0) |> Enum.join("/")
     op = get_op(chunks)
-    op_params = get_op_params(op, chunks)
-    repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if repo && repo.public_access || Repository.member?(repo, current_user) do
+    if op_params = get_op_params(op, chunks)
+    && repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
+    && repo.public_access || Repository.member?(repo, current_user) do
       org = repo.organisation
       user = repo.user
       git = setup_git(repo, conn, op, op_params)
@@ -110,7 +111,7 @@ defmodule KmxgitWeb.RepositoryController do
                        nil -> nil
                      end
       tree1 = op_params.tree || first_tree
-      op_params = %{op_params | tree: tree1, git: git, org: org, repo: repo, user: user}
+      op_params = %OpParams{op_params | tree: tree1, git: git, org: org, repo: repo, user: user}
       if git.valid do
         show_op(conn, op || :tree, op_params)
       else
@@ -157,12 +158,14 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp get_op_params(nil, _) do
-    %{tree: nil, from: nil, git: nil, org: nil, path: nil, repo: nil, to: nil, user: nil}
+    %OpParams{}
   end
   defp get_op_params(:diff, chunks) do
     path = chunks |> Enum.at(1)
-    {[_, from, to], _} = path |> Enum.split(3)
-    %{tree: nil, from: from, git: nil, org: nil, path: nil, repo: nil, to: to, user: nil}
+    case path |> Enum.split(3) do
+      {[_, from, to], _} -> %OpParams{from: from, to: to}
+      _ -> nil
+    end
   end
   defp get_op_params(_, chunks) do
     path = chunks |> Enum.at(1)
@@ -170,12 +173,16 @@ defmodule KmxgitWeb.RepositoryController do
     rest1 = rest |> Enum.map(fn x ->
       Enum.join(x, "/")
     end)
-    {[_, tree], path1} = path |> Enum.split(2)
-    path2 = (path1 ++ rest1)
-    |> Enum.reject(&(!&1 || &1 == ""))
-    |> Enum.join("/")
-    path3 = if path2 != "", do: path2
-    %{tree: tree, from: nil, git: nil, org: nil, path: path3, repo: nil, to: nil, user: nil}
+    case path |> Enum.split(2) do
+      {[_, tree], path1} ->
+        path2 = (path1 ++ rest1)
+        |> Enum.reject(&(!&1 || &1 == ""))
+        |> Enum.join("/")
+        path3 = if path2 != "", do: path2
+        %OpParams{tree: tree, path: path3}
+      _ ->
+        nil
+    end
   end
 
   defp setup_git(repo, conn, op, %{path: path}) do
