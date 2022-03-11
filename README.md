@@ -163,12 +163,17 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 ## kmxgit 0.4
 
+ - Shared deploy SSH keys.
+   - For now deploy keys must be unique (cannot be shared between repos).
  - Releases
    - infos
    - static files
  - Pull requests
    - Comments in diff
- - Issues / tickets ?
+ - Issues / tickets
+   - fields: reported_by, owner, priority, milestone, component, version, severity, keywords, carbon_copy, branch
+   - discussion
+   - status change
  - Static site generator
  - OAuth2
    - Google
