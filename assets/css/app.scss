@@ -135,16 +135,21 @@ table.admin-properties th {
     padding: 0.5em 0.5em 0.5em 3.5em;
     position: relative;
 }
-.content_text .line_numbers {
-    position: absolute;
-    top: 0.5em;
-    left: 0.5em;
-    text-align: right;
-    width: 2.5em;
-    color: #aaa;
-    a {
-        text-decoration: none;
+.content_text {
+    .line_numbers {
+        position: absolute;
+        top: 0.5em;
+        left: 0.5em;
+        text-align: right;
+        width: 2.5em;
         color: #aaa;
+        a {
+            text-decoration: none;
+            color: #aaa;
+        }
+    }
+    .highlight pre {
+        overflow: auto hidden;
     }
 }
 .content_html {
