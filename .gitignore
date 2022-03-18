@@ -38,3 +38,6 @@ npm-debug.log
 /priv/avatar/
 /priv/repo/dumps/
 /priv/static/
+
+/size
+/size.o
