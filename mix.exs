@@ -34,7 +34,7 @@ defmodule Kmxgit.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bcrypt_elixir, "~> 2.0"},
+      {:bcrypt_elixir, "~> 3.0"},
       {:dart_sass, "~> 0.2", runtime: Mix.env() == :dev},
       {:earmark, "~> 1.4.5"},
       {:ecto_sql, "~> 3.6"},
@@ -50,9 +50,9 @@ defmodule Kmxgit.MixProject do
       {:phoenix, "~> 1.6.2"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_dashboard, "~> 0.5"},
+      {:phoenix_live_dashboard, "~> 0.6"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.16.0"},
+      {:phoenix_live_view, "~> 0.17.0"},
       {:plug_cowboy, "~> 2.5"},
       {:plug_recaptcha, git: "https://github.com/thodg/plug_recaptcha.git"},
       {:postgrex, ">= 0.0.0"},
