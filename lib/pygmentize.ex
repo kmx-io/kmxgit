@@ -29,7 +29,7 @@ defmodule Pygmentize do
         acc |> Enum.reverse() |> Enum.join()
       {^port, {:exit_status, status}} ->
         IO.inspect("pygmentize exited with status #{status}")
-        content
+        nil
       {^port, {:data, data}} ->
         html_port(content, port, [data | acc])
       {:DOWN, _, :port, ^port, reason} ->
@@ -39,7 +39,12 @@ defmodule Pygmentize do
         IO.inspect(x)
         html_port(content, port, acc)
     after 1000 ->
-        html_port(content, port, acc)
+        result = acc |> Enum.reverse() |> Enum.join()
+        if result == "" do
+          nil
+        else
+          result
+        end
     end
   end
 end
