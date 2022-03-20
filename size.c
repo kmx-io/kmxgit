@@ -42,6 +42,7 @@ int main (int argc, char **argv)
     if (fwrite(buf, r, 1, pipe) != 1)
       err(1, "fwrite");
     pos += r;
+    len = pos + BUFSIZE < size ? BUFSIZE : size - pos;
   }
   if (r < 0)
       err(1, "fread");
