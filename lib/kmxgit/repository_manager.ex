@@ -12,6 +12,8 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
+  # Do you want to refactor this code ?
+
   def list_all_repositories() do
     from(r in Repository)
     |> join(:full, [r], o in Organisation, on: o.id == r.organisation_id)
@@ -209,11 +211,15 @@ defmodule Kmxgit.RepositoryManager do
   def add_member(%Repository{} = repo, login) do
     user = UserManager.get_user_by_login(login)
     if user do
-      members = [user | repo.members]
-      repo
-      |> Repository.changeset(%{})
-      |> Ecto.Changeset.put_assoc(:members, members)
-      |> Repo.update()
+      if ! Enum.find(repo.members, & &1.id == user.id) do
+        members = [user | repo.members]
+        repo
+        |> Repository.changeset(%{})
+        |> Ecto.Changeset.put_assoc(:members, members)
+        |> Repo.update()
+      else
+        {:error, :already_a_member}
+      end
     else
       {:error, :not_found}
     end
@@ -222,11 +228,15 @@ defmodule Kmxgit.RepositoryManager do
   def remove_member(%Repository{} = repo, login) do
     user = UserManager.get_user_by_login(login)
     if user do
-      members = Enum.reject(repo.members, &(&1.id == user.id))
-      repo
-      |> Repository.changeset(%{})
-      |> Ecto.Changeset.put_assoc(:members, members)
-      |> Repo.update()
+      if Enum.find(repo.members, & &1.id == user.id) do
+        members = Enum.reject(repo.members, &(&1.id == user.id))
+        repo
+        |> Repository.changeset(%{})
+        |> Ecto.Changeset.put_assoc(:members, members)
+        |> Repo.update()
+      else
+        {:error, :already_a_member}
+      end
     else
       {:error, :not_found}
     end

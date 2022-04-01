@@ -491,22 +491,23 @@ defmodule KmxgitWeb.RepositoryController do
     slug = Enum.join(params["slug"], "/")
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
     if repo && Repository.owner?(repo, current_user) do
-      case Repo.transaction(fn ->
-            case RepositoryManager.update_repository(repo, params["repository"]) do
-              {:ok, repo1} ->
-                s = Repository.full_slug(repo)
-                s1 = Repository.full_slug(repo1)
-                if s != s1 do
-                  case GitManager.rename(s, s1) do
-                    :ok -> repo1
-                    {:error, err} -> Repo.rollback(err)
-                  end
-                else
-                  repo1
-                end
-              {:error, changeset} -> Repo.rollback(changeset)
+      tr = Repo.transaction(fn ->
+        case RepositoryManager.update_repository(repo, params["repository"]) do
+          {:ok, repo1} ->
+            s = Repository.full_slug(repo)
+            s1 = Repository.full_slug(repo1)
+            if s != s1 do
+              case GitManager.rename(s, s1) do
+                :ok -> repo1
+                {:error, err} -> Repo.rollback(err)
+              end
+            else
+              repo1
             end
-          end) do
+          {:error, changeset} -> Repo.rollback(changeset)
+        end
+      end)
+      case tr do
         {:ok, repo1} ->
           case GitManager.update_auth() do
             :ok -> :ok = GitManager.public_access(Repository.full_slug(repo1), repo1.public_access)

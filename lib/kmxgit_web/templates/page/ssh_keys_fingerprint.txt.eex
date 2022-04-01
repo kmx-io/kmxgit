@@ -1,4 +1,5 @@
-1024 SHA256:r57ekxPcF9yJ0WpHOUpAFjm07xTpPjRSGlogZ0rYUCw root@git.kmx.io (DSA)
- 256 SHA256:18YiaGgFCjxudAXYNqwgTsc18+8VJKhANWY/z1M9QII root@git.kmx.io (ECDSA)
- 256 SHA256:YIvGEjpZv0WTbi82w9YcWlD0wjrNehdEW/Fm8VGysxI root@git.kmx.io (ED25519)
-3072 SHA256:nCIvnd0P1WO6UktpUlW1txA74kmIojRSn22OUh1uiNs root@git.kmx.io (RSA)
+/!\ Warning /!\ SSH keys have changed, here are the new ones :
+1024 SHA256:O7NLic6YcSMZAeZUIM4xwzE6dL9uyiIcLUrxBl9sQ3I root@git.kmx.io (DSA)
+ 256 SHA256:Nxh+WtteSkSNc98RRtQTjoKUUrLVLFwe51eztgRirFA root@git.kmx.io (ECDSA)
+ 256 SHA256:LvKPy9BCcR2/TdRDB03NqYftphKu4jCcOq6bESFXtLs root@git.kmx.io (ED25519)
+3072 SHA256:FilNI547qCbcy01f7IJiDsdUfjECMsO5caN7xXUI7DM root@git.kmx.io (RSA)

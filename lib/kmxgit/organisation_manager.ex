@@ -35,9 +35,6 @@ defmodule Kmxgit.OrganisationManager do
   def index_order_by(query, %{column: "id", reverse: true}) do
     order_by(query, [desc: :id])
   end
-  def index_order_by(query, %{column: "id"}) do
-    order_by(query, :id)
-  end
   def index_order_by(query, %{column: "name", reverse: true}) do
     order_by(query, [org, s], [desc_nulls_last: fragment("lower(?)", org.name)])
   end
@@ -55,6 +52,9 @@ defmodule Kmxgit.OrganisationManager do
   end
   def index_order_by(query, %{column: "du"}) do
     order_by(query, :disk_usage)
+  end
+  def index_order_by(query, _) do
+    order_by(query, :id)
   end
 
   def update_disk_usage() do

@@ -1,7 +1,7 @@
 
-PROG = size
-SRC = size.c
-SRC_O = size.o
+PROG = bin/size
+SRC = c_src/size.c
+SRC_O = c_src/size.o
 
 all: ${PROG}
 

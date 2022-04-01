@@ -5,7 +5,7 @@
       <h1><%= @user.name %> (<%= @user.slug.slug %>)</h1>
       <div class="col col-12 col-md-8">
         <%= if @user.description do %>
-          <%= raw Earmark.as_html!(@user.description) %>
+          <%= raw Markdown.to_html!(@user.description) %>
         <% end %>
       </div>
       <%= if @current_user && @user.id == @current_user.id do %>
@@ -53,7 +53,7 @@
           </th>
           <td>
             <ul>
-              <%= for org <- Enum.sort_by(@user.organisations, fn o -> o.slug.slug end) do %>
+              <%= for org <- Enum.sort_by(@user.organisations, & &1.slug.slug) do %>
                 <li>
                   <%= link(org.name || org.slug.slug,
                       to: Routes.slug_path(@conn, :show, org.slug.slug),

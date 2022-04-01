@@ -15,7 +15,7 @@ defmodule Pygmentize do
     
   def html(content, filename) do
     lexer = lexer(filename)
-    cmd = "./size #{byte_size(content)} pygmentize -l #{lexer} -f html"
+    cmd = "./bin/size #{byte_size(content)} pygmentize -l #{lexer} -f html"
     IO.inspect(cmd)
     port = Port.open({:spawn, cmd}, [:binary, :use_stdio, :exit_status, :stderr_to_stdout])
     Port.monitor(port)

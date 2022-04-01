@@ -14,4 +14,8 @@ defmodule Markdown do
       changeset
     end
   end
+
+  def to_html!(md) do
+    Earmark.as_html!(md)
+  end
 end

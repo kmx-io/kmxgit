@@ -63,6 +63,36 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 ```
 
 
+<h1><a id="todo" href="#todo">TODO</a></h1>
+
+## kmxgit 0.4
+
+ - slugs without joins
+ - Markdown refactor
+ - git port / bindings
+ - pygmentize port
+ - shell commands -> elixir (mkdir mv rm)
+ - Shared deploy SSH keys.
+   - For now deploy keys must be unique (cannot be shared between repos).
+ - Releases
+   - infos
+   - static files
+ - Pull requests
+   - Comments in diff
+ - Issues / tickets
+   - fields
+     - trac: reported_by, owner, priority, milestone, component, version, severity, keywords, carbon_copy, branch
+     - github: 
+     - gitlab: 
+   - discussion
+   - status change
+ - Static site generator
+ - OAuth2
+   - Google
+   - Github
+   - Gitlab
+
+
 <h1><a id="ChangeLog" href="#ChangeLog">ChangeLog</a></h1>
 
 <h2><a id="v0.3" href="#v0.3">Added in kmxgit 0.3</a></h2>
@@ -157,28 +187,6 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - readme.md
  - same url slug for organisations and users
  - user auth using Guardian
-
-
-<h1><a id="todo" href="#todo">TODO</a></h1>
-
-## kmxgit 0.4
-
- - Shared deploy SSH keys.
-   - For now deploy keys must be unique (cannot be shared between repos).
- - Releases
-   - infos
-   - static files
- - Pull requests
-   - Comments in diff
- - Issues / tickets
-   - fields: reported_by, owner, priority, milestone, component, version, severity, keywords, carbon_copy, branch
-   - discussion
-   - status change
- - Static site generator
- - OAuth2
-   - Google
-   - Github
-   - Gitlab
 
 
 <h1><a href="#copyright" id="copyright">Copyright</a></h1>

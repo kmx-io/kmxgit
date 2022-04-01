@@ -16,6 +16,7 @@ defmodule Kmxgit.UserManager do
                  owned_repositories: [members: :slug,
                                       organisation: :slug,
                                       user: :slug]]
+
   def list_all_users() do
     from(u in User)
     |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
