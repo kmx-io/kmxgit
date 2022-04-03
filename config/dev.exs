@@ -2,8 +2,10 @@ import Config
 
 # Configure your database
 config :kmxgit, Kmxgit.Repo,
-  database: "kmxgit_dev",
+  database: "git",
   hostname: "localhost",
+  username: "git",
+  password: "kHoe+doaJNo55rf+gcmRZsO9fiANjNy",
   show_sensitive_data_on_connection_error: true,
   pool_size: 2
 

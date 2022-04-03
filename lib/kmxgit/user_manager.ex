@@ -355,7 +355,7 @@ defmodule Kmxgit.UserManager do
 
   def totp_init do
     Repo.transaction fn ->
-      Enum.each list_users(), fn u ->
+      Enum.each list_users().result, fn u ->
         {:ok, _} = User.totp_changeset(u) |> Repo.update()
       end
     end

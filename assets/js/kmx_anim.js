@@ -1,4 +1,4 @@
-import $ from "jQuery";
+import $ from "jquery";
 import kmx_colors from "./kmx_colors";
 
 function getRandomInt(max) {

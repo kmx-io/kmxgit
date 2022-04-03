@@ -2,7 +2,7 @@ import Config
 
 config :kmxgit,
   discord: "https://discord.gg/nUAr57YKsh",
-  discord_errors_webhook: System.fetch_env!("DISCORD_ERRORS_WEBHOOK"),
+  discord_errors_webhook: System.get_env("DISCORD_ERRORS_WEBHOOK"),
   ecto_repos: [Kmxgit.Repo],
   footer: """
 <a href="https://www.kmx.io/" target="_blank"><i class="fas fa-circle"></i> kmx.io</a> &nbsp; &nbsp;

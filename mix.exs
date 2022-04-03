@@ -35,11 +35,11 @@ defmodule Kmxgit.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
-      {:dart_sass, "~> 0.2", runtime: Mix.env() == :dev},
+      {:dart_sass, git: "https://github.com/kmx-io/dart_sass", only: :dev},
       {:earmark, "~> 1.4.5"},
       {:ecto_sql, "~> 3.6"},
       {:elixir_auth_google, "~> 1.6.2"},
-      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.4", only: :dev},
       {:exgravatar, "~> 2.0"},
       {:file_size, "~> 3.0"},
       {:floki, ">= 0.30.0", only: :test},
