@@ -28,6 +28,24 @@ config :kmxgit, KmxgitWeb.Endpoint,
     esbuild: {Esbuild, :run, [:default, ~w(--sourcemap=inline --watch)]}
   ]
 
+config :dart_sass,
+  path: "sass",
+  version: "1.49.10",
+  default: [
+    args: ~w(css/app.scss ../priv/static/_assets/app.css),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
+config :esbuild,
+  path: "esbuild",
+  version: "0.14.27",
+  default: [
+    args:
+      ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/_assets --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
