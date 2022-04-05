@@ -162,6 +162,7 @@ end
     pipe_through [:browser]
     get "/:slug", SlugController, :show
     get "/:owner/*slug", RepositoryController, :show
+    match :*, "/*path", PageController, :not_found
   end
 
   if Mix.env() != :dev do
