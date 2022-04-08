@@ -6,7 +6,10 @@ defmodule Pygmentize do
   end
 
   def lexer(filename) do
-    {out, status} = System.cmd("pygmentize", ["-N", filename |> String.replace(~r/ /, "_")])
+    cmd = "pygmentize"
+    args = ["-N", filename |> String.replace(~r/ /, "_")]
+    IO.inspect({cmd, args})
+    {out, status} = System.cmd(cmd, args)
     case status do
       0 -> out |> String.trim()
       _ -> ""
@@ -28,15 +31,15 @@ defmodule Pygmentize do
       {^port, {:exit_status, 0}} ->
         acc |> Enum.reverse() |> Enum.join()
       {^port, {:exit_status, status}} ->
-        IO.inspect("pygmentize exited with status #{status}")
+        #IO.inspect("pygmentize exited with status #{status}")
         nil
       {^port, {:data, data}} ->
         html_port(content, port, [data | acc])
       {:DOWN, _, :port, ^port, reason} ->
-        IO.inspect({:down, reason})
+        #IO.inspect({:down, reason})
         acc |> Enum.reverse() |> Enum.join()
       x ->
-        IO.inspect(x)
+        #IO.inspect(x)
         html_port(content, port, acc)
     after 1000 ->
         result = acc |> Enum.reverse() |> Enum.join()

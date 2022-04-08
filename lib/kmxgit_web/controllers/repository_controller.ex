@@ -265,7 +265,7 @@ defmodule KmxgitWeb.RepositoryController do
           markdown_html = if ext && String.match?(ext, ~r/md/i) do
             Earmark.as_html!(content)
           end
-          IO.inspect(path: path, name: name, type: type)
+          #IO.inspect(path: path, name: name, type: type)
           %{git | content: content, content_html: content_html, content_type: type, filename: filename, line_numbers: line_numbers, markdown_html: markdown_html}
         {:error, error} -> %{git | status: error}
       end
@@ -371,7 +371,7 @@ defmodule KmxgitWeb.RepositoryController do
     git = git
     |> git_put_log1(repo, tree, path)
     |> git_put_commit(repo, conn, op, tree, path)
-    IO.inspect(git)
+    #IO.inspect(git)
     diff = case GitManager.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
              {:ok, diff} -> diff
              _ -> nil
@@ -393,7 +393,7 @@ defmodule KmxgitWeb.RepositoryController do
       {:ok, diff} ->
         diff_html = Pygmentize.html(diff, "diff.patch")
         diff_line_numbers = line_numbers(diff)
-        IO.inspect(from: from, to: to, diff: diff, html: diff_html, line_numbers: diff_line_numbers)
+        #IO.inspect(from: from, to: to, diff: diff, html: diff_html, line_numbers: diff_line_numbers)
         conn
         |> assign_current_organisation(org)
         |> assign(:current_repository, repo)
@@ -411,7 +411,7 @@ defmodule KmxgitWeb.RepositoryController do
   end
   defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
     log = git_log(repo, tree, path)
-    IO.inspect([:log, tree: tree, git: git, path: path, log: log])
+    #IO.inspect([:log, tree: tree, git: git, path: path, log: log])
     conn
     |> assign(:tree, tree)
     |> assign(:tree_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", tree] ++ (if path, do: String.split(path, "/"), else: []))))
