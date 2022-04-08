@@ -168,7 +168,11 @@ end
   if Mix.env() != :dev do
     use Plug.ErrorHandler
     @impl Plug.ErrorHandler
+    def handle_errors(conn, params = %{reason: Elixir.Plug.CSRFProtection.InvalidCSRFTokenError}) do
+      send_resp(conn, conn.status, "Error !")
+    end
     def handle_errors(conn, params) do
+      IO.inspect(params)
       Discord.error(conn, params)
       send_resp(conn, conn.status, "Error ! We have been notified, please retry later.")
     end
