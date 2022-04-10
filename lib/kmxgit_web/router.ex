@@ -168,7 +168,7 @@ end
   if Mix.env() != :dev do
     use Plug.ErrorHandler
     @impl Plug.ErrorHandler
-    def handle_errors(conn, params = %{reason: Elixir.Plug.CSRFProtection.InvalidCSRFTokenError}) do
+    def handle_errors(conn, %{kind: :error, reason: %Elixir.Plug.CSRFProtection.InvalidCSRFTokenError{}}) do
       send_resp(conn, conn.status, "Error !")
     end
     def handle_errors(conn, params) do
