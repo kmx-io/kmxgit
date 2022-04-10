@@ -1,5 +1,7 @@
 defmodule Pygmentize do
 
+  require Logger
+
   def random_string() do
     :crypto.strong_rand_bytes(16)
     |> Base.url_encode64()
@@ -8,7 +10,7 @@ defmodule Pygmentize do
   def lexer(filename) do
     cmd = "pygmentize"
     args = ["-N", filename |> String.replace(~r/ /, "_")]
-    IO.inspect({cmd, args})
+    Logger.info(inspect([cmd | args]))
     {out, status} = System.cmd(cmd, args)
     case status do
       0 -> out |> String.trim()
@@ -19,7 +21,7 @@ defmodule Pygmentize do
   def html(content, filename) do
     lexer = lexer(filename)
     cmd = "./bin/size #{byte_size(content)} pygmentize -l #{lexer} -f html"
-    IO.inspect(cmd)
+    Logger.info("EXEC #{cmd}")
     port = Port.open({:spawn, cmd}, [:binary, :use_stdio, :exit_status, :stderr_to_stdout])
     Port.monitor(port)
     send(port, {self(), {:command, content}})
@@ -30,15 +32,15 @@ defmodule Pygmentize do
     receive do
       {^port, {:exit_status, 0}} ->
         acc |> Enum.reverse() |> Enum.join()
-      {^port, {:exit_status, status}} ->
+      {^port, {:exit_status, _status}} ->
         #IO.inspect("pygmentize exited with status #{status}")
         nil
       {^port, {:data, data}} ->
         html_port(content, port, [data | acc])
-      {:DOWN, _, :port, ^port, reason} ->
+      {:DOWN, _, :port, ^port, _reason} ->
         #IO.inspect({:down, reason})
         acc |> Enum.reverse() |> Enum.join()
-      x ->
+      _x ->
         #IO.inspect(x)
         html_port(content, port, acc)
     after 1000 ->
