@@ -102,7 +102,7 @@ defmodule KmxgitWeb.RepositoryController do
     op = get_op(chunks)
     op_params = get_op_params(op, chunks)
     repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-    if op_params && repo && repo.public_access || Repository.member?(repo, current_user) do
+    if op_params && repo && (repo.public_access || Repository.member?(repo, current_user)) do
       org = repo.organisation
       user = repo.user
       git = setup_git(repo, conn, op, op_params)
@@ -185,7 +185,7 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
-  defp setup_git(repo, conn, op, %{path: path}) do
+  defp setup_git(repo, conn, op, op_params) do
     %{trees: [],
       content: nil,
       content_html: nil,
@@ -199,7 +199,7 @@ defmodule KmxgitWeb.RepositoryController do
       status: "",
       tags: [],
       valid: true}
-      |> git_put_branches(repo, conn, op, path)
+      |> git_put_branches(repo, conn, op, op_params.path)
   end
 
   defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
