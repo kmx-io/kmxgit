@@ -427,13 +427,17 @@ defmodule KmxgitWeb.RepositoryController do
     git = git
     |> git_put_tags(repo, conn, op, nil)
     tag = Enum.find(git.tags, fn tag -> tag.tag == tree end)
-    conn
-    |> assign_current_organisation(org)
-    |> assign(:current_repository, repo)
-    |> assign(:path, nil)
-    |> assign(:repo, repo)
-    |> assign(:tag, tag)
-    |> render("tag.html")
+    if tag do
+      conn
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:path, nil)
+      |> assign(:repo, repo)
+      |> assign(:tag, tag)
+      |> render("tag.html")
+    else
+      not_found(conn)
+    end
   end
   defp show_op(conn, :tree = op, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
     git = git
