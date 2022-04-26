@@ -345,12 +345,17 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_log(repo, tree, path) do
     slug = Repository.full_slug(repo)
-    {:ok, log} = if path do
+    result = if path do
       GitManager.log_file(slug, path, tree)
     else
       GitManager.log(slug, tree)
     end
-    log
+    case result do
+      {:ok, log} -> log
+      {:error, reason} ->
+        Logger.error(inspect(reason))
+        nil
+    end
   end
 
   defp show_op(conn, :blob, %{git: git, path: path, repo: repo, tree: tree}) do
@@ -412,16 +417,20 @@ defmodule KmxgitWeb.RepositoryController do
   defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
     log = git_log(repo, tree, path)
     #IO.inspect([:log, tree: tree, git: git, path: path, log: log])
-    conn
-    |> assign(:tree, tree)
-    |> assign(:tree_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", tree] ++ (if path, do: String.split(path, "/"), else: []))))
-    |> assign_current_organisation(org)
-    |> assign(:current_repository, repo)
-    |> assign(:git, git)
-    |> assign(:log, log)
-    |> assign(:path, path)
-    |> assign(:repo, repo)
-    |> render("log.html")
+    if log do
+      conn
+      |> assign(:tree, tree)
+      |> assign(:tree_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", tree] ++ (if path, do: String.split(path, "/"), else: []))))
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:git, git)
+      |> assign(:log, log)
+      |> assign(:path, path)
+      |> assign(:repo, repo)
+      |> render("log.html")
+    else
+      not_found(conn)
+    end
   end
   defp show_op(conn, :tag = op, %{tree: tree, git: git, org: org, repo: repo}) do
     git = git
