@@ -1,5 +1,6 @@
 defmodule KmxgitWeb.RepositoryController do
   use KmxgitWeb, :controller
+  use Logger
 
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager.Organisation
