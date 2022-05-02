@@ -3,6 +3,7 @@ defmodule Kmxgit.GitManager do
   @git_root "priv/git"
 
   def git_dir(repo) do
+    if String.match?(repo, ~r/(^|\/)\.\.($|\/)/), do: raise "invalid git dir"
     "#{@git_root}/#{repo}.git"
   end
 
