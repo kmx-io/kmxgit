@@ -39,5 +39,6 @@ npm-debug.log
 /priv/repo/dumps/
 /priv/static/
 
+/bin/gitport
 /bin/size
 *.o

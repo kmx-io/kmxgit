@@ -10,6 +10,7 @@ defmodule Kmxgit.Application do
     children = [
       # Start the Ecto repository
       Kmxgit.Repo,
+      Kmxgit.Git,
       # Start the Telemetry supervisor
       KmxgitWeb.Telemetry,
       # Start the PubSub system
