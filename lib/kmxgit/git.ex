@@ -1,46 +1,25 @@
 defmodule Kmxgit.Git do
-  use GenServer
+  @on_load :init
 
   @git_root "priv/git"
 
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+  def init do
+    path = "bin/libgit_nif"
+    |> String.to_charlist()
+    :ok = :erlang.load_nif(path, 0)
   end
 
   # Functions
 
   def branches(repo) do
-    GenServer.call(__MODULE__, {:branches, repo})
-    |> String.trim()
-    |> String.split(" ")
+    repo
+    |> git_dir()
+    |> IO.inspect()
+    |> branches_nif()
   end
 
-  # Callbacks
-
-  @impl true
-  def init(_) do
-    cmd = {:spawn_executable, "bin/gitport"}
-    IO.inspect(cmd)
-    port = Port.open(cmd, [:binary])
-    {:ok, %{from: [], port: port}}
-  end
-  
-  @impl true
-  def handle_call(arg = {:branches, repo}, from, state) do
-    IO.inspect({:handle_cast, arg})
-    dir = git_dir(repo)
-    cmd = "branches #{dir}\n"
-    send(state.port, {self(), {:command, cmd}})
-    {:noreply, %{state | from: state.from ++ [from]}}
-  end
-
-  @impl true
-  def handle_info(arg = {port, {:data, data}}, state = %{from: [from | rest], port: port}) do
-    GenServer.reply(from, data)
-    {:noreply, %{state | from: rest}}
-  end
-  def handle_info(arg, state) do
-    {:noreply, %{state | from: tl(state.from)}}
+  def branches_nif(_path) do
+    exit(:nif_not_loaded)
   end
 
   # common functions
