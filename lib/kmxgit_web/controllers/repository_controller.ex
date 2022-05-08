@@ -2,6 +2,7 @@ defmodule KmxgitWeb.RepositoryController do
   use KmxgitWeb, :controller
   require Logger
 
+  alias Kmxgit.Git
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.RepositoryManager
@@ -204,7 +205,7 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
-    case GitManager.branches(Repository.full_slug(repo)) do
+    case Git.branches(Repository.full_slug(repo)) do
       {:ok, branches} ->
         branch_trees = branches
         |> Enum.map(fn branch ->

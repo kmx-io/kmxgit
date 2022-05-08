@@ -14,7 +14,6 @@ defmodule Kmxgit.Git do
   def branches(repo) do
     repo
     |> git_dir()
-    |> IO.inspect()
     |> branches_nif()
   end
 

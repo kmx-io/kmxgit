@@ -48,34 +48,32 @@ static ERL_NIF_TERM branches (ErlNifEnv *env, int argc,
   git_branch_iterator *i = NULL;
   git_reference *ref = NULL;
   git_branch_t ref_type = 0;
-  char *branch = NULL;
+  const char *branch = NULL;
   char *path = NULL;
+  ERL_NIF_TERM acc;
   ERL_NIF_TERM branches;
-  fprintf(stderr, "branches %d\n", argc);
+  ERL_NIF_TERM ok;
   if (argc != 1 || !argv || !argv[0])
     goto error;
   path = enif_term_to_string(env, argv[0]);
-  fprintf(stderr, "path: '%s'\n", path);
   if (!path || !path[0])
     goto error;
   if (git_repository_open(&r, path))
     goto error;
   git_branch_iterator_new(&i, r, GIT_BRANCH_ALL);
-  branches = enif_make_list(env, 0);
+  acc = enif_make_list(env, 0);
   while (!git_branch_next(&ref, &ref_type, i)) {
-    git_branch_name((const char **) &branch, ref);
-    fprintf(stderr, " %s", branch);
-    branches = push_string(env, branch, branches);
+    git_branch_name(&branch, ref);
+    acc = push_string(env, branch, acc);
   }
   git_branch_iterator_free(i);
+  ok = enif_make_atom(env, "ok");
+  if (! enif_make_reverse_list(env, acc, &branches))
+    goto error;
   free(path);
-  //free(branch);
-  fprintf(stderr, "\n");
-  return branches;
+  return enif_make_tuple2(env, ok, branches);
  error:
-  fprintf(stderr, "error\n");
   free(path);
-  //free(branch);
   return enif_make_atom(env, "error");
 }
 
