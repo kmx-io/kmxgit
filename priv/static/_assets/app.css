@@ -31096,10 +31096,10 @@ table.admin-properties th {
   color: #aaa;
 }
 .content_text .line_numbers pre {
-  overflow: visible;
+  overflow: hidden;
 }
 .content_text .highlight pre {
-  overflow: auto visible;
+  overflow: auto hidden;
 }
 
 .content_html {
