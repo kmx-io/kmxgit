@@ -145,9 +145,12 @@ table.admin-properties th {
             text-decoration: none;
             color: #aaa;
         }
+        pre {
+            overflow: visible;
+        }
     }
     .highlight pre {
-        overflow: auto hidden;
+        overflow: auto visible;
     }
 }
 .content_html {

@@ -17,7 +17,17 @@ defmodule Kmxgit.Git do
     |> branches_nif()
   end
 
-  def branches_nif(_path) do
+  def branches_nif(_repo) do
+    exit(:nif_not_loaded)
+  end
+
+  def content(repo, sha) do
+    repo
+    |> git_dir()
+    |> content_nif(sha)
+  end
+
+  def content_nif(_repo, _sha) do
     exit(:nif_not_loaded)
   end
 

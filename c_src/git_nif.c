@@ -49,16 +49,16 @@ static ERL_NIF_TERM branches (ErlNifEnv *env, int argc,
   git_reference *ref = NULL;
   git_branch_t ref_type = 0;
   const char *branch = NULL;
-  char *path = NULL;
+  char *repo = NULL;
   ERL_NIF_TERM acc;
   ERL_NIF_TERM branches;
   ERL_NIF_TERM ok;
   if (argc != 1 || !argv || !argv[0])
     goto error;
-  path = enif_term_to_string(env, argv[0]);
-  if (!path || !path[0])
+  repo = enif_term_to_string(env, argv[0]);
+  if (!repo || !repo[0])
     goto error;
-  if (git_repository_open(&r, path))
+  if (git_repository_open(&r, repo))
     goto error;
   git_branch_iterator_new(&i, r, GIT_BRANCH_ALL);
   acc = enif_make_list(env, 0);
@@ -70,15 +70,62 @@ static ERL_NIF_TERM branches (ErlNifEnv *env, int argc,
   ok = enif_make_atom(env, "ok");
   if (! enif_make_reverse_list(env, acc, &branches))
     goto error;
-  free(path);
+  git_repository_free(r);
+  free(repo);
   return enif_make_tuple2(env, ok, branches);
  error:
-  free(path);
+  git_repository_free(r);
+  free(repo);
+  return enif_make_atom(env, "error");
+}
+
+static ERL_NIF_TERM content (ErlNifEnv *env, int argc,
+                             const ERL_NIF_TERM argv[])
+{
+  ErlNifBinary bin;
+  git_blob *blob = NULL;
+  ERL_NIF_TERM content;
+  const void *data = NULL;
+  git_oid oid = {0};
+  ERL_NIF_TERM ok;
+  git_repository *r = NULL;
+  char *repo = NULL;
+  char *sha = NULL;
+  git_object_size_t size = 0;
+  if (argc != 2 || !argv || !argv[0] || !argv[1])
+    goto error;
+  repo = enif_term_to_string(env, argv[0]);
+  if (!repo || !repo[0])
+    goto error;
+  sha = enif_term_to_string(env, argv[1]);
+  if (!sha || !sha[0])
+    goto error;
+  if (git_repository_open(&r, repo))
+    goto error;
+  if (git_oid_fromstr(&oid, sha))
+    goto error;
+  if (git_blob_lookup(&blob, r, &oid))
+    goto error;
+  size = git_blob_rawsize(blob);
+  data = git_blob_rawcontent(blob);
+  enif_alloc_binary(size, &bin);
+  memcpy(bin.data, data, size);
+  content = enif_make_binary(env, &bin);
+  ok = enif_make_atom(env, "ok");
+  git_repository_free(r);
+  free(repo);
+  free(sha);
+  return enif_make_tuple2(env, ok, content);
+ error:
+  git_repository_free(r);
+  free(repo);
+  free(sha);
   return enif_make_atom(env, "error");
 }
 
 static ErlNifFunc funcs[] = {
   {"branches_nif", 1, branches, 0},
+  {"content_nif", 2, content, 0},
 };
 
 int load (ErlNifEnv *env, void **a, ERL_NIF_TERM b)

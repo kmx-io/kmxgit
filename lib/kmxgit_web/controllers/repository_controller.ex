@@ -255,7 +255,7 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: "blob"}], valid: true}, repo, path) do
     if (path == name) do
-      case GitManager.content(Repository.full_slug(repo), sha1) do
+      case Git.content(Repository.full_slug(repo), sha1) do
         {:ok, content} ->
           {type, ext} = case Regex.run(~r/[.]([^.]+)$/, path) do
                           [_, ext] -> {mime_type(content, ext), ext}
@@ -282,13 +282,13 @@ defmodule KmxgitWeb.RepositoryController do
   defp git_put_readme(git = %{files: files, valid: true}, repo) do
     readme = Enum.map(files, fn f ->
       if String.match?(f.name, ~r/^readme\.md$/i) do
-        {:ok, content} = GitManager.content(Repository.full_slug(repo), f.sha1)
+        {:ok, content} = Git.content(Repository.full_slug(repo), f.sha1)
         %{html: Earmark.as_html!(content),
           name: f.name,
           txt: content}
       else
         if String.match?(f.name, ~r/^readme(.txt)?$/i) do
-          {:ok, content} = GitManager.content(Repository.full_slug(repo), f.sha1)
+          {:ok, content} = Git.content(Repository.full_slug(repo), f.sha1)
           %{html: nil,
             name: f.name,
             txt: content}
