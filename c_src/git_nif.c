@@ -124,17 +124,19 @@ static ERL_NIF_TERM content_nif (ErlNifEnv *env, int argc,
 }
 
 ERL_NIF_TERM git_tree_entry_file_map (ErlNifEnv *env,
-                                      const git_tree_entry *entry)
+                                      const git_tree_entry *entry,
+                                      const char *name)
 {
-  const char *name;
   git_object_t type;
   git_filemode_t mode;
   char sha[41];
   ERL_NIF_TERM k[4];
   ERL_NIF_TERM v[4];
   ERL_NIF_TERM file;
-  fprintf(stderr, "name\n");
-  name = git_tree_entry_name(entry);
+  if (!name) {
+    fprintf(stderr, "name\n");
+    name = git_tree_entry_name(entry);
+  }
   fprintf(stderr, "type\n");
   type = git_tree_entry_type(entry);
   fprintf(stderr, "mode\n");
@@ -222,7 +224,7 @@ static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
     type = git_tree_entry_type(entry);
     switch (type) {
     case GIT_OBJECT_BLOB:
-      file = git_tree_entry_file_map(env, entry);
+      file = git_tree_entry_file_map(env, entry, path);
       files = enif_make_list(env, 1, file);
       fprintf(stderr, "free blob\n");
       git_repository_free(r);
@@ -250,7 +252,7 @@ static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
     const git_tree_entry *sub_entry;
     fprintf(stderr, "sub_entry\n");
     sub_entry = git_tree_entry_byindex(subtree, count);
-    file = git_tree_entry_file_map(env, sub_entry);
+    file = git_tree_entry_file_map(env, sub_entry, NULL);
     files = enif_make_list_cell(env, file, files);
     enif_fprintf(stderr, "files = %T\n", files);
   }
