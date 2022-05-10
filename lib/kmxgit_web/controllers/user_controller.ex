@@ -1,6 +1,7 @@
 defmodule KmxgitWeb.UserController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
   alias Kmxgit.Repo
   alias Kmxgit.UserManager
@@ -59,10 +60,7 @@ defmodule KmxgitWeb.UserController do
             end
           end) do
         {:ok, user} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.slug_path(conn, :show, User.login(user)))
         {:error, changeset} ->
@@ -164,10 +162,7 @@ defmodule KmxgitWeb.UserController do
             end
           end) do
         {:ok, _} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update() do
           conn
           |> redirect(to: "/")
         {:error, changeset} ->

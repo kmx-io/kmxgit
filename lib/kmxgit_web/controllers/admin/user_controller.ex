@@ -2,6 +2,7 @@ defmodule KmxgitWeb.Admin.UserController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.IndexParams
+  alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager
   alias Kmxgit.UserManager
@@ -85,10 +86,7 @@ defmodule KmxgitWeb.Admin.UserController do
     if user do
       case UserManager.admin_update_user(user, params["user"]) do
         {:ok, user1} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.admin_user_path(conn, :show, user1))
         {:error, changeset} ->
@@ -137,10 +135,7 @@ defmodule KmxgitWeb.Admin.UserController do
   def delete(conn, params) do
     if user = UserManager.get_user(params["id"]) do
       {:ok, _} = UserManager.delete_user(user)
-      case GitManager.update_auth() do
-        :ok -> nil
-        error -> IO.inspect(error)
-      end
+      GitAuth.update()
       conn
       |> redirect(to: Routes.admin_user_path(conn, :index))
     else

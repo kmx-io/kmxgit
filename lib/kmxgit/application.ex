@@ -8,16 +8,11 @@ defmodule Kmxgit.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
       Kmxgit.Repo,
-      # Start the Telemetry supervisor
+      Kmxgit.GitAuth,
       KmxgitWeb.Telemetry,
-      # Start the PubSub system
       {Phoenix.PubSub, name: Kmxgit.PubSub},
-      # Start the Endpoint (http/https)
       KmxgitWeb.Endpoint
-      # Start a worker by calling: Kmxgit.Worker.start_link(arg)
-      # {Kmxgit.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

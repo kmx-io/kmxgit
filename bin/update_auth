@@ -1,0 +1,6 @@
+#!/bin/sh
+while read LINE; do
+    echo "update auth" >&2
+    bin/update_etc_git_auth
+    bin/update_git_ssh_authorized_keys
+done

@@ -37,7 +37,7 @@ defmodule Kmxgit.Git do
       {:ok, files} ->
         files1 = files
         |> Enum.map(fn file ->
-          Map.put(file, :url, "#{parent}/#{file.name}")
+          Map.put(file, :url, "#{parent}/#{path}/#{file.name}")
         end)
         {:ok, files1}
       x -> x

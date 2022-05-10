@@ -80,10 +80,8 @@ defmodule KmxgitWeb.RepositoryController do
           end
         end) do
       {:ok, repo} ->
-        case GitManager.update_auth() do
-          :ok -> :ok = GitManager.public_access(Repository.full_slug(repo), repo.public_access)
-          error -> IO.inspect(error)
-        end
+        GitAuth.update()
+        :ok = GitManager.public_access(Repository.full_slug(repo), repo.public_access)
         conn
         |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
       {:error, changeset} ->
@@ -524,10 +522,8 @@ defmodule KmxgitWeb.RepositoryController do
       end)
       case tr do
         {:ok, repo1} ->
-          case GitManager.update_auth() do
-            :ok -> :ok = GitManager.public_access(Repository.full_slug(repo1), repo1.public_access)
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
+          :ok = GitManager.public_access(Repository.full_slug(repo1), repo1.public_access)
           conn
           |> redirect(to: Routes.repository_path(conn, :show, Repository.owner_slug(repo1), Repository.splat(repo1)))
         {:error, changeset} ->
@@ -570,10 +566,7 @@ defmodule KmxgitWeb.RepositoryController do
       org = repo.organisation
       case RepositoryManager.add_member(repo, login) do
         {:ok, repo} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
         {:error, _} ->
@@ -615,10 +608,7 @@ defmodule KmxgitWeb.RepositoryController do
       org = repo.organisation
       case RepositoryManager.remove_member(repo, login) do
         {:ok, repo} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.repository_path(conn, :show, params["owner"], Repository.splat(repo)))
         {:error, _} ->
@@ -646,10 +636,7 @@ defmodule KmxgitWeb.RepositoryController do
             end
           end) do
         {:ok, _} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.slug_path(conn, :show, params["owner"]))
         {:error, _changeset} ->
@@ -767,10 +754,7 @@ defmodule KmxgitWeb.RepositoryController do
           end
         end) do
       {:ok, repo} ->
-        case GitManager.update_auth() do
-          :ok -> nil
-          error -> IO.inspect(error)
-        end
+        GitAuth.update()
         conn
         |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
       {:error, changeset} ->

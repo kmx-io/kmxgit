@@ -1,6 +1,7 @@
 defmodule KmxgitWeb.OrganisationController do
   use KmxgitWeb, :controller
 
+  alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager
   alias Kmxgit.OrganisationManager.Organisation
@@ -54,10 +55,7 @@ defmodule KmxgitWeb.OrganisationController do
                 if org.slug.slug != org1.slug.slug do
                   case GitManager.rename_dir(org.slug.slug, org1.slug.slug) do
                     :ok ->
-                      case GitManager.update_auth() do
-                        :ok -> nil
-                        error -> IO.inspect(error)
-                      end
+                      GitAuth.update()
                       org1
                     {:error, err} -> Repo.rollback(err)
                   end
@@ -101,10 +99,7 @@ defmodule KmxgitWeb.OrganisationController do
     if org && Organisation.owner?(org, current_user) do
       case OrganisationManager.add_user(org, login) do
         {:ok, org} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
         {:error, _e} ->
@@ -138,10 +133,7 @@ defmodule KmxgitWeb.OrganisationController do
     if org && Organisation.owner?(org, current_user) do
       case OrganisationManager.remove_user(org, login) do
         {:ok, org} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
         {:error, _} ->
@@ -164,10 +156,7 @@ defmodule KmxgitWeb.OrganisationController do
               {:ok, _} ->
                 case GitManager.delete_dir(org.slug.slug) do
                   :ok ->
-                    case GitManager.update_auth() do
-                      :ok -> nil
-                      error -> IO.inspect(error)
-                    end
+                    GitAuth.update()
                     :ok
                   {:error, out} -> Repo.rollback(status: out)
                 end

@@ -2,6 +2,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.IndexParams
+  alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager
   alias Kmxgit.Repo
@@ -82,10 +83,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
                 if org.slug.slug != org1.slug.slug do
                   case GitManager.rename_dir(org.slug.slug, org1.slug.slug) do
                     :ok ->
-                      case GitManager.update_auth() do
-                        :ok -> nil
-                        error -> IO.inspect(error)
-                      end
+                      GitAuth.update()
                       org1
                     {:error, err} -> Repo.rollback(err)
                   end
@@ -123,10 +121,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     org = OrganisationManager.get_organisation!(params["organisation_id"])
     case OrganisationManager.add_user(org, login) do
       {:ok, org1} ->
-        case GitManager.update_auth() do
-          :ok -> nil
-          error -> IO.inspect(error)
-        end
+        GitAuth.update()
         conn
         |> redirect(to: Routes.admin_organisation_path(conn, :show, org1))
       {:error, _} ->
@@ -150,10 +145,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     org = OrganisationManager.get_organisation!(params["organisation_id"])
     case OrganisationManager.remove_user(org, login) do
       {:ok, org} ->
-        case GitManager.update_auth() do
-          :ok -> nil
-          error -> IO.inspect(error)
-        end
+        GitAuth.update()
         conn
         |> redirect(to: Routes.admin_organisation_path(conn, :show, org))
       {:error, _} ->
@@ -169,10 +161,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
     if org do
       case OrganisationManager.delete_organisation(org) do
         {:ok, _} ->
-          case GitManager.update_auth() do
-            :ok -> nil
-            error -> IO.inspect(error)
-          end
+          GitAuth.update()
           conn
           |> redirect(to: Routes.admin_organisation_path(conn, :index))
         {:error, _} ->
