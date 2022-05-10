@@ -41,8 +41,8 @@ ERL_NIF_TERM push_string (ErlNifEnv *env, const char *str, const ERL_NIF_TERM ac
   return enif_make_list_cell(env, term, acc);
 }
 
-static ERL_NIF_TERM branches (ErlNifEnv *env, int argc,
-                              const ERL_NIF_TERM argv[])
+static ERL_NIF_TERM branches_nif (ErlNifEnv *env, int argc,
+                                  const ERL_NIF_TERM argv[])
 {
   git_repository *r = NULL;
   git_branch_iterator *i = NULL;
@@ -79,8 +79,8 @@ static ERL_NIF_TERM branches (ErlNifEnv *env, int argc,
   return enif_make_atom(env, "error");
 }
 
-static ERL_NIF_TERM content (ErlNifEnv *env, int argc,
-                             const ERL_NIF_TERM argv[])
+static ERL_NIF_TERM content_nif (ErlNifEnv *env, int argc,
+                                 const ERL_NIF_TERM argv[])
 {
   ErlNifBinary bin;
   git_blob *blob = NULL;
@@ -123,9 +123,159 @@ static ERL_NIF_TERM content (ErlNifEnv *env, int argc,
   return enif_make_atom(env, "error");
 }
 
+ERL_NIF_TERM git_tree_entry_file_map (ErlNifEnv *env,
+                                      const git_tree_entry *entry)
+{
+  const char *name;
+  git_object_t type;
+  git_filemode_t mode;
+  char sha[41];
+  ERL_NIF_TERM k[4];
+  ERL_NIF_TERM v[4];
+  ERL_NIF_TERM file;
+  fprintf(stderr, "name\n");
+  name = git_tree_entry_name(entry);
+  fprintf(stderr, "type\n");
+  type = git_tree_entry_type(entry);
+  fprintf(stderr, "mode\n");
+  mode = git_tree_entry_filemode(entry);
+  fprintf(stderr, "git_oid_tostr\n");
+  git_oid_tostr(sha, 41, git_tree_entry_id(entry));
+  k[0] = enif_make_atom(env, "name");
+  v[0] = enif_string_to_term(env, name);
+  k[1] = enif_make_atom(env, "type");
+  if (type == GIT_OBJECT_TREE)
+    v[1] = enif_make_atom(env, "tree");
+  else
+    v[1] = enif_make_atom(env, "blob");
+  k[2] = enif_make_atom(env, "mode");
+  v[2] = enif_make_int64(env, mode);
+  k[3] = enif_make_atom(env, "sha1");
+  v[3] = enif_string_to_term(env, sha);
+  fprintf(stderr, "enif_make_map_from_arrays\n");
+  enif_make_map_from_arrays(env, k, v, 4, &file);
+  return file;
+}
+
+static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
+                               const ERL_NIF_TERM argv[])
+{
+  size_t count;
+  git_tree_entry *entry = NULL;
+  ERL_NIF_TERM files;
+  git_object *obj = NULL;
+  ERL_NIF_TERM ok;
+  char *path = NULL;
+  git_repository *r = NULL;
+  char *repo_dir = NULL;
+  ERL_NIF_TERM res;
+  char *rev = NULL;
+  size_t rev_size = 0;
+  git_tree *subtree = NULL;
+  git_tree *tree = NULL;
+  char *tree_name = NULL;
+  git_object_t type = 0;
+  ERL_NIF_TERM file;
+  if (argc != 3 || !argv || !argv[0] || !argv[1] || !argv[2]) {
+    res = enif_make_atom(env, "badarg");
+    goto error;
+  }
+  repo_dir = enif_term_to_string(env, argv[0]);
+  if (!repo_dir || !repo_dir[0]) {
+    res = enif_make_atom(env, "repo_dir_missing");
+    goto error;
+  }
+  tree_name = enif_term_to_string(env, argv[1]);
+  if (!tree_name || !tree_name[0]) {
+    res = enif_make_atom(env, "tree_name_missing");
+    goto error;
+  }
+  path = enif_term_to_string(env, argv[2]);
+  if (!path) {
+    res = enif_make_atom(env, "path_missing");
+    goto error;
+  }
+  rev_size = strlen(tree_name) + 8;
+  rev = malloc(rev_size);
+  strlcpy(rev, tree_name, rev_size);
+  strlcat(rev, "^{tree}", rev_size);
+  fprintf(stderr, "files_nif '%s' '%s' '%s'\n", repo_dir, rev, path);
+  ok = enif_make_atom(env, "ok");
+  if (git_repository_open(&r, repo_dir)) {
+    res = enif_make_atom(env, "git_repository_open");
+    goto error;
+  }
+  if (git_revparse_single(&obj, r, rev)) {
+    res = enif_make_atom(env, "git_revparse_single");
+    goto error;
+  }
+  tree = (git_tree*) obj;
+  fprintf(stderr, "tree: %p\nentry\n", tree);
+  if (!path[0] || !strcmp(path, "."))
+    subtree = tree;
+  else {
+    if (git_tree_entry_bypath(&entry, tree, path)) {
+      res = enif_make_atom(env, "git_tree_entry_bypath");
+      goto error;
+    }
+    fprintf(stderr, "type\n");
+    type = git_tree_entry_type(entry);
+    switch (type) {
+    case GIT_OBJECT_BLOB:
+      file = git_tree_entry_file_map(env, entry);
+      files = enif_make_list(env, 1, file);
+      fprintf(stderr, "free blob\n");
+      git_repository_free(r);
+      free(repo_dir);
+      free(tree_name);
+      free(path);
+      git_tree_entry_free(entry);
+      return enif_make_tuple2(env, ok, files);
+    case GIT_OBJECT_TREE:
+      fprintf(stderr, "subtree\n");
+      if (git_tree_lookup(&subtree, r, git_tree_entry_id(entry))) {
+        res = enif_make_atom(env, "git_tree_lookup");
+        goto error;
+      }
+      break;
+    default:
+      res = enif_make_atom(env, "git_tree_entry_type_invalid");
+      goto error;
+    }
+  }
+  fprintf(stderr, "loop\n");
+  files = enif_make_list(env, 0);
+  count = git_tree_entrycount(subtree);
+  while (count--) {
+    const git_tree_entry *sub_entry;
+    fprintf(stderr, "sub_entry\n");
+    sub_entry = git_tree_entry_byindex(subtree, count);
+    file = git_tree_entry_file_map(env, sub_entry);
+    files = enif_make_list_cell(env, file, files);
+    enif_fprintf(stderr, "files = %T\n", files);
+  }
+  fprintf(stderr, "free\n");
+  git_repository_free(r);
+  free(repo_dir);
+  free(tree_name);
+  free(path);
+  git_tree_entry_free(entry);
+  return enif_make_tuple2(env, ok, files);
+ error:
+  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  enif_fprintf(stderr, "%T\n", res);
+  git_repository_free(r);
+  free(repo_dir);
+  free(tree_name);
+  free(path);
+  git_tree_entry_free(entry);
+  return res;
+}
+
 static ErlNifFunc funcs[] = {
-  {"branches_nif", 1, branches, 0},
-  {"content_nif", 2, content, 0},
+  {"branches_nif", 1, branches_nif, 0},
+  {"content_nif", 2, content_nif, 0},
+  {"files_nif", 3, files_nif, 0},
 };
 
 int load (ErlNifEnv *env, void **a, ERL_NIF_TERM b)

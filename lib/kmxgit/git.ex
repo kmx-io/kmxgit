@@ -31,6 +31,23 @@ defmodule Kmxgit.Git do
     exit(:nif_not_loaded)
   end
 
+  def files(repo, tree, path, parent \\ ".") do
+    dir = git_dir(repo)
+    case files_nif(dir, tree, path) do
+      {:ok, files} ->
+        files1 = files
+        |> Enum.map(fn file ->
+          Map.put(file, :url, "#{parent}/#{file.name}")
+        end)
+        {:ok, files1}
+      x -> x
+    end
+  end
+
+  def files_nif(_repo, _tree, _path) do
+    exit(:nif_not_loaded)
+  end
+
   # common functions
 
   def git_dir(repo) do

@@ -224,7 +224,7 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
   defp git_put_files(git = %{valid: true}, repo, tree, subdir, conn) do
-    case GitManager.files(Repository.full_slug(repo), tree, subdir || "") do
+    case Git.files(Repository.full_slug(repo), tree, subdir || "") do
       {:ok, []} -> git
       {:ok, files} ->
         files = files
@@ -253,7 +253,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> List.last()
   end
 
-  defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: "blob"}], valid: true}, repo, path) do
+  defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: :blob}], valid: true}, repo, path) do
     if (path == name) do
       case Git.content(Repository.full_slug(repo), sha1) do
         {:ok, content} ->
@@ -450,7 +450,7 @@ defmodule KmxgitWeb.RepositoryController do
       not_found(conn)
     end
   end
-  defp show_op(conn, :tree = op, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
+  defp show_op(conn, op = :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
     git = git
     |> git_put_files(repo, tree, path, conn)
     |> git_put_content(repo, path)

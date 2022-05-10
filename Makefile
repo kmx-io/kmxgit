@@ -1,5 +1,5 @@
 
-CFLAGS = -W -Wall -Werror
+CFLAGS = -W -Wall -Werror -O0 -DDEBUG -ggdb
 CPPFLAGS = -I/usr/local/include -I/usr/local/lib/erlang24/usr/include
 LDFLAGS = -L/usr/local/lib -L/usr/local/lib/erlang24/usr/lib
 

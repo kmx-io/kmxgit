@@ -10,9 +10,9 @@
       <%= for file <- @git.files do %>
         <li>
           <%= case file.type do %>
-            <% "blob" -> %>
+            <% :blob -> %>
               <%= link file.name, to: file.url %>
-            <% "tree" -> %>
+            <% :tree -> %>
               <%= link "#{file.name}/", to: file.url %>
             <% _ -> %>
               <%= "#{file.type} #{file.name}" %>
