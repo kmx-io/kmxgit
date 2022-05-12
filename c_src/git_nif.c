@@ -275,10 +275,43 @@ static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
   return res;
 }
 
+static ERL_NIF_TERM create_nif (ErlNifEnv *env, int argc,
+                                const ERL_NIF_TERM argv[])
+{
+  ERL_NIF_TERM ok;
+  git_repository *r = NULL;
+  char *repo_dir = NULL;
+  ERL_NIF_TERM res;
+  if (argc != 1 || !argv || !argv[0]) {
+    res = enif_make_atom(env, "badarg");
+    goto error;
+  }
+  repo_dir = enif_term_to_string(env, argv[0]);
+  if (!repo_dir || !repo_dir[0]) {
+    res = enif_make_atom(env, "repo_dir_missing");
+    goto error;
+  }
+  if (git_repository_init(&r, repo_dir, 1)) {
+    res = enif_make_atom(env, "git_repository_init");
+    goto error;
+  }
+  git_repository_free(r);
+  free(repo_dir);
+  ok = enif_make_atom(env, "ok");
+  return ok;
+ error:
+  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  enif_fprintf(stderr, "%T\n", res);
+  git_repository_free(r);
+  free(repo_dir);
+  return res;
+}
+
 static ErlNifFunc funcs[] = {
   {"branches_nif", 1, branches_nif, 0},
-  {"content_nif", 2, content_nif, 0},
-  {"files_nif", 3, files_nif, 0},
+  {"content_nif",  2, content_nif,  0},
+  {"create_nif",   1, create_nif,   0},
+  {"files_nif",    3, files_nif,    0},
 };
 
 int load (ErlNifEnv *env, void **a, ERL_NIF_TERM b)

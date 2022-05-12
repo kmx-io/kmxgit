@@ -3,6 +3,7 @@ defmodule KmxgitWeb.RepositoryController do
   require Logger
 
   alias Kmxgit.Git
+  alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.RepositoryManager
@@ -67,8 +68,8 @@ defmodule KmxgitWeb.RepositoryController do
     case Repo.transaction(fn ->
           case RepositoryManager.create_repository(params, owner) do
             {:ok, repo} ->
-              case GitManager.create(Repository.full_slug(repo)) do
-                {:ok, _} -> repo
+              case Git.create(Repository.full_slug(repo)) do
+                :ok -> repo
                 {:error, e} ->
                   repo
                   |> Repository.changeset(params)

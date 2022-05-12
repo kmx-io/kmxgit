@@ -2,6 +2,7 @@ defmodule KmxgitWeb.Admin.RepositoryController do
   use KmxgitWeb, :controller
 
   alias Kmxgit.IndexParams
+  alias Kmxgit.Git
   alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager
@@ -61,8 +62,8 @@ defmodule KmxgitWeb.Admin.RepositoryController do
     case Repo.transaction(fn ->
           case RepositoryManager.create_repository(owner, params) do
             {:ok, repo} ->
-              case GitManager.create(Repository.full_slug(repo)) do
-                {:ok, _} -> repo
+              case Git.create(Repository.full_slug(repo)) do
+                :ok -> repo
                 {:error, e} ->
                   repo
                   |> Repository.changeset(params)

@@ -3,7 +3,6 @@ defmodule KmxgitWeb.Admin.UserController do
 
   alias Kmxgit.IndexParams
   alias Kmxgit.GitAuth
-  alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User

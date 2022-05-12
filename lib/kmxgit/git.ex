@@ -9,7 +9,7 @@ defmodule Kmxgit.Git do
     :ok = :erlang.load_nif(path, 0)
   end
 
-  # Functions
+  # NIFs
 
   def branches(repo) do
     repo
@@ -28,6 +28,17 @@ defmodule Kmxgit.Git do
   end
 
   def content_nif(_repo, _sha) do
+    exit(:nif_not_loaded)
+  end
+
+  def create(repo) do
+    dir = "#{@git_root}/#{Path.dirname(repo)}"
+    name = "#{Path.basename(repo)}.git"
+    :ok = File.mkdir_p(dir)
+    create_nif("#{dir}/#{name}")
+  end
+
+  def create_nif(_repo) do
     exit(:nif_not_loaded)
   end
 

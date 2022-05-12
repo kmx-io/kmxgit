@@ -162,7 +162,7 @@ defmodule KmxgitWeb.UserController do
             end
           end) do
         {:ok, _} ->
-          GitAuth.update() do
+          GitAuth.update()
           conn
           |> redirect(to: "/")
         {:error, changeset} ->

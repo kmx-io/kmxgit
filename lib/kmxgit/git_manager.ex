@@ -102,11 +102,9 @@ defmodule Kmxgit.GitManager do
       {:error, "file exists"}
     else
       dir = Path.dirname(dir_to)
-      :ok = File.mkdir_p(dir)
-      {out, status} = System.cmd("mv", [dir_from, dir_to], stderr_to_stdout: true)
-      case status do
-        0 -> :ok
-        _ -> {:error, out}
+      with :ok <- File.mkdir_p(dir),
+           :ok <- File.rename(dir_from, dir_to) do
+        :ok
       end
     end
   end
@@ -117,11 +115,7 @@ defmodule Kmxgit.GitManager do
     if File.exists?(dir_to) do
       {:error, "file exists"}
     else
-      {out, status} = System.cmd("mv", [dir_from, dir_to], stderr_to_stdout: true)
-      case status do
-        0 -> :ok
-        _ -> {:error, out}
-      end
+      File.rename(dir_from, dir_to)
     end
   end
 
@@ -170,14 +164,16 @@ defmodule Kmxgit.GitManager do
 
   def public_access(repo, true) do
     dir = git_dir(repo)
-    if ! File.exists?(export = "#{dir}/git-daemon-export-ok") do
+    export = "#{dir}/git-daemon-export-ok"
+    if ! File.exists?(export) do
       File.write!(export, "")
     end
     :ok
   end
   def public_access(repo, false) do
     dir = git_dir(repo)
-    if File.exists?(export = "#{dir}/git-daemon-export-ok") do
+    export = "#{dir}/git-daemon-export-ok"
+    if File.exists?(export) do
       File.rm!(export)
     end
     :ok
