@@ -1,9 +1,10 @@
-#include <erl_nif.h>
-#include <git2.h>
 #include <stdlib.h>
 #include <string.h>
 
-char * enif_term_to_string (ErlNifEnv *env, const ERL_NIF_TERM term)
+#include <erl_nif.h>
+#include <git2.h>
+
+static char * enif_term_to_string (ErlNifEnv *env, const ERL_NIF_TERM term)
 {
   ErlNifBinary bin;
   unsigned len;
@@ -26,7 +27,7 @@ char * enif_term_to_string (ErlNifEnv *env, const ERL_NIF_TERM term)
   }
 }
 
-ERL_NIF_TERM enif_string_to_term (ErlNifEnv *env, const char *str)
+static ERL_NIF_TERM enif_string_to_term (ErlNifEnv *env, const char *str)
 {
   size_t len = strlen(str);
   ErlNifBinary bin;
@@ -35,7 +36,7 @@ ERL_NIF_TERM enif_string_to_term (ErlNifEnv *env, const char *str)
   return enif_make_binary(env, &bin);
 }
 
-ERL_NIF_TERM push_string (ErlNifEnv *env, const char *str, const ERL_NIF_TERM acc)
+static ERL_NIF_TERM push_string (ErlNifEnv *env, const char *str, const ERL_NIF_TERM acc)
 {
   ERL_NIF_TERM term = enif_string_to_term(env, str);
   return enif_make_list_cell(env, term, acc);
@@ -123,9 +124,9 @@ static ERL_NIF_TERM content_nif (ErlNifEnv *env, int argc,
   return enif_make_atom(env, "error");
 }
 
-ERL_NIF_TERM git_tree_entry_file_map (ErlNifEnv *env,
-                                      const git_tree_entry *entry,
-                                      const char *name)
+static ERL_NIF_TERM git_tree_entry_file_map (ErlNifEnv *env,
+                                             const git_tree_entry *entry,
+                                             const char *name)
 {
   git_object_t type;
   git_filemode_t mode;
