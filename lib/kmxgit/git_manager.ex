@@ -7,6 +7,77 @@ defmodule Kmxgit.GitManager do
     "#{@git_root}/#{repo}.git"
   end
 
+  def rename(from, to) do
+    dir_from = git_dir(from)
+    dir_to = git_dir(to)
+    if File.exists?(dir_to) do
+      {:error, "file exists"}
+    else
+      dir = Path.dirname(dir_to)
+      with :ok <- File.mkdir_p(dir),
+           :ok <- File.rename(dir_from, dir_to) do
+        :ok
+      end
+    end
+  end
+
+  def rename_dir(from, to) do
+    dir_from = "#{@git_root}/#{from}/"
+    dir_to   = "#{@git_root}/#{to}/"
+    if File.exists?(dir_to) do
+      {:error, "file exists"}
+    else
+      File.rename(dir_from, dir_to)
+    end
+  end
+
+  defp rm_rf(dir) do
+    with {:ok, _} <- File.rm_rf(dir) do
+      :ok
+    end
+  end
+
+  def delete(repo) do
+    repo |> git_dir() |> rm_rf()
+  end
+
+  def delete_dir(dir) do
+    "#{@git_root}/#{dir}/"
+    |> rm_rf()
+  end
+
+  def fork(from, to) do
+    dir_from = git_dir(from)
+    dir_to = git_dir(to)
+    if File.exists?(dir_to) do
+      {:error, "file exists"}
+    else
+      dir = Path.dirname(dir_to)
+      with :ok <- File.mkdir_p(dir),
+           {:ok, _} <- File.cp_r(dir_from, dir_to) do
+        :ok
+      end
+    end
+  end
+
+  def public_access(repo, true) do
+    dir = git_dir(repo)
+    export = "#{dir}/git-daemon-export-ok"
+    if ! File.exists?(export) do
+      File.write!(export, "")
+    end
+    :ok
+  end
+  def public_access(repo, false) do
+    dir = git_dir(repo)
+    export = "#{dir}/git-daemon-export-ok"
+    if File.exists?(export) do
+      File.rm!(export)
+    end
+    :ok
+  end
+
+  @deprecated "use Kmxgit.Git instead"
   def branches(repo) do
     dir = git_dir(repo)
     {out, status} = System.cmd("git", ["-C", dir, "branch", "--list"], stderr_to_stdout: true)
@@ -21,10 +92,12 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   defp filter_branches(lines) do
     filter_branches(lines, [], nil)
   end
 
+  @deprecated "use Kmxgit.Git instead"
   defp filter_branches([], acc, nil) do
     Enum.reverse(acc)
   end
@@ -39,6 +112,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def content(repo, path) do
     dir = git_dir(repo)
     path = if path == "" do "." else path end
@@ -49,6 +123,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def files(repo, tree, path, parent \\ ".") do
     dir = git_dir(repo)
     path1 = if path == "", do: ".", else: path
@@ -82,6 +157,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def update_auth do
     {out, status} = System.cmd("update_etc_git_auth", [], stderr_to_stdout: true)
     case status do
@@ -95,30 +171,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  def rename(from, to) do
-    dir_from = git_dir(from)
-    dir_to = git_dir(to)
-    if File.exists?(dir_to) do
-      {:error, "file exists"}
-    else
-      dir = Path.dirname(dir_to)
-      with :ok <- File.mkdir_p(dir),
-           :ok <- File.rename(dir_from, dir_to) do
-        :ok
-      end
-    end
-  end
-
-  def rename_dir(from, to) do
-    dir_from = "#{@git_root}/#{from}/"
-    dir_to   = "#{@git_root}/#{to}/"
-    if File.exists?(dir_to) do
-      {:error, "file exists"}
-    else
-      File.rename(dir_from, dir_to)
-    end
-  end
-
+  @deprecated "use Kmxgit.Git instead"
   def create(repo) do
     dir = "#{@git_root}/#{Path.dirname(repo)}"
     name = "#{Path.basename(repo)}.git"
@@ -130,55 +183,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  defp rm_rf(dir) do
-    case System.cmd("rm", ["-rf", dir], stderr_to_stdout: true) do
-      {"", 0} -> :ok
-      {err, _} -> {:error, err}
-    end
-  end
-
-  def delete(repo) do
-    repo |> git_dir() |> rm_rf()
-  end
-
-  def delete_dir(dir) do
-    "#{@git_root}/#{dir}/"
-    |> rm_rf()
-  end
-
-  def fork(from, to) do
-    dir_from = git_dir(from)
-    dir_to = git_dir(to)
-    if File.exists?(dir_to) do
-      {:error, "file exists"}
-    else
-      dir = Path.dirname(dir_to)
-      :ok = File.mkdir_p(dir)
-      {out, status} = System.cmd("cp", ["-PRp", dir_from, dir_to], stderr_to_stdout: true)
-      case status do
-        0 -> :ok
-        _ -> {:error, out}
-      end
-    end
-  end
-
-  def public_access(repo, true) do
-    dir = git_dir(repo)
-    export = "#{dir}/git-daemon-export-ok"
-    if ! File.exists?(export) do
-      File.write!(export, "")
-    end
-    :ok
-  end
-  def public_access(repo, false) do
-    dir = git_dir(repo)
-    export = "#{dir}/git-daemon-export-ok"
-    if File.exists?(export) do
-      File.rm!(export)
-    end
-    :ok
-  end
-
+  @deprecated "use Kmxgit.Git instead"
   def log(repo, tree \\ nil) do
     if tree do
       log_(repo, [tree])
@@ -187,6 +192,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def log_file(repo, path, tree \\ nil) do
     if tree do
       log_(repo, [tree, "--", path])
@@ -195,10 +201,13 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   defp ok_hd({:ok, [first | _]}), do: {:ok, first}
   defp ok_hd({:ok, []}), do: {:ok, nil}
+  @deprecated "use Kmxgit.Git instead"
   defp ok_hd(x), do: x
 
+  @deprecated "use Kmxgit.Git instead"
   def log1(repo, tree \\ nil) do
     if tree do
       log_(repo, ["-1", tree])
@@ -208,6 +217,7 @@ defmodule Kmxgit.GitManager do
     |> ok_hd()
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def log1_file(repo, file, tree \\ nil) do
     if tree do
       log_(repo, ["-1", tree, "--", file])
@@ -217,6 +227,7 @@ defmodule Kmxgit.GitManager do
     |> ok_hd()
   end
 
+  @deprecated "use Kmxgit.Git instead"
   defp log_(repo, args) do
     dir = git_dir(repo)
     args = ["-C", dir, "log", "--format=%H %aI \"%an <%ae>\" %s"] ++ args
@@ -238,6 +249,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def tag(repo, tag) do
     dir = git_dir(repo)
     args = ["-C", dir, "log", "-1", "--format=%H %aI \"%an <%ae>\"", tag]
@@ -252,6 +264,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def tags(repo) do
     dir = git_dir(repo)
     {out, status} = System.cmd("git", ["-C", dir, "tag", "-l"], stderr_to_stdout: true)
@@ -268,12 +281,14 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def tag_info(repo, tag) do
     {:ok, commit} = log1(repo, tag)
     commit
     |> Map.put(:tag, tag)
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def diff(repo, from, to) do
     dir = git_dir(repo)
     IO.inspect("git -C #{dir} diff #{from} #{to}")
