@@ -315,14 +315,14 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
 {
   char *branch_name = NULL;
   git_diff_options diffopts = {GIT_DIFF_OPTIONS_VERSION, 0, GIT_SUBMODULE_IGNORE_UNSPECIFIED, {NULL, 0}, NULL, NULL, NULL, 3, 0, 0, 0, 0, 0};
-  git_oid oid;
+  /*git_oid oid;*/
   ERL_NIF_TERM ok;
   char *path = NULL;
   git_pathspec *ps = NULL;
   git_repository *r = NULL;
   char *repo_dir = NULL;
   ERL_NIF_TERM res;
-  git_revwalk *walker;
+  /*git_revwalk *walker;*/
   if (argc != 3 || !argv || !argv[0] || !argv[1] || !argv[2]) {
     res = enif_make_atom(env, "badarg");
     goto error;
