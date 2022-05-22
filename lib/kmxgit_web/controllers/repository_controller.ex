@@ -346,12 +346,7 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_log(repo, tree, path) do
     slug = Repository.full_slug(repo)
-    result = if path do
-      GitManager.log_file(slug, path, tree)
-    else
-      GitManager.log(slug, tree)
-    end
-    case result do
+    case Git.log(slug, tree, path || "") do
       {:ok, log} -> log
       {:error, reason} ->
         Logger.error(inspect(reason))

@@ -3,10 +3,11 @@ defmodule Kmxgit.Git do
 
   @git_root "priv/git"
 
-  def init do
-    path = "bin/libgit_nif"
-    |> String.to_charlist()
-    :ok = :erlang.load_nif(path, 0)
+  # common functions
+
+  def git_dir(repo) do
+    if String.match?(repo, ~r/(^|\/)\.\.($|\/)/), do: raise "invalid git dir"
+    "#{@git_root}/#{repo}.git"
   end
 
   # NIFs
@@ -59,10 +60,20 @@ defmodule Kmxgit.Git do
     exit(:nif_not_loaded)
   end
 
-  # common functions
+  def init do
+    path = "bin/libgit_nif"
+    |> String.to_charlist()
+    :ok = :erlang.load_nif(path, 0)
+  end
 
-  def git_dir(repo) do
-    if String.match?(repo, ~r/(^|\/)\.\.($|\/)/), do: raise "invalid git dir"
-    "#{@git_root}/#{repo}.git"
+  def log(repo, tree \\ "HEAD", path \\ "") do
+    tree = tree || "HEAD"
+    dir = git_dir(repo)
+    log_nif(dir, tree, path)
+    # %{author: author, author_email: email, hash: hash, date: date, message: msg}
+  end
+
+  def log_nif(repo, tree, path) do
+    exit(:nif_not_loaded)
   end
 end
