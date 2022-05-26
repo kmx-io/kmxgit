@@ -69,11 +69,11 @@ defmodule Kmxgit.Git do
   def log(repo, tree \\ "HEAD", path \\ "") do
     tree = tree || "HEAD"
     dir = git_dir(repo)
+    # [%{author: author, author_email: email, hash: hash, date: date, message: msg}]
     log_nif(dir, tree, path)
-    # %{author: author, author_email: email, hash: hash, date: date, message: msg}
   end
 
-  def log_nif(repo, tree, path) do
+  def log_nif(_repo, _tree, _path) do
     exit(:nif_not_loaded)
   end
 end

@@ -23,13 +23,13 @@
         </p>
         <div class="clear"></div>
       </div>
-      <%= if @diff_html do %>
+      <%= if @diff do %>
         <div class="content_text">
           <div class="line_numbers">
             <pre><%= for ln <- @diff_line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
             <% end %></pre>
           </div>
-          <%= raw @diff_html %>
+          <pre><code class="language-diff"><%= @diff %></code></pre>
         </div>
         <hr/>
       <% end %>

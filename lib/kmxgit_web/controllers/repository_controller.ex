@@ -401,13 +401,13 @@ defmodule KmxgitWeb.RepositoryController do
              {:ok, diff} -> diff
              _ -> nil
            end
-    diff_html = diff && Pygmentize.html(diff, "diff.patch")
+    #diff_html = diff && Pygmentize.html(diff, "diff.patch")
     diff_line_numbers = diff && line_numbers(diff)
     conn
     |> assign(:commit, git.log1)
     |> assign_current_organisation(org)
     |> assign(:current_repository, repo)
-    |> assign(:diff_html, diff_html)
+    |> assign(:diff, diff)
     |> assign(:diff_line_numbers, diff_line_numbers)
     |> assign(:path, path)
     |> assign(:repo, repo)
@@ -416,14 +416,14 @@ defmodule KmxgitWeb.RepositoryController do
   defp show_op(conn, :diff, %{from: from, org: org, path: path, repo: repo, to: to}) do
     case GitManager.diff(Repository.full_slug(repo), from, to) do
       {:ok, diff} ->
-        diff_html = Pygmentize.html(diff, "diff.patch")
+        #diff_html = Pygmentize.html(diff, "diff.patch")
         diff_line_numbers = line_numbers(diff)
         #IO.inspect(from: from, to: to, diff: diff, html: diff_html, line_numbers: diff_line_numbers)
         conn
         |> assign_current_organisation(org)
         |> assign(:current_repository, repo)
+        |> assign(:diff, diff)
         |> assign(:diff_from, from)
-        |> assign(:diff_html, diff_html)
         |> assign(:diff_line_numbers, diff_line_numbers)
         |> assign(:diff_to, to)
         |> assign(:path, path)

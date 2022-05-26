@@ -19,7 +19,7 @@
           <pre><%= for ln <- @diff_line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
           <% end %></pre>
         </div>
-        <%= raw @diff_html %>
+        <pre><code class="language-diff"><%= @diff %></code></pre>
       </div>
     </div>
   </div>
