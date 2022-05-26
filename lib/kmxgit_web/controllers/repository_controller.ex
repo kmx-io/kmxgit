@@ -189,6 +189,7 @@ defmodule KmxgitWeb.RepositoryController do
   defp setup_git(repo, conn, op, op_params) do
     %{trees: [],
       content: nil,
+      content_lang: nil,
       content_html: nil,
       content_type: nil,
       filename: nil,
@@ -252,6 +253,28 @@ defmodule KmxgitWeb.RepositoryController do
     |> List.last()
   end
 
+  @ext_lang %{
+    "ex" => "elixir",
+    "exs" => "elixir"
+  }
+
+  defp lang(nil, filename) do
+    if String.match?(filename, ~r/Makefile$/i) do
+      "makefile"
+    else
+      "shell"
+    end
+  end
+  defp lang("", filename), do: lang(nil, filename)
+  defp lang(ext, filename) do
+    case Regex.run(~r/(.*)~$/, ext) do
+      [_, ext1] -> lang(ext1, filename)
+      _ ->
+        ext2 = String.replace(ext, ~r/[^A-Za-z0-9]/, "_")
+        @ext_lang[ext2] || ext2
+    end
+  end
+
   defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: :blob}], valid: true}, repo, path) do
     if (path == name) do
       case Git.content(Repository.full_slug(repo), sha1) do
@@ -261,13 +284,14 @@ defmodule KmxgitWeb.RepositoryController do
                           _ -> {mime_type(content), nil}
                         end
           filename = filename(name)
-          content_html = Pygmentize.html(content, filename)
+          #content_html = Pygmentize.html(content, filename)
           line_numbers = line_numbers(content)
           markdown_html = if ext && String.match?(ext, ~r/md/i) do
             Earmark.as_html!(content)
           end
+          lang = lang(ext, filename)
           #IO.inspect(path: path, name: name, type: type)
-          %{git | content: content, content_html: content_html, content_type: type, filename: filename, line_numbers: line_numbers, markdown_html: markdown_html}
+          %{git | content: content, content_lang: lang, content_type: type, filename: filename, line_numbers: line_numbers, markdown_html: markdown_html}
         {:error, error} -> %{git | status: error}
       end
     else

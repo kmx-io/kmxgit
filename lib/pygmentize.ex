@@ -17,7 +17,8 @@ defmodule Pygmentize do
       _ -> ""
     end
   end
-    
+
+  @deprecated "use prismjs"
   def html(content, filename) do
     lexer = lexer(filename)
     cmd = "./bin/size #{byte_size(content)} pygmentize -l #{lexer} -f html"

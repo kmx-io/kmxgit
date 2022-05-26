@@ -1,4 +1,5 @@
 /* This file is for your main application CSS */
+@import "./prism-tomorrow.scss";
 @import "./inter.scss";
 @import "./kmx_colors.scss";
 $primary: $kmx_blue;
@@ -17,7 +18,6 @@ $code-font-size: $font-size-base;
 @import "./admin.scss";
 @import "./flash.scss";
 @import "./footer.scss";
-@import "./pygments.scss";
 
 a {
     text-decoration: none;
@@ -149,20 +149,19 @@ table.admin-properties th {
             overflow: hidden;
         }
     }
-    .highlight pre {
-        overflow: auto hidden;
+    code[class*=language-], pre[class*=language-] {
+        font-family: courier_new;
+        font-weight: bold;
+    }
+    pre[class*=language-] {
+        margin: -0.3em;
+        padding: 0.3em;
     }
 }
 .content_html {
     margin: 0;
     padding: 0.5em;
     position: relative;
-}
-pre code {
-    display: block;
-    border: solid 1px #ccc;
-    padding: 1em;
-    overflow: scroll;
 }
 .content_html img {
     max-width: 100%;
