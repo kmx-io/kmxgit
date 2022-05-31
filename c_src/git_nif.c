@@ -187,7 +187,7 @@ files_make_map (ErlNifEnv *env,
   v[2] = enif_make_int64(env, mode);
   k[3] = enif_make_atom(env, "sha1");
   v[3] = enif_string_to_term(env, sha);
-  fprintf(stderr, "enif_make_map_from_arrays\n");
+  /*fprintf(stderr, "enif_make_map_from_arrays\n");*/
   enif_make_map_from_arrays(env, k, v, 4, &file);
   return file;
 }
