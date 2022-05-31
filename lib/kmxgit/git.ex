@@ -43,6 +43,15 @@ defmodule Kmxgit.Git do
     exit(:nif_not_loaded)
   end
 
+  def diff(repo, from, to) do
+    dir = git_dir(repo)
+    diff_nif(dir, from, to)
+  end
+
+  def diff_nif(_repo, _from, _to) do
+    exit(:nif_not_loaded)
+  end
+
   def files(repo, tree, path, parent \\ ".") do
     dir = git_dir(repo)
     case files_nif(dir, tree, path) do

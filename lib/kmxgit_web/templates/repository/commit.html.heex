@@ -17,7 +17,7 @@
       </h2>
       <div>
         <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @commit.author_email, size: 48, title: @commit.author, class: "commit-avatar") %>
-        <%= @commit.date |> String.replace("T", " ") |> String.replace("+", " +") %>
+        <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], @commit.date) %>
         <p>
           <%= @commit.message %>
         </p>
@@ -27,7 +27,7 @@
         <div class="content_text">
           <div class="line_numbers">
             <pre><%= for ln <- @diff_line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
-            <% end %></pre>
+<% end %></pre>
           </div>
           <pre><code class="language-diff"><%= @diff %></code></pre>
         </div>

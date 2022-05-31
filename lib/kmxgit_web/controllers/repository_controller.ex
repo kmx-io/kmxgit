@@ -397,7 +397,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_log1(repo, tree, path)
     |> git_put_commit(repo, conn, op, tree, path)
     #IO.inspect(git)
-    diff = case GitManager.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
+    diff = case Git.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
              {:ok, diff} -> diff
              _ -> nil
            end
@@ -414,7 +414,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> render("commit.html")
   end
   defp show_op(conn, :diff, %{from: from, org: org, path: path, repo: repo, to: to}) do
-    case GitManager.diff(Repository.full_slug(repo), from, to) do
+    case Git.diff(Repository.full_slug(repo), from, to) do
       {:ok, diff} ->
         #diff_html = Pygmentize.html(diff, "diff.patch")
         diff_line_numbers = line_numbers(diff)
