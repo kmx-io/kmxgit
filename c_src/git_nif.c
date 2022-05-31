@@ -499,7 +499,8 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
   ERL_NIF_TERM log;
   ERL_NIF_TERM res;
   struct log_state s;
-  if (argc != 3 || !argv || !argv[0] || !argv[1] || !argv[2]) {
+  if (argc != 5 || !argv || !argv[0] || !argv[1] ||
+      !argv[2] || !argv[3] || !argv[4]) {
     res = enif_make_atom(env, "badarg");
     goto error;
   }
@@ -518,12 +519,11 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "path_missing");
     goto error;
   }
-  if (git_repository_open_bare(&r, repo_dir)) {
+  bzero(&s, sizeof(s));
+  if (git_repository_open_bare(&s.repo, repo_dir)) {
     res = enif_make_atom(env, "git_repository_open_bare");
     goto error;
   }
-  bzero(&s, sizeof(s));
-  s.repo = r;
   s.sorting = GIT_SORT_TIME;
   if (log_add_revision(&s, branch_name)) {
     res = enif_make_atom(env, "bad_branch");
@@ -531,7 +531,10 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
   }
   bzero(&opt, sizeof(opt));
   opt.max_parents = -1;
-  opt.limit = -1;
+  enif_get_int(env, argv[3], &i);
+  opt.skip = i;
+  enif_get_int(env, argv[4], &i);
+  opt.limit = i;
   if (path[0]) {
     diffopts.pathspec.strings = &path;
     diffopts.pathspec.count = 1;
@@ -622,7 +625,7 @@ static ErlNifFunc funcs[] = {
   {"content_nif",  2, content_nif,  0},
   {"create_nif",   1, create_nif,   0},
   {"files_nif",    3, files_nif,    0},
-  {"log_nif",      3, log_nif,      0},
+  {"log_nif",      5, log_nif,      0},
 };
 
 ERL_NIF_INIT(Elixir.Kmxgit.Git, funcs, load, NULL, NULL, unload);

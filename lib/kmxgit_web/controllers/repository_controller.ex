@@ -327,8 +327,8 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_put_log1(git = %{valid: true}, repo, tree, path) do
     slug = Repository.full_slug(repo)
-    log1 = case if path, do: GitManager.log1_file(slug, path, tree), else: GitManager.log1(slug, tree) do
-             {:ok, log1} -> log1
+    log1 = case Git.log(slug, tree, path || "", 0, 1) do
+             {:ok, [log1]} -> log1
              {:error, err} ->
                IO.inspect(err)
                nil

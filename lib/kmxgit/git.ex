@@ -66,14 +66,14 @@ defmodule Kmxgit.Git do
     :ok = :erlang.load_nif(path, 0)
   end
 
-  def log(repo, tree \\ "HEAD", path \\ "") do
+  def log(repo, tree \\ "HEAD", path \\ "", skip \\ 0, limit \\ 100) do
     tree = tree || "HEAD"
     dir = git_dir(repo)
     # [%{author: author, author_email: email, hash: hash, date: date, message: msg}]
-    log_nif(dir, tree, path)
+    log_nif(dir, tree, path, skip, limit)
   end
 
-  def log_nif(_repo, _tree, _path) do
+  def log_nif(_repo, _tree, _path, _skip, _limit) do
     exit(:nif_not_loaded)
   end
 end
