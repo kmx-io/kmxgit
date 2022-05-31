@@ -601,7 +601,51 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
   free(repo_dir);
   free(branch_name);
   free(path);
+  return res;
+}
 
+static ERL_NIF_TERM tags_nif (ErlNifEnv *env, int argc,
+                              const ERL_NIF_TERM argv[])
+{
+  git_repository *r = NULL;
+  char *repo_dir = NULL;
+  git_strarray tags = {0};
+  int i = 0;
+  ERL_NIF_TERM acc;
+  ERL_NIF_TERM tag;
+  ERL_NIF_TERM ok;
+  ERL_NIF_TERM res;
+  if (argc != 1 || !argv || !argv[0]) {
+    res = enif_make_atom(env, "badarg");
+    goto error;
+  }
+  repo_dir = enif_term_to_string(env, argv[0]);
+  if (!repo_dir || !repo_dir[0]) {
+    res = enif_make_atom(env, "repo_dir_missing");
+    goto error;
+  }
+  if (git_repository_open_bare(&r, repo_dir)) {
+    res = enif_make_atom(env, "git_repository_open_bare");
+    goto error;
+  }
+  if (git_tag_list(&tags, r)) {
+    res = enif_make_atom(env, "git_tag_list");
+    goto error;
+  }
+  acc = enif_make_list(env, 0);
+  for (i = tags.count - 1; i >= 0; i--) {
+    tag = enif_string_to_term(env, tags.strings[i]);
+    acc = enif_make_list_cell(env, tag, acc);
+  }
+  ok = enif_make_atom(env, "ok");
+  git_repository_free(r);
+  free(repo_dir);
+  return enif_make_tuple2(env, ok, acc);
+ error:
+  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  enif_fprintf(stderr, "%T\n", res);
+  git_repository_free(r);
+  free(repo_dir);
   return res;
 }
 
@@ -626,6 +670,7 @@ static ErlNifFunc funcs[] = {
   {"create_nif",   1, create_nif,   0},
   {"files_nif",    3, files_nif,    0},
   {"log_nif",      5, log_nif,      0},
+  {"tags_nif",     1, tags_nif,     0}
 };
 
 ERL_NIF_INIT(Elixir.Kmxgit.Git, funcs, load, NULL, NULL, unload);

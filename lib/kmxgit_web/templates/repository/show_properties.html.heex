@@ -53,7 +53,7 @@
         <ul>
           <%= for tag <- @git.tags |> Enum.reverse() do %>
             <li>
-              <%= link tag.tag, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tag", tag.tag])) %>
+              <%= link tag, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tag", tag])) %>
             </li>
           <% end %>
         </ul>

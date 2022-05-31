@@ -76,4 +76,13 @@ defmodule Kmxgit.Git do
   def log_nif(_repo, _tree, _path, _skip, _limit) do
     exit(:nif_not_loaded)
   end
+
+  def tags(repo) do
+    dir = git_dir(repo)
+    tags_nif(dir)
+  end
+
+  def tags_nif(_repo) do
+    exit(:nif_not_loaded)
+  end
 end

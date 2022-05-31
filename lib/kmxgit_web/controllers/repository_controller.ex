@@ -340,10 +340,10 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp git_put_tags(git = %{valid: true}, repo, conn, op, path) do
-    case GitManager.tags(Repository.full_slug(repo)) do
+    case Git.tags(Repository.full_slug(repo)) do
       {:ok, tags} ->
         tag_trees = tags
-        |> Enum.map(fn %{tag: tag} ->
+        |> Enum.map(fn tag ->
           url = Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_#{op || :tree}", tag] ++ (if path, do: String.split(path, "/"), else: []))
           {:tag, tag, url}
         end)
