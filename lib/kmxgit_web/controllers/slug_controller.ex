@@ -39,6 +39,9 @@ defmodule KmxgitWeb.SlugController do
           |> Enum.filter(fn repo ->
             repo.public_access || Repository.member?(repo, current_user)
           end)
+          |> Enum.sort(fn a, b ->
+            a.slug < b.slug
+          end)
           conn
           |> assign(:current_organisation, org)
           |> assign(:disk_usage, Organisation.disk_usage(org))
