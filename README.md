@@ -67,11 +67,12 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 ## kmxgit 0.4
 
- - slugs without joins
+ - Performance improvements :
+   - DONE git bindings
+   - DONE pygmentize -> prismjs
+   - DONE shell commands -> elixir (mkdir mv rm)
+   - slugs without joins
  - Markdown refactor
- - git port / bindings
- - pygmentize port
- - shell commands -> elixir (mkdir mv rm)
  - Shared deploy SSH keys.
    - For now deploy keys must be unique (cannot be shared between repos).
  - Releases
