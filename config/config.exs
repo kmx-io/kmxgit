@@ -30,6 +30,8 @@ config :kmxgit, KmxgitWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :kmxgit, Kmxgit.Mailer, adapter: Swoosh.Adapters.Local
 
+config :file_size, :number_format, precision: 2
+
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
 
