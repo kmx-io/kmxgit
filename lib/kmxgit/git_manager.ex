@@ -299,6 +299,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def du_ks(path) do
     {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)
     case status do
@@ -311,10 +312,12 @@ defmodule Kmxgit.GitManager do
     end
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def dir_disk_usage(dir) do
     du_ks("#{@git_root}/#{dir}")
   end
 
+  @deprecated "use Kmxgit.Git instead"
   def disk_usage(repo) do
     git_dir(repo)
     |> du_ks()

@@ -10,6 +10,52 @@ defmodule Kmxgit.Git do
     "#{@git_root}/#{repo}.git"
   end
 
+  def du_ks(path) do
+    {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)
+    case status do
+      0 ->
+        {k, _} = Integer.parse(out)
+        k
+      x ->
+        IO.inspect(x)
+        0
+    end
+  end
+
+  def du_ks_(path) do
+    if File.dir?(path) do
+      case File.ls(path) do
+        {:ok, files} ->
+          Enum.reduce(files, 0, fn file, acc ->
+            if file != "." && file != ".." do
+              du_ks("#{path}/#{file}") + acc
+            else
+              acc
+            end
+          end)
+        {:error, err} ->
+          IO.inspect(err)
+          0
+      end
+    else
+      case File.lstat(path, time: :posix) do
+        {:ok, stat} -> stat.size / 1024
+        {:error, err} ->
+          IO.inspect(err)
+          0
+      end
+    end
+  end
+
+  def dir_disk_usage(dir) do
+    du_ks("#{@git_root}/#{dir}")
+  end
+
+  def disk_usage(repo) do
+    git_dir(repo)
+    |> du_ks()
+  end
+
   # NIFs
 
   def branches(repo) do

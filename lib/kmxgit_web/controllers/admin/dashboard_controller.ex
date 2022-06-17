@@ -1,14 +1,14 @@
 defmodule KmxgitWeb.Admin.DashboardController do
   use KmxgitWeb, :controller
 
-  alias Kmxgit.GitManager
+  alias Kmxgit.Git
   alias Kmxgit.OrganisationManager
   alias Kmxgit.RepositoryManager
   alias Kmxgit.UserManager
 
   def index(conn, _params) do
     conn
-    |> assign(:disk_usage, GitManager.du_ks("priv/git/"))
+    |> assign(:disk_usage, Git.du_ks("priv/git/"))
     |> assign(:org_count, OrganisationManager.count_organisations())
     |> assign(:page_title, gettext "Dashboard")
     |> assign(:repo_count, RepositoryManager.count_repositories())

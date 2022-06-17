@@ -58,9 +58,12 @@ defmodule KmxgitWeb do
       alias Kmxgit.UserManager.User
 
       def disk_usage(size) do
+        units = {:kb, :mb, :gb, :tb}
+        index = min(3, trunc(:math.log2(abs(size)) / 10))
+        unit = elem(units, index)
         FileSize.new(size, :kb)
-        |> FileSize.convert(:mb)
-        |> FileSize.to_string()
+        |> FileSize.convert(unit)
+        |> FileSize.format()
       end
 
       def recaptcha_site_key do

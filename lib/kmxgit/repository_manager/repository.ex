@@ -3,7 +3,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Kmxgit.GitManager
+  alias Kmxgit.Git
   alias Kmxgit.RepositoryManager
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.UserManager.User
@@ -211,7 +211,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   end
 
   def disk_usage(repo = %__MODULE__{}) do
-    GitManager.disk_usage(full_slug(repo))
+    Git.disk_usage(full_slug(repo))
   end
   def disk_usage(repos) when is_list(repos) do
     repos

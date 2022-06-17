@@ -3,7 +3,7 @@ defmodule Kmxgit.OrganisationManager.Organisation do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Kmxgit.GitManager
+  alias Kmxgit.Git
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.User
@@ -46,7 +46,7 @@ defmodule Kmxgit.OrganisationManager.Organisation do
 
   def disk_usage(org) do
     if org do
-      GitManager.dir_disk_usage(org.slug.slug)
+      Git.dir_disk_usage(org.slug.slug)
     else
       0
     end
