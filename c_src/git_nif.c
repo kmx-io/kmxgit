@@ -794,4 +794,15 @@ static ErlNifFunc funcs[] = {
   {"tags_nif",     1, tags_nif,     0}
 };
 
-ERL_NIF_INIT(Elixir.Kmxgit.Git, funcs, load, NULL, NULL, unload);
+int upgrade (ErlNifEnv* env, void** priv_data, void** old_priv_data,
+             ERL_NIF_TERM load_info)
+{
+  (void) env;
+  (void) priv_data;
+  (void) old_priv_data;
+  (void) load_info;
+  fprintf(stderr, "git_nif upgrade\n");
+  return 0;
+}
+
+ERL_NIF_INIT(Elixir.Kmxgit.Git, funcs, load, NULL, upgrade, unload);
