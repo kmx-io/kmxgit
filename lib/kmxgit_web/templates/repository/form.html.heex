@@ -51,7 +51,7 @@
           data: [confirm: gettext("Are you sure you want to delete the repository %{repo} ?", repo: Repository.full_slug(@current_repository))] %>
     <% else %>
       <%= link gettext("Cancel"),
-          to: Routes.slug_path(@conn, :show, @owner.slug.slug),
+          to: Routes.slug_path(@conn, :show, @owner.slug_),
           class: "btn btn-secondary" %>
     <% end %>
     <%= submit gettext("Submit"), class: "btn btn-primary" %>

@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1><%= gettext("Organisation %{org}", org: @org.name || @org.slug.slug) %></h1>
+  <h1><%= gettext("Organisation %{org}", org: @org.name || @org.slug_) %></h1>
 
   <table class="table admin-properties">
     <tr>
@@ -12,7 +12,7 @@
     </tr>
     <tr>
       <th><%= gettext "Slug" %></th>
-      <td><%= @org.slug.slug %></td>
+      <td><%= @org.slug_ %></td>
     </tr>
     <tr>
       <th><%= gettext "Description" %></th>
@@ -26,7 +26,7 @@
       <th><%= gettext "Users" %></th>
       <td>
         <%= for user <- @org.users do %>
-          <%= link(user.slug.slug, to: Routes.admin_user_path(@conn, :show, user), class: "user") %>
+          <%= link(User.login(user), to: Routes.admin_user_path(@conn, :show, user), class: "user") %>
         <% end %>
         <%= link "-",
             to: Routes.admin_organisation__path(@conn, :remove_user, @org),
@@ -65,6 +65,6 @@
       class: "btn btn-primary" %>
 
   <%= link gettext("Show"),
-      to: Routes.slug_path(@conn, :show, @org.slug.slug),
+      to: Routes.slug_path(@conn, :show, @org.slug_),
       class: "btn btn-primary" %>
 </div>

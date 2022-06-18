@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1><%= gettext("Edit organisation %{organisation}", organisation: @org.name || @org.slug.slug) %></h1>
+  <h1><%= gettext("Edit organisation %{organisation}", organisation: @org.name || @org.slug_) %></h1>
 
   <%= render("form.html", assigns) %>
 </div>

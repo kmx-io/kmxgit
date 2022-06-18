@@ -33,16 +33,16 @@
       <%= gettext "Users" %><br/>
       <%= if Repository.owner?(@repo, @current_user) do %>
         <%= link "-",
-        to: Routes.repository_path(@conn, :remove_user, @owner.slug.slug, Repository.splat(@repo)),
+        to: Routes.repository_path(@conn, :remove_user, @owner.slug_, Repository.splat(@repo)),
         class: "btn btn-danger btn-sm" %>
         <%= link "+",
-        to: Routes.repository_path(@conn, :add_user, @owner.slug.slug, Repository.splat(@repo)),
+        to: Routes.repository_path(@conn, :add_user, @owner.slug_, Repository.splat(@repo)),
         class: "btn btn-primary btn-sm" %>
       <% end %>
     </th>
     <td>
       <%= for user <- @members do %>
-        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: user.slug.slug, class: "") %>
+        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
       <% end %>
     </td>
   </tr>

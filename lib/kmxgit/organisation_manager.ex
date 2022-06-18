@@ -6,13 +6,11 @@ defmodule Kmxgit.OrganisationManager do
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.Pagination
   alias Kmxgit.Repo
-  alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager
 
   def list_all_organisations() do
     from(org in Organisation)
-    |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id)
-    |> order_by([org, s], [asc_nulls_last: fragment("lower(?)", s.slug)])
+    |> order_by([org], [asc_nulls_last: fragment("lower(?)", org.slug_)])
     |> preload([:owned_repositories, :slug])
     |> Repo.all()
   end
@@ -20,32 +18,31 @@ defmodule Kmxgit.OrganisationManager do
   def list_organisations(params \\ %IndexParams{}) do
     update_disk_usage()
     from(org in Organisation)
-    |> join(:inner, [org], s in Slug, on: s.organisation_id == org.id)
     |> search(params)
     |> index_order_by(params)
-    |> Pagination.page(params, preload: [:owned_repositories, :slug])
+    |> Pagination.page(params, preload: [:owned_repositories])
   end
 
   def search(query, %IndexParams{search: search}) do
     expr = "%#{search}%"
     query
-    |> where([org, s], ilike(org.name, ^expr) or ilike(s.slug, ^expr))
+    |> where([org], ilike(org.name, ^expr) or ilike(org.slug_, ^expr))
   end
 
   def index_order_by(query, %{column: "id", reverse: true}) do
     order_by(query, [desc: :id])
   end
   def index_order_by(query, %{column: "name", reverse: true}) do
-    order_by(query, [org, s], [desc_nulls_last: fragment("lower(?)", org.name)])
+    order_by(query, [org], [desc_nulls_last: fragment("lower(?)", org.name)])
   end
   def index_order_by(query, %{column: "name"}) do
-    order_by(query, [org, s], [asc_nulls_last: fragment("lower(?)", org.name)])
+    order_by(query, [org], [asc_nulls_last: fragment("lower(?)", org.name)])
   end
   def index_order_by(query, %{column: "slug", reverse: true}) do
-    order_by(query, [org, s], [desc_nulls_last: fragment("lower(?)", s.slug)])
+    order_by(query, [org], [desc_nulls_last: fragment("lower(?)", org.slug_)])
   end
   def index_order_by(query, %{column: "slug"}) do
-    order_by(query, [org, s], [asc_nulls_last: fragment("lower(?)", s.slug)])
+    order_by(query, [org], [asc_nulls_last: fragment("lower(?)", org.slug_)])
   end
   def index_order_by(query, %{column: "du", reverse: true}) do
     order_by(query, [desc: :disk_usage])
@@ -58,7 +55,7 @@ defmodule Kmxgit.OrganisationManager do
   end
 
   def update_disk_usage() do
-    Repo.all(from org in Organisation, preload: :slug)
+    Repo.all(from org in Organisation)
     |> Enum.map(fn org ->
       org
       |> Ecto.Changeset.cast(%{}, [])
@@ -82,10 +79,9 @@ defmodule Kmxgit.OrganisationManager do
   def get_organisation(id) do
     Repo.one from organisation in Organisation,
       where: [id: ^id],
-      preload: [:slug,
-                owned_repositories: [organisation: :slug,
-                                     user: :slug],
-                users: :slug],
+      preload: [:users,
+                owned_repositories: [:organisation,
+                                     :user]],
       limit: 1
   end
 
@@ -93,8 +89,8 @@ defmodule Kmxgit.OrganisationManager do
     get_organisation(id) || raise Ecto.NoResultsError
   end
 
-  def change_organisation(organisation \\ %Organisation{}) do
-    Organisation.changeset(organisation, %{})
+  def change_organisation(organisation \\ %Organisation{}, attrs \\ %{}) do
+    Organisation.changeset(organisation, attrs)
   end
 
   def create_organisation(user, attrs \\ %{}) do
@@ -112,13 +108,10 @@ defmodule Kmxgit.OrganisationManager do
 
   def get_organisation_by_slug(slug) do
     Repo.one from o in Organisation,
-      join: s in Slug,
-      on: s.organisation_id == o.id,
-      where: fragment("lower(?)", s.slug) == ^String.downcase(slug),
-      preload: [:slug,
-                owned_repositories: [organisation: :slug,
-                                     user: :slug],
-                users: :slug],
+      where: o.slug_ == ^slug,
+      preload: [:users,
+                owned_repositories: [:organisation,
+                                     :user]],
       limit: 1
   end
 
@@ -158,5 +151,15 @@ defmodule Kmxgit.OrganisationManager do
     %Organisation{}
     |> Organisation.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def update_slug_() do
+    for org <- list_all_organisations() do
+      if (org.slug) do
+        update_organisation(org, %{slug_: org.slug.slug})
+      else
+        delete_organisation(org)
+      end
+    end
   end
 end

@@ -1,9 +1,9 @@
 <div class="container-fluid">
   <h1>
     <%= if @conn.assigns[:current_organisation] do %>
-      <%= gettext("New repository for organisation %{org}", org: @current_organisation.name || @current_organisation.slug.slug) %>
+      <%= gettext("New repository for organisation %{org}", org: @current_organisation.name || @current_organisation.slug_) %>
     <% else %>
-      <%= gettext("New repository for user %{login}", login: @owner.slug.slug) %>
+      <%= gettext("New repository for user %{login}", login: User.login(@owner)) %>
     <% end %>
   </h1>
   <%= render "form.html", assigns %>

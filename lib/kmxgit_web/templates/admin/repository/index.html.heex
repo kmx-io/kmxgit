@@ -19,9 +19,9 @@
           <td>
             <%= case owner = Repository.owner(repo) do %>
               <% %Organisation{} -> %>
-                <%= link owner.name || owner.slug.slug, to: Routes.admin_organisation_path(@conn, :show, owner) %>
+                <%= link owner.name || owner.slug_, to: Routes.admin_organisation_path(@conn, :show, owner) %>
               <% %User{} -> %>
-                <%= link owner.slug.slug, to: Routes.admin_user_path(@conn, :show, owner) %>
+                <%= link User.login(owner), to: Routes.admin_user_path(@conn, :show, owner) %>
             <% end %>
           </td>
           <td><%= link Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo) %></td>

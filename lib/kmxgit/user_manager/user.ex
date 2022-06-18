@@ -24,6 +24,7 @@ defmodule Kmxgit.UserManager.User do
     field :password_confirmation, :string, virtual: true, redact: true
     many_to_many :repositories, Repository, join_through: "users_repositories", on_delete: :delete_all
     has_one :slug, Slug, on_delete: :delete_all
+    field :slug_, :string
     field :ssh_keys, :string
     many_to_many :organisations, Organisation, join_through: "users_organisations", on_delete: :delete_all
     timestamps()
@@ -179,10 +180,11 @@ defmodule Kmxgit.UserManager.User do
   defp common_changeset(changeset) do
     changeset
     |> cast_assoc(:slug)
-    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :totp_secret, :slug])
+    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :totp_secret, :slug, :slug_])
     |> validate_email()
     |> Markdown.validate_markdown(:description)
     |> foreign_key_constraint(:owned_repositories, name: :repositories_user_id_fkey)
+    |> validate_format(:slug_, ~r/^[A-Za-z][-_+.0-9A-Za-z]{1,64}$/)
   end
 
   defp generate_totp_secret(changeset) do
@@ -192,13 +194,13 @@ defmodule Kmxgit.UserManager.User do
 
   def changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:deploy_only, :description, :name, :ssh_keys])
+    |> cast(attrs, [:deploy_only, :description, :name, :slug_, :ssh_keys])
     |> common_changeset()
   end
 
   def admin_changeset(user, attrs \\ %{}, opts \\ []) do
     user
-    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :ssh_keys])
+    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :slug_, :ssh_keys])
     |> validate_email()
     |> maybe_validate_password(opts)
     |> common_changeset()
@@ -206,7 +208,7 @@ defmodule Kmxgit.UserManager.User do
 
   def admin_create_user_changeset(user, attrs \\ %{}, opts \\ []) do
     user
-    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :ssh_keys])
+    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :slug_, :ssh_keys])
     |> generate_totp_secret()
     |> validate_email()
     |> maybe_validate_password(opts)
@@ -223,7 +225,7 @@ defmodule Kmxgit.UserManager.User do
     |> Enum.map(fn line ->
       line1 = String.replace(line, "\r", "")
       if Regex.match?(~r/^[ \t]*ssh-/, line1) do
-        "environment=\"GIT_AUTH_ID=#{user.slug.slug}\" #{line1}"
+        "environment=\"GIT_AUTH_ID=#{login(user)}\" #{line1}"
       else
         line1
       end
@@ -237,15 +239,7 @@ defmodule Kmxgit.UserManager.User do
   end
 
   def login(user) do
-    if user do
-      if user.slug do
-        user.slug.slug || raise ArgumentError, "no slug for user !"
-      else
-        raise ArgumentError, "no slug for user"
-      end
-    else
-      raise ArgumentError, "no slug for nil user"
-    end
+    user.slug_
   end
 
   def totp_verify(%__MODULE__{totp_secret: secret}, token) do

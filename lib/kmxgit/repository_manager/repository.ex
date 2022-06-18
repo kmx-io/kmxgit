@@ -86,7 +86,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     user = get_field(changeset, :user)
     owner = org || user
     slug = get_field(changeset, :slug)
-    if repo = RepositoryManager.get_repository_by_owner_and_slug(owner.slug.slug, slug) do
+    if repo = RepositoryManager.get_repository_by_owner_and_slug(owner.slug_, slug) do
       if repo.id != changeset.data.id do
         changeset
         |> add_error(:slug, "is already taken")
@@ -109,7 +109,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
   end
 
   def owner_slug(repo) do
-    owner(repo).slug.slug
+    owner(repo).slug_
   end
 
   def full_slug(repo) do
@@ -174,7 +174,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     full_slug = full_slug(repo)
     auth = members(repo)
     |> Enum.sort(fn a, b ->
-      a.slug.slug < b.slug.slug
+      a.slug_ < b.slug_
     end)
     |> Enum.map(fn user ->
       mode = if user.deploy_only do
@@ -182,7 +182,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
         else
           "rw"
         end
-      auth_line(user.slug.slug, mode, full_slug)
+      auth_line(User.login(user), mode, full_slug)
     end)
     auth ++ [auth_line(deploy_user(repo), "r", full_slug)]
   end

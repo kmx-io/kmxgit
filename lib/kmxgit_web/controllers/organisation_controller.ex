@@ -6,6 +6,8 @@ defmodule KmxgitWeb.OrganisationController do
   alias Kmxgit.OrganisationManager
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.Repo
+  alias Kmxgit.SlugManager
+  alias Kmxgit.UserManager.User
 
   def new(conn, _params) do
     _ = conn.assigns.current_user
@@ -18,11 +20,25 @@ defmodule KmxgitWeb.OrganisationController do
 
   def create(conn, params) do
     current_user = conn.assigns.current_user
-    case OrganisationManager.create_organisation(current_user, params["organisation"]) do
+    case Repo.transaction(fn ->
+          case OrganisationManager.create_organisation(current_user, params["organisation"]) do
+            {:ok, organisation} ->
+              case SlugManager.create_slug(organisation) do
+                {:ok, _slug} -> organisation
+                {:error, err} ->
+                  {message, _} = err.errors[:slug]
+                  changeset = OrganisationManager.change_organisation(%Organisation{}, params["organisation"])
+                  |> Ecto.Changeset.add_error(:slug_, message)
+                  Repo.rollback(changeset)
+              end
+            {:error, err} -> Repo.rollback(err)
+          end
+        end) do
       {:ok, organisation} ->
         conn
-        |> redirect(to: Routes.slug_path(conn, :show, organisation.slug.slug))
+        |> redirect(to: Routes.slug_path(conn, :show, organisation.slug_))
       {:error, changeset} ->
+        IO.inspect(changeset)
         conn
         |> assign(:action, Routes.organisation_path(conn, :create))
         |> assign(:changeset, changeset)
@@ -36,7 +52,7 @@ defmodule KmxgitWeb.OrganisationController do
     changeset = OrganisationManager.change_organisation(org)
     if org && Organisation.owner?(org, current_user) do
       conn
-      |> assign(:action, Routes.organisation_path(conn, :update, org.slug.slug))
+      |> assign(:action, Routes.organisation_path(conn, :update, org.slug_))
       |> assign(:changeset, changeset)
       |> assign(:current_organisation, org)
       |> render("edit.html")
@@ -52,11 +68,15 @@ defmodule KmxgitWeb.OrganisationController do
       case Repo.transaction(fn ->
             case OrganisationManager.update_organisation(org, params["organisation"]) do
               {:ok, org1} ->
-                if org.slug.slug != org1.slug.slug do
-                  case GitManager.rename_dir(org.slug.slug, org1.slug.slug) do
-                    :ok ->
-                      GitAuth.update()
-                      org1
+                if org.slug_ != org1.slug_ do
+                  case SlugManager.rename_slug(org.slug_, org1.slug_) do
+                    {:ok, _} ->
+                      case GitManager.rename_dir(org.slug_, org1.slug_) do
+                        :ok ->
+                          GitAuth.update()
+                          org1
+                        {:error, err} -> Repo.rollback(err)
+                      end
                     {:error, err} -> Repo.rollback(err)
                   end
                 else
@@ -67,10 +87,10 @@ defmodule KmxgitWeb.OrganisationController do
           end) do
         {:ok, org1} ->
           conn
-          |> redirect(to: Routes.slug_path(conn, :show, org1.slug.slug))
+          |> redirect(to: Routes.slug_path(conn, :show, org1.slug_))
         {:error, changeset} ->
           conn
-          |> assign(:action, Routes.organisation_path(conn, :update, org.slug.slug))
+          |> assign(:action, Routes.organisation_path(conn, :update, org.slug_))
           |> assign(:changeset, changeset)
           |> render("edit.html")
       end
@@ -101,7 +121,7 @@ defmodule KmxgitWeb.OrganisationController do
         {:ok, org} ->
           GitAuth.update()
           conn
-          |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
+          |> redirect(to: Routes.slug_path(conn, :show, org.slug_))
         {:error, _e} ->
           conn
           |> assign(:action, Routes.organisation_path(conn, :add_user_post, params["slug"]))
@@ -135,7 +155,7 @@ defmodule KmxgitWeb.OrganisationController do
         {:ok, org} ->
           GitAuth.update()
           conn
-          |> redirect(to: Routes.slug_path(conn, :show, org.slug.slug))
+          |> redirect(to: Routes.slug_path(conn, :show, org.slug_))
         {:error, _} ->
           conn
           |> assign(:action, Routes.organisation_path(conn, :remove_user_post, params["slug"]))
@@ -154,21 +174,26 @@ defmodule KmxgitWeb.OrganisationController do
       case Repo.transaction(fn ->
             case OrganisationManager.delete_organisation(org) do
               {:ok, _} ->
-                case GitManager.delete_dir(org.slug.slug) do
+                case SlugManager.delete_slug(org.slug_) do
                   :ok ->
-                    GitAuth.update()
-                    :ok
-                  {:error, out} -> Repo.rollback(status: out)
+                    case GitManager.delete_dir(org.slug_) do
+                      :ok ->
+                        GitAuth.update()
+                        :ok
+                      {:error, out} -> Repo.rollback(status: out)
+                    end
+                  {:error, e} -> Repo.rollback(e)
                 end
               {:error, e} -> Repo.rollback(e)
             end
           end) do
         {:ok, _} ->
           conn
-          |> redirect(to: Routes.slug_path(conn, :show, current_user.slug.slug))
-        {:error, _} ->
+          |> redirect(to: Routes.slug_path(conn, :show, User.login(current_user)))
+        {:error, err} ->
+          IO.inspect(err)
           conn
-          |> redirect(to: Routes.organisation_path(conn, :edit, org.slug.slug))
+          |> redirect(to: Routes.organisation_path(conn, :edit, org.slug_))
       end
     else
       not_found(conn)

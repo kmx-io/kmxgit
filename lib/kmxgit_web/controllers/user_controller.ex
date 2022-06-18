@@ -32,7 +32,7 @@ defmodule KmxgitWeb.UserController do
       conn
       |> assign(:changeset, changeset)
       |> assign(:email_changeset, email_changeset)
-      |> assign(:page_title, gettext("Edit user %{login}", login: user.slug.slug))
+      |> assign(:page_title, gettext("Edit user %{login}", login: User.login(user)))
       |> assign(:password_changeset, password_changeset)
       |> assign(:user, user)
       |> render("edit.html")
@@ -65,7 +65,7 @@ defmodule KmxgitWeb.UserController do
           |> redirect(to: Routes.slug_path(conn, :show, User.login(user)))
         {:error, changeset} ->
           conn
-          |> assign(:page_title, gettext("Edit user %{login}", login: user.slug.slug))
+          |> assign(:page_title, gettext("Edit user %{login}", login: User.login(user)))
           |> assign(:changeset, changeset)
           |> assign(:user, user)
           |> render("edit.html")
@@ -150,11 +150,11 @@ defmodule KmxgitWeb.UserController do
 
   def delete(conn, params) do
     current_user = conn.assigns.current_user
-    if params["login"] == current_user.slug.slug do
+    if params["login"] == User.login(current_user) do
       case Repo.transaction(fn ->
             case UserManager.delete_user(current_user) do
               {:ok, _} ->
-                case GitManager.delete_dir(current_user.slug.slug) do
+                case GitManager.delete_dir(User.login(current_user)) do
                   :ok -> :ok
                   {:error, out} -> Repo.rollback(status: out)
                 end
@@ -168,7 +168,7 @@ defmodule KmxgitWeb.UserController do
         {:error, changeset} ->
           conn
           |> assign(:changeset, changeset)
-          |> assign(:page_title, gettext("Edit user %{login}", login: current_user.slug.slug))
+          |> assign(:page_title, gettext("Edit user %{login}", login: User.login(current_user)))
           |> render("edit.html")
       end
     else

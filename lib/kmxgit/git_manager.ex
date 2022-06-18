@@ -23,11 +23,15 @@ defmodule Kmxgit.GitManager do
 
   def rename_dir(from, to) do
     dir_from = "#{@git_root}/#{from}/"
-    dir_to   = "#{@git_root}/#{to}/"
-    if File.exists?(dir_to) do
-      {:error, "file exists"}
+    if File.exists?(dir_from) do
+      dir_to   = "#{@git_root}/#{to}/"
+      if File.exists?(dir_to) do
+        {:error, "file exists"}
+      else
+        File.rename(dir_from, dir_to)
+      end
     else
-      File.rename(dir_from, dir_to)
+      :ok
     end
   end
 

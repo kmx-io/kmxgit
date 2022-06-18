@@ -12,10 +12,10 @@
         <%= case owner = Repository.owner(@repo) do %>
           <% %Organisation{} -> %>
             <%= gettext "Organisation" %>
-            <%= link owner.name || owner.slug.slug, to: Routes.admin_organisation_path(@conn, :show, owner) %>
+            <%= link owner.name || owner.slug_, to: Routes.admin_organisation_path(@conn, :show, owner) %>
           <% %User{} -> %>
             <%= gettext "User" %>
-            <%= link owner.slug.slug, to: Routes.admin_user_path(@conn, :show, owner) %>
+            <%= link User.login(owner), to: Routes.admin_user_path(@conn, :show, owner) %>
         <% end %>
       </td>
     </tr>
@@ -55,7 +55,7 @@
       <th><%= gettext "Members" %></th>
       <td>
         <%= for user <- @members do %>
-          <%= link(user.slug.slug, to: Routes.admin_user_path(@conn, :show, user), class: "user") %>
+          <%= link(User.login(user), to: Routes.admin_user_path(@conn, :show, user), class: "user") %>
         <% end %>
         <%= link "-",
             to: Routes.admin_repository__path(@conn, :remove_user, @repo),

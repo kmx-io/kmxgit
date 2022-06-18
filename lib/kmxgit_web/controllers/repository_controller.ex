@@ -84,11 +84,11 @@ defmodule KmxgitWeb.RepositoryController do
         GitAuth.update()
         :ok = GitManager.public_access(Repository.full_slug(repo), repo.public_access)
         conn
-        |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
+        |> redirect(to: Routes.repository_path(conn, :show, owner.slug_, Repository.splat(repo)))
       {:error, changeset} ->
         IO.inspect changeset
         conn
-        |> assign(:action, Routes.repository_path(conn, :create, owner.slug.slug))
+        |> assign(:action, Routes.repository_path(conn, :create, owner.slug_))
         |> assign(:changeset, changeset)
         |> assign_current_organisation(owner)
         |> assign(:owner, owner)
@@ -778,7 +778,7 @@ defmodule KmxgitWeb.RepositoryController do
       {:ok, repo} ->
         GitAuth.update()
         conn
-        |> redirect(to: Routes.repository_path(conn, :show, owner.slug.slug, Repository.splat(repo)))
+        |> redirect(to: Routes.repository_path(conn, :show, owner.slug_, Repository.splat(repo)))
       {:error, changeset} ->
         IO.inspect changeset
         conn

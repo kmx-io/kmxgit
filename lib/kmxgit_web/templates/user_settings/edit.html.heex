@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h1>
     <%= gettext "Edit user" %>
-    <%= @current_user.slug.slug %>
+    <%= User.login(@current_user) %>
   </h1>
 
   <h2><%= gettext "Change email" %></h2>

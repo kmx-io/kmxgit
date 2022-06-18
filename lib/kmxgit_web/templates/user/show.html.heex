@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col col-12">
       <%= render("avatar.html", conn: @conn, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %>
-      <h1><%= @user.name %> (<%= @user.slug.slug %>)</h1>
+      <h1><%= @user.name %> (<%= User.login(@user) %>)</h1>
       <div class="col col-12 col-md-8">
         <%= if @user.description do %>
           <%= raw Markdown.to_html!(@user.description) %>
@@ -10,10 +10,10 @@
       </div>
       <%= if @current_user && @user.id == @current_user.id do %>
         <%= link gettext("New repository"),
-            to: Routes.repository_path(@conn, :new, @user.slug.slug),
+            to: Routes.repository_path(@conn, :new, User.login(@user)),
             class: "btn btn-primary" %>
         <%= link gettext("Edit"),
-            to: Routes.user_path(@conn, :edit, @user.slug.slug),
+            to: Routes.user_path(@conn, :edit, User.login(@user)),
             class: "btn btn-primary" %>
       <% end %>
     </div>
@@ -38,7 +38,7 @@
         </tr>
         <tr>
           <th><%= gettext "Login" %></th>
-          <td><%= @user.slug.slug %></td>
+          <td><%= User.login(@user) %></td>
         </tr>
         <tr>
           <th><%= gettext "Deploy only" %></th>
@@ -53,10 +53,10 @@
           </th>
           <td>
             <ul>
-              <%= for org <- Enum.sort_by(@user.organisations, & &1.slug.slug) do %>
+              <%= for org <- Enum.sort_by(@user.organisations, & &1.slug_) do %>
                 <li>
-                  <%= link(org.name || org.slug.slug,
-                      to: Routes.slug_path(@conn, :show, org.slug.slug),
+                  <%= link(org.name || org.slug_,
+                      to: Routes.slug_path(@conn, :show, org.slug_),
                       class: "org") %>
                 </li>
               <% end %>

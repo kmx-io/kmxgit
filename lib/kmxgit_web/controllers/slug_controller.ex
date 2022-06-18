@@ -46,12 +46,12 @@ defmodule KmxgitWeb.SlugController do
           |> assign(:current_organisation, org)
           |> assign(:disk_usage, Organisation.disk_usage(org))
           |> assign(:org, org)
-          |> assign(:page_title, org.name || org.slug.slug)
+          |> assign(:page_title, org.name || org.slug_)
           |> assign(:repos, repos)
           |> put_view(OrganisationView)
           |> render("show.html")
         else
-          not_found(conn)
+          raise "invalid slug"
         end
       end
     end

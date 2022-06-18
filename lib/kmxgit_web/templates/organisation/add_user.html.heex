@@ -1,6 +1,6 @@
 <div class="container-fluid">
 
-  <h1><%= gettext "Add user to %{org}", org: @current_organisation.name || @current_organisation.slug.slug %></h1>
+  <h1><%= gettext "Add user to %{org}", org: @current_organisation.name || @current_organisation.slug_ %></h1>
 
   <%= form_for :organisation, @action, fn f -> %>
 

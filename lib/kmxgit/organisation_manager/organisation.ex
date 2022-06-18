@@ -12,20 +12,21 @@ defmodule Kmxgit.OrganisationManager.Organisation do
     field :description, :string
     field :disk_usage, :integer, default: 0
     field :name, :string
-    has_many :owned_repositories, Repository
+    has_many :owned_repositories, Repository, on_delete: :delete_all
     many_to_many :users, User, join_through: "users_organisations", on_replace: :delete, on_delete: :delete_all
     has_one :slug, Slug, on_delete: :delete_all
+    field :slug_, :string
     timestamps()
   end
 
   @doc false
   def changeset(organisation, attrs \\ %{}) do
     organisation
-    |> cast(attrs, [:description, :name])
-    |> cast_assoc(:slug)
-    |> validate_required([:slug])
+    |> cast(attrs, [:description, :name, :slug_])
+    |> validate_required([:slug_])
     |> Markdown.validate_markdown(:description)
     |> foreign_key_constraint(:owned_repositories, name: :repositories_organisation_id_fkey)
+    |> validate_format(:slug_, ~r/^[A-Za-z][-_+.0-9A-Za-z]{1,64}$/)
   end
 
   def owner?(org, user) do
@@ -46,7 +47,7 @@ defmodule Kmxgit.OrganisationManager.Organisation do
 
   def disk_usage(org) do
     if org do
-      Git.dir_disk_usage(org.slug.slug)
+      Git.dir_disk_usage(org.slug_)
     else
       0
     end

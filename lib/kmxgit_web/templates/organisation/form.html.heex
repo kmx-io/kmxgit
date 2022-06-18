@@ -1,12 +1,10 @@
 <%= form_for @changeset, @action, fn f -> %>
 
-  <%= inputs_for f, :slug, fn ff -> %>
-    <div class="mb-3">
-      <%= label ff, :slug, class: "form-label" %>
-      <%= text_input ff, :slug, class: "form-control" %>
-      <%= error_tag ff, :slug %>
-    </div>
-  <% end %>
+  <div class="mb-3">
+    <%= label f, :slug_, class: "form-label" %>
+    <%= text_input f, :slug_, class: "form-control" %>
+    <%= error_tag f, :slug_ %>
+  </div>
 
   <div class="mb-3">
     <%= label f, :name, class: "form-label" %>
@@ -23,16 +21,16 @@
   <div class="mb-3">
     <%= if @conn.assigns[:current_organisation] do %>
       <%= link gettext("Cancel"),
-          to: Routes.slug_path(@conn, :show, @current_organisation.slug.slug),
+          to: Routes.slug_path(@conn, :show, @current_organisation.slug_),
           class: "btn btn-secondary" %>
       <%= link gettext("Delete organisation"),
-          to: Routes.organisation_path(@conn, :delete, @current_organisation.slug.slug),
+          to: Routes.organisation_path(@conn, :delete, @current_organisation.slug_),
           method: :delete,
           class: "btn btn-danger",
-          data: [confirm: gettext("Are you sure you want to delete the organisation %{org} ?", org: @current_organisation.name || @current_organisation.slug.slug)] %>
+          data: [confirm: gettext("Are you sure you want to delete the organisation %{org} ?", org: @current_organisation.name || @current_organisation.slug_)] %>
     <% else %>
       <%= link gettext("Cancel"),
-          to: Routes.slug_path(@conn, :show, @current_user.slug.slug),
+          to: Routes.slug_path(@conn, :show, User.login(@current_user)),
           class: "btn btn-secondary" %>
     <% end %>
     <%= submit gettext("Submit"), class: "btn btn-primary" %>

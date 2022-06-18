@@ -409,4 +409,10 @@ defmodule Kmxgit.UserManager do
       false
     end
   end
+
+  def update_slug_() do
+    for u <- list_all_users() do
+      Kmxgit.UserManager.update_user(u, %{slug_: u.slug.slug})
+    end
+  end
 end

@@ -32,7 +32,7 @@
       </th>
       <td>
         <%= for org <- @user.organisations do %>
-          <%= link(org.name || org.slug.slug, to: Routes.admin_organisation_path(@conn, :show, org), class: "org") %>
+          <%= link(org.name || org.slug_, to: Routes.admin_organisation_path(@conn, :show, org), class: "org") %>
         <% end %>
       </td>
     </tr>

@@ -59,7 +59,7 @@ defmodule KmxgitWeb do
 
       def disk_usage(size) do
         units = {:kb, :mb, :gb, :tb}
-        index = min(3, trunc(:math.log2(abs(size)) / 10))
+        index = min(3, trunc(:math.log2(abs(size) + 4) / 10))
         unit = elem(units, index)
         FileSize.new(size, :kb)
         |> FileSize.convert(unit)

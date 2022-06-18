@@ -1,5 +1,7 @@
 defmodule Discord do
 
+  alias Kmxgit.UserManager.User
+
   def headers_to_string(headers), do: headers_to_string(headers, [])
   def headers_to_string([], acc), do: acc |> Enum.reverse() |> Enum.join("\n")
   def headers_to_string([{name, value} | rest], acc) do
@@ -9,7 +11,7 @@ defmodule Discord do
   def error(conn, params) do
     req_path = conn.request_path
     user = if conn.assigns[:current_user] do
-      conn.assigns.current_user.slug.slug
+      User.login(conn.assigns.current_user)
     else
       "_anonymous"
     end

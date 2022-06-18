@@ -80,8 +80,8 @@ defmodule KmxgitWeb.Admin.OrganisationController do
       case Repo.transaction(fn ->
             case OrganisationManager.update_organisation(org, params["organisation"]) do
               {:ok, org1} ->
-                if org.slug.slug != org1.slug.slug do
-                  case GitManager.rename_dir(org.slug.slug, org1.slug.slug) do
+                if org.slug_ != org1.slug_ do
+                  case GitManager.rename_dir(org.slug_, org1.slug_) do
                     :ok ->
                       GitAuth.update()
                       org1

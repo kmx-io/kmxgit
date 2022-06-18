@@ -1,13 +1,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col col-12">
-      <h1><%= @org.name || @org.slug.slug %></h1>
+      <h1><%= @org.name || @org.slug_ %></h1>
       <%= if Organisation.owner?(@org, @current_user) do %>
         <%= link gettext("New repository"),
-            to: Routes.repository_path(@conn, :new, @org.slug.slug),
+            to: Routes.repository_path(@conn, :new, @org.slug_),
             class: "btn btn-primary" %>
         <%= link gettext("Edit"),
-            to: Routes.organisation_path(@conn, :edit, @org.slug.slug),
+            to: Routes.organisation_path(@conn, :edit, @org.slug_),
             class: "btn btn-primary" %>
       <% end %>
     </div>
@@ -19,7 +19,7 @@
       <ul>
         <%= for repo <- @repos do %>
           <li>
-            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @org.slug.slug, Repository.splat(repo)) %>
+            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @org.slug_, Repository.splat(repo)) %>
           </li>
         <% end %>
       </ul>  
@@ -33,7 +33,7 @@
         </tr>
         <tr>
           <th><%= gettext "Slug" %></th>
-          <td><%= @org.slug.slug %></td>
+          <td><%= @org.slug_ %></td>
         </tr>
         <tr>
           <th><%= gettext "Description" %></th>
@@ -48,16 +48,16 @@
             <%= gettext "Users" %><br/>
             <%= if Organisation.owner?(@org, @current_user) do %>
               <%= link "-",
-                  to: Routes.organisation_path(@conn, :remove_user, @org.slug.slug),
+                  to: Routes.organisation_path(@conn, :remove_user, @org.slug_),
                   class: "btn btn-danger btn-sm" %>
               <%= link "+",
-                  to: Routes.organisation_path(@conn, :add_user, @org.slug.slug),
+                  to: Routes.organisation_path(@conn, :add_user, @org.slug_),
                   class: "btn btn-primary btn-sm" %>
             <% end %>
           </th>
           <td>
             <%= for user <- @org.users do %>
-              <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: user.slug.slug, class: "") %>
+              <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
             <% end %>
           </td>
         </tr>
