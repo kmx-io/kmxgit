@@ -4,6 +4,7 @@ defmodule KmxgitWeb.UserController do
   alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
   alias Kmxgit.Repo
+  alias Kmxgit.SlugManager
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.{Avatar, User}
   alias KmxgitWeb.ErrorView
@@ -48,10 +49,15 @@ defmodule KmxgitWeb.UserController do
       case Repo.transaction(fn ->
             case UserManager.update_user(user, params["user"]) do
               {:ok, user1} ->
-                if User.login(user1) != User.login(user) do
-                  case GitManager.rename_dir(User.login(user), User.login(user1)) do
-                    :ok -> user
-                    {:error, err} -> Repo.rollback(err)
+                if User.login(user) != User.login(user1) do
+                  case SlugManager.rename_slug(User.login(user), User.login(user1)) do
+                    {:ok, _slug} ->
+                      case GitManager.rename_dir(User.login(user), User.login(user1)) do
+                        :ok -> user1
+                        {:error, err} -> Repo.rollback(err)
+                      end
+                    {:error, changeset} ->
+                      Repo.rollback(changeset)
                   end
                 else
                   user

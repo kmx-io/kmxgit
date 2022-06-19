@@ -19,7 +19,7 @@ defmodule Kmxgit.UserManager.User do
     field :name, :string
     field :totp_last, :integer, default: 0, redact: true
     field :totp_secret, :string, redact: true
-    has_many :owned_repositories, Repository
+    has_many :owned_repositories, Repository, on_delete: :delete_all
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
     many_to_many :repositories, Repository, join_through: "users_repositories", on_delete: :delete_all
@@ -49,7 +49,7 @@ defmodule Kmxgit.UserManager.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :slug_])
     |> generate_totp_secret()
     |> validate_email()
     |> validate_password(opts)
@@ -179,8 +179,7 @@ defmodule Kmxgit.UserManager.User do
 
   defp common_changeset(changeset) do
     changeset
-    |> cast_assoc(:slug)
-    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :totp_secret, :slug, :slug_])
+    |> validate_required([:deploy_only, :email, :hashed_password, :is_admin, :totp_secret, :slug_])
     |> validate_email()
     |> Markdown.validate_markdown(:description)
     |> foreign_key_constraint(:owned_repositories, name: :repositories_user_id_fkey)

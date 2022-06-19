@@ -8,19 +8,16 @@ defmodule Kmxgit.UserManager do
   alias Kmxgit.IndexParams
   alias Kmxgit.Pagination
   alias Kmxgit.Repo
-  alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager.{Avatar, User, UserToken, UserNotifier}
 
-  @user_preload [:slug,
-                 organisations: :slug,
-                 owned_repositories: [members: :slug,
-                                      organisation: :slug,
-                                      user: :slug]]
+  @user_preload [:organisations,
+                 owned_repositories: [:members,
+                                      :organisation,
+                                      :user]]
 
   def list_all_users() do
     from(u in User)
-    |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
-    |> order_by([u, s], fragment("lower(?)", s.slug))
+    |> order_by([u], fragment("lower(?)", u.slug_))
     |> preload([:owned_repositories, :slug])
     |> Repo.all()
   end
@@ -28,16 +25,15 @@ defmodule Kmxgit.UserManager do
   def list_users(params \\ %IndexParams{}) do
     update_disk_usage()
     from(u in User)
-    |> join(:inner, [u], s in Slug, on: s.user_id == u.id)
     |> search(params)
     |> index_order_by(params)
-    |> Pagination.page(params, preload: [:owned_repositories, :slug])
+    |> Pagination.page(params, preload: [:owned_repositories])
   end
 
   def search(query, %IndexParams{search: search}) do
     expr = "%#{search}%"
     query
-    |> where([u, s], ilike(u.name, ^expr) or ilike(s.slug, ^expr) or ilike(u.email, ^expr))
+    |> where([u], ilike(u.name, ^expr) or ilike(u.slug_, ^expr) or ilike(u.email, ^expr))
   end
 
   def index_order_by(query, %IndexParams{column: "id", reverse: true}) do
@@ -47,22 +43,22 @@ defmodule Kmxgit.UserManager do
     order_by(query, :id)
   end
   def index_order_by(query, %IndexParams{column: "name", reverse: true}) do
-    order_by(query, [u, s], [desc_nulls_last: fragment("lower(?)", u.name)])
+    order_by(query, [u], [desc_nulls_last: fragment("lower(?)", u.name)])
   end
   def index_order_by(query, %IndexParams{column: "name"}) do
-    order_by(query, [u, s], [asc_nulls_last: fragment("lower(?)", u.name)])
+    order_by(query, [u], [asc_nulls_last: fragment("lower(?)", u.name)])
   end
   def index_order_by(query, %IndexParams{column: "email", reverse: true}) do
-    order_by(query, [u, s], [desc_nulls_last: fragment("lower(?)", u.email)])
+    order_by(query, [u], [desc_nulls_last: fragment("lower(?)", u.email)])
   end
   def index_order_by(query, %IndexParams{column: "email"}) do
-    order_by(query, [u, s], [asc_nulls_last: fragment("lower(?)", u.email)])
+    order_by(query, [u], [asc_nulls_last: fragment("lower(?)", u.email)])
   end
   def index_order_by(query, %IndexParams{column: "login", reverse: true}) do
-    order_by(query, [u, s], [desc_nulls_last: fragment("lower(?)", s.slug)])
+    order_by(query, [u], [desc_nulls_last: fragment("lower(?)", u.slug_)])
   end
   def index_order_by(query, %IndexParams{column: "login"}) do
-    order_by(query, [u, s], [asc_nulls_last: fragment("lower(?)", s.slug)])
+    order_by(query, [u], [asc_nulls_last: fragment("lower(?)", u.slug_)])
   end
   def index_order_by(query, %IndexParams{column: "du", reverse: true}) do
     order_by(query, [desc: :disk_usage])
@@ -90,7 +86,7 @@ defmodule Kmxgit.UserManager do
   end
 
   def update_disk_usage() do
-    Repo.all(from user in User, preload: :slug)
+    Repo.all(from user in User)
     |> Enum.map(fn user ->
       user
       |> Ecto.Changeset.cast(%{}, [])
@@ -123,9 +119,7 @@ defmodule Kmxgit.UserManager do
 
   def get_user_by_login(login) do
     Repo.one from u in User,
-      join: s in Slug,
-      on: s.user_id == u.id,
-      where: fragment("lower(?)", s.slug) == ^String.downcase(login),
+      where: u.slug_ == ^login,
       limit: 1,
       preload: ^@user_preload
   end
@@ -336,9 +330,7 @@ defmodule Kmxgit.UserManager do
 
   def authenticate_user(login, password) do
     query = from u in User,
-      join: s in Slug,
-      on: s.user_id == u.id,
-      where: fragment("lower(?)", s.slug) == ^String.downcase(login) or fragment("lower(?)", u.email) == ^String.downcase(login),
+      where: u.slug_ == ^login or u.email == ^login,
       limit: 1
     case Repo.one(query) do
       nil ->

@@ -5,10 +5,11 @@ defmodule Kmxgit.SlugManager do
   alias Kmxgit.Repo
   alias Kmxgit.OrganisationManager.Organisation
   alias Kmxgit.SlugManager.Slug
+  alias Kmxgit.UserManager.User
 
   def list_all_slugs do
     Slug
-    |> Repo.all
+    |> Repo.all()
   end
 
   def create_slug(slug) when is_binary(slug) do
@@ -19,6 +20,11 @@ defmodule Kmxgit.SlugManager do
   def create_slug(%Organisation{id: id, slug_: slug}) do
     %Slug{}
     |> Slug.create_changeset(%{slug: slug, organisation_id: id})
+    |> Repo.insert()
+  end
+  def create_slug(%User{id: id, slug_: slug}) do
+    %Slug{}
+    |> Slug.create_changeset(%{slug: slug, user_id: id})
     |> Repo.insert()
   end
 
