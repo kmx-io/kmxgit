@@ -7,6 +7,7 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.Pagination
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager.Repository
+  alias Kmxgit.SlugManager
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
