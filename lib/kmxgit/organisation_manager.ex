@@ -10,7 +10,7 @@ defmodule Kmxgit.OrganisationManager do
 
   def list_all_organisations() do
     from(org in Organisation)
-    |> order_by([org], [asc_nulls_last: fragment("lower(?)", org.slug_)])
+    |> order_by([org], [asc_nulls_last: org.slug_])
     |> preload([:owned_repositories, :slug])
     |> Repo.all()
   end
@@ -39,10 +39,10 @@ defmodule Kmxgit.OrganisationManager do
     order_by(query, [org], [asc_nulls_last: fragment("lower(?)", org.name)])
   end
   def index_order_by(query, %{column: "slug", reverse: true}) do
-    order_by(query, [org], [desc_nulls_last: fragment("lower(?)", org.slug_)])
+    order_by(query, [org], [desc_nulls_last: org.slug_])
   end
   def index_order_by(query, %{column: "slug"}) do
-    order_by(query, [org], [asc_nulls_last: fragment("lower(?)", org.slug_)])
+    order_by(query, [org], [asc_nulls_last: org.slug_])
   end
   def index_order_by(query, %{column: "du", reverse: true}) do
     order_by(query, [desc: :disk_usage])

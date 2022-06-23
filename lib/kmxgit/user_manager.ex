@@ -120,8 +120,7 @@ defmodule Kmxgit.UserManager do
   def get_user_by_login(login) do
     Repo.one from u in User,
       where: u.slug_ == ^login,
-      limit: 1,
-      preload: ^@user_preload
+      limit: 1
   end
 
   def get_user_by_login_and_password(login, password)
@@ -133,8 +132,7 @@ defmodule Kmxgit.UserManager do
   def get_user_by_email(email) do
     Repo.one from u in User,
       where: u.email == ^email,
-      limit: 1,
-      preload: ^@user_preload
+      limit: 1
   end
  
   def register_user(attrs) do

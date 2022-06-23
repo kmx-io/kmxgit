@@ -7,46 +7,38 @@ defmodule Kmxgit.RepositoryManager do
   alias Kmxgit.Pagination
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager.Repository
-  alias Kmxgit.SlugManager
-  alias Kmxgit.SlugManager.Slug
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
 
-  # Do you want to refactor this code ?
-
   def list_all_repositories() do
     from(r in Repository)
-    |> join(:full, [r], o in Organisation, on: o.id == r.organisation_id)
-    |> join(:full, [r, o], os in Slug, on: os.organisation_id == o.id)
-    |> join(:full, [r, o, os], u in User, on: u.id == r.user_id)
-    |> join(:full, [r, o, os, u], us in Slug, on: us.user_id == u.id)
-    |> where([r, o, os, u, us], not is_nil(r))
-    |> order_by([r, o, os, u, us], [fragment("concat(lower(?), lower(?))", os.slug, us.slug), :slug])
-    |> preload([members: :slug,
-                organisation: [:slug, users: :slug],
-                user: :slug])
+    |> join(:left, [r], o in Organisation, on: o.id == r.organisation_id)
+    |> join(:left, [r, o], u in User, on: u.id == r.user_id)
+    |> where([r, o, u], not is_nil(r))
+    |> order_by([r, o, u], [fragment("concat(lower(?), lower(?))", o.slug_, u.slug_), :slug])
+    |> preload([:members,
+                :user,
+                organisation: [:users]])
     |> Repo.all()
   end
 
   def list_repositories(params \\ %IndexParams{}) do
     update_disk_usage()
     from(r in Repository)
-    |> join(:full, [r], o in Organisation, on: o.id == r.organisation_id)
-    |> join(:full, [r, o], os in Slug, on: os.organisation_id == o.id)
-    |> join(:full, [r, o, os], u in User, on: u.id == r.user_id)
-    |> join(:full, [r, o, os, u], us in Slug, on: us.user_id == u.id)
-    |> where([r, o, os, u, us], not is_nil(r))
+    |> join(:left, [r], o in Organisation, on: o.id == r.organisation_id)
+    |> join(:left, [r, o], u in User, on: u.id == r.user_id)
+    |> where([r, o, u], not is_nil(r))
     |> search(params)
     |> index_order_by(params)
-    |> Pagination.page(params, preload: [members: :slug,
-                                        organisation: [:slug, users: :slug],
-                                        user: :slug])
+    |> Pagination.page(params, preload: [:members,
+                                         :user,
+                                         organisation: [:users]])
   end
 
   def search(query, %IndexParams{search: search}) do
     query
-    |> where([r, o, os, u, us],
-         ilike(fragment("concat(?, ?, '/', ?)", os.slug, us.slug, r.slug),
+    |> where([r, o, u],
+         ilike(fragment("concat(?, ?, '/', ?)", o.slug_, u.slug_, r.slug),
            ^"%#{search}%"))
   end
 
@@ -57,16 +49,16 @@ defmodule Kmxgit.RepositoryManager do
     order_by(query, :id)
   end
   def index_order_by(query, %{column: "owner", reverse: true}) do
-    order_by(query, [r, o, os, u, us], [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug)])
+    order_by(query, [r, o, u], [desc: fragment("concat(lower(?), lower(?))", o.slug_, u.slug_)])
   end
   def index_order_by(query, %{column: "owner"}) do
-    order_by(query, [r, o, os, u, us], fragment("concat(lower(?), lower(?))", os.slug, us.slug))
+    order_by(query, [r, o, u], fragment("concat(lower(?), lower(?))", o.slug_, u.slug_))
   end
   def index_order_by(query, %{column: "slug", reverse: true}) do
-    order_by(query, [r, o, os, u, us], [desc: fragment("concat(lower(?), lower(?))", os.slug, us.slug), desc: :slug])
+    order_by(query, [r, o, u], [desc: fragment("concat(lower(?), lower(?))", o.slug_, u.slug_), desc: :slug])
   end
   def index_order_by(query, %{column: "slug"}) do
-    order_by(query, [r, o, os, u, us], [fragment("concat(lower(?), lower(?))", os.slug, us.slug), :slug])
+    order_by(query, [r, o, u], [fragment("concat(lower(?), lower(?))", o.slug_, u.slug_), :slug])
   end
   def index_order_by(query, %{column: "du", reverse: true}) do
     order_by(query, [desc: :disk_usage])
@@ -76,8 +68,8 @@ defmodule Kmxgit.RepositoryManager do
   end
 
   def update_disk_usage() do
-    Repo.all(from repo in Repository, preload: [organisation: :slug,
-                                                user: :slug])
+    Repo.all(from repo in Repository, preload: [:organisation,
+                                                :user])
     |> Enum.map(fn repo ->
       repo
       |> Ecto.Changeset.cast(%{}, [])
@@ -142,9 +134,13 @@ defmodule Kmxgit.RepositoryManager do
       if slug = SlugManager.get_slug(owner_slug) do
         owner = slug.organisation || slug.user
         IO.inspect([owner_slug: owner_slug, slug: slug, owner: owner])
-        repository
-        |> Repository.owner_changeset(attrs, owner)
-        |> Repo.update()
+        if owner do
+          repository
+          |> Repository.owner_changeset(attrs, owner)
+          |> Repo.update()
+        else
+          raise "invalid slug"
+        end
       else
         changeset = repository
         |> Repository.changeset(attrs)
@@ -167,9 +163,9 @@ defmodule Kmxgit.RepositoryManager do
     Repo.one(from repo in Repository,
       where: repo.id == ^id,
       limit: 1,
-      preload: [members: :slug,
-                organisation: [:slug, [users: :slug]],
-                user: :slug])
+      preload: [:members,
+                :user,
+                organisation: [:slug, :users]])
   end
 
   def get_repository!(id) do
@@ -178,34 +174,23 @@ defmodule Kmxgit.RepositoryManager do
 
   def get_repository_by_owner_id_and_slug(org_id, nil, slug) do
     Repo.one from r in Repository,
-      where: r.organisation_id == ^org_id and is_nil(r.user_id) and fragment("lower(?)", r.slug) == ^String.downcase(slug),
+      where: r.organisation_id == ^org_id and is_nil(r.user_id) and r.slug == ^slug,
       limit: 1
   end
   def get_repository_by_owner_id_and_slug(nil, user_id, slug) do
     Repo.one from r in Repository,
-      where: is_nil(r.organisation_id) and r.user_id == ^user_id and fragment("lower(?)", r.slug) == ^String.downcase(slug),
+      where: is_nil(r.organisation_id) and r.user_id == ^user_id and r.slug == ^slug,
       limit: 1
   end
 
   def get_repository_by_owner_and_slug(owner, slug) do
-    downcase_owner = String.downcase(owner)
-    downcase_slug = String.downcase(slug)
-    Repo.one from r in Repository,
-      full_join: o in Organisation,
-      on: o.id == r.organisation_id,
-      full_join: os in Slug,
-      on: os.organisation_id == o.id,
-      full_join: u in User,
-      on: u.id == r.user_id,
-      full_join: us in Slug,
-      on: us.user_id == u.id,
-      where: (fragment("lower(?)", os.slug) == ^downcase_owner or fragment("lower(?)", us.slug) == ^downcase_owner) and fragment("lower(?)", r.slug) == ^downcase_slug,
-      preload: [forked_from: [organisation: :slug,
-                              user: :slug],
-                members: :slug,
-                organisation: [:slug, [users: :slug]],
-                user: :slug],
-      limit: 1
+    from(r in Repository)
+    |> join(:left, [r], o in Organisation, on: o.id == r.organisation_id)
+    |> join(:left, [r, o], u in User, on: u.id == r.user_id)
+    |> where([r, o, u], (o.slug_ == ^owner or u.slug_ == ^owner) and r.slug == ^slug)
+    |> preload([:members, :user, forked_from: [:organisation, :user], organisation: [:users]])
+    |> limit(1)
+    |> Repo.one()
   end
 
   def add_member(%Repository{} = repo, login) do
