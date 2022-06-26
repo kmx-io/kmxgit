@@ -10,15 +10,21 @@ defmodule Kmxgit.Git do
     "#{@git_root}/#{repo}.git"
   end
 
+  @disable_du true
+
   def du_ks(path) do
-    {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)
-    case status do
-      0 ->
-        {k, _} = Integer.parse(out)
-        k
-      x ->
-        IO.inspect(x)
-        0
+    if @disable_du do
+      0
+    else
+      {out, status} = System.cmd("du", ["-ks", path], stderr_to_stdout: true)
+      case status do
+        0 ->
+          {k, _} = Integer.parse(out)
+          k
+        x ->
+          IO.inspect(x)
+          0
+      end
     end
   end
 
