@@ -1,7 +1,7 @@
 <%= if !@git.content do %>
   <%= Enum.map @git.readme, fn readme -> %>
     <hr/>
-    <h3><%= readme.name %></h3>
+    <h3><a id={readme.name} href={"##{readme.name}"} ><%= readme.name %></a></h3>
     <div class="container-fluid">
       <div class="container-fluid file_content">
         <div class="content_html">
