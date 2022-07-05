@@ -1,103 +1,51 @@
 #include <stdlib.h>
 #include <string.h>
-
 #include <erl_nif.h>
 #include <git2.h>
+#include <enif.h>
 
-static ERL_NIF_TERM enif_string_to_term (ErlNifEnv *env,
-                                         const char *str);
-static char * enif_term_to_string (ErlNifEnv *env,
-                                   const ERL_NIF_TERM term);
+static int check_repo_dir (const char *s);
 static ERL_NIF_TERM push_string (ErlNifEnv *env, const char *str,
                                  const ERL_NIF_TERM acc);
 
-static ERL_NIF_TERM branches_nif (ErlNifEnv *env, int argc,
-                                  const ERL_NIF_TERM argv[])
+ERL_NIF_TERM branches_nif (ErlNifEnv *env, int argc,
+                           const ERL_NIF_TERM argv[]);
+ERL_NIF_TERM content_nif (ErlNifEnv *env, int argc,
+                          const ERL_NIF_TERM argv[]);
+ERL_NIF_TERM create_nif (ErlNifEnv *env, int argc,
+                         const ERL_NIF_TERM argv[]);
+ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
+                       const ERL_NIF_TERM argv[]);
+ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
+                        const ERL_NIF_TERM argv[]);
+ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
+                      const ERL_NIF_TERM argv[]);
+ERL_NIF_TERM tags_nif (ErlNifEnv *env, int argc,
+                       const ERL_NIF_TERM argv[]);
+
+static ErlNifFunc funcs[] = {
+        {"branches_nif", 1, branches_nif, 0},
+        {"content_nif",  2, content_nif,  0},
+        {"create_nif",   1, create_nif,   0},
+        {"diff_nif",     3, diff_nif,     0},
+        {"files_nif",    3, files_nif,    0},
+        {"log_nif",      5, log_nif,      0},
+        {"tags_nif",     1, tags_nif,     0}
+};
+
+static ERL_NIF_TERM g_ok = 0;
+static ERL_NIF_TERM g_error = 0;
+
+ERL_NIF_TERM branches_nif (ErlNifEnv *env, int argc,
+                           const ERL_NIF_TERM argv[])
 {
-  git_repository *r = NULL;
+  ERL_NIF_TERM acc;
+  const char *branch = NULL;
+  ERL_NIF_TERM branches = 0;
   git_branch_iterator *i = NULL;
   git_reference *ref = NULL;
   git_branch_t ref_type = 0;
-  const char *branch = NULL;
-  char *repo = NULL;
-  ERL_NIF_TERM acc;
-  ERL_NIF_TERM branches;
-  ERL_NIF_TERM ok;
-  if (argc != 1 || !argv || !argv[0])
-    goto error;
-  repo = enif_term_to_string(env, argv[0]);
-  if (!repo || !repo[0])
-    goto error;
-  if (git_repository_open_bare(&r, repo))
-    goto error;
-  git_branch_iterator_new(&i, r, GIT_BRANCH_ALL);
-  acc = enif_make_list(env, 0);
-  while (!git_branch_next(&ref, &ref_type, i)) {
-    git_branch_name(&branch, ref);
-    acc = push_string(env, branch, acc);
-  }
-  git_branch_iterator_free(i);
-  ok = enif_make_atom(env, "ok");
-  if (! enif_make_reverse_list(env, acc, &branches))
-    goto error;
-  git_repository_free(r);
-  free(repo);
-  return enif_make_tuple2(env, ok, branches);
- error:
-  git_repository_free(r);
-  free(repo);
-  return enif_make_atom(env, "error");
-}
-
-static ERL_NIF_TERM content_nif (ErlNifEnv *env, int argc,
-                                 const ERL_NIF_TERM argv[])
-{
-  ErlNifBinary bin;
-  git_blob *blob = NULL;
-  ERL_NIF_TERM content;
-  const void *data = NULL;
-  git_oid oid = {0};
-  ERL_NIF_TERM ok;
-  git_repository *r = NULL;
-  char *repo = NULL;
-  char *sha = NULL;
-  git_object_size_t size = 0;
-  if (argc != 2 || !argv || !argv[0] || !argv[1])
-    goto error;
-  repo = enif_term_to_string(env, argv[0]);
-  if (!repo || !repo[0])
-    goto error;
-  sha = enif_term_to_string(env, argv[1]);
-  if (!sha || !sha[0])
-    goto error;
-  if (git_repository_open_bare(&r, repo))
-    goto error;
-  if (git_oid_fromstr(&oid, sha))
-    goto error;
-  if (git_blob_lookup(&blob, r, &oid))
-    goto error;
-  size = git_blob_rawsize(blob);
-  data = git_blob_rawcontent(blob);
-  enif_alloc_binary(size, &bin);
-  memcpy(bin.data, data, size);
-  content = enif_make_binary(env, &bin);
-  ok = enif_make_atom(env, "ok");
-  git_repository_free(r);
-  free(repo);
-  free(sha);
-  return enif_make_tuple2(env, ok, content);
- error:
-  git_repository_free(r);
-  free(repo);
-  free(sha);
-  return enif_make_atom(env, "error");
-}
-
-static ERL_NIF_TERM create_nif (ErlNifEnv *env, int argc,
-                                const ERL_NIF_TERM argv[])
-{
-  ERL_NIF_TERM ok;
-  git_repository *r = NULL;
+  git_repository *repo = NULL;
   char *repo_dir = NULL;
   ERL_NIF_TERM res;
   if (argc != 1 || !argv || !argv[0]) {
@@ -109,37 +57,143 @@ static ERL_NIF_TERM create_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "repo_dir_missing");
     goto error;
   }
-  if (strstr(repo_dir, "..")) {
+  if (check_repo_dir(repo_dir)) {
     res = enif_make_atom(env, "repo_dir");
     goto error;
   }
-  if (git_repository_init(&r, repo_dir, 1)) {
-    res = enif_make_atom(env, "git_repository_init");
+  if (git_repository_open_bare(&repo, repo_dir)) {
+    res = enif_make_atom(env, "git_repository_open_bare");
     goto error;
   }
-  git_repository_free(r);
-  free(repo_dir);
-  ok = enif_make_atom(env, "ok");
-  return ok;
+  git_branch_iterator_new(&i, repo, GIT_BRANCH_ALL);
+  acc = enif_make_list(env, 0);
+  while (!git_branch_next(&ref, &ref_type, i)) {
+    git_branch_name(&branch, ref);
+    acc = push_string(env, branch, acc);
+    git_reference_free(ref);
+  }
+  if (! enif_make_reverse_list(env, acc, &branches)) {
+    res = enif_make_atom(env, "enif_make_reverse_list");
+    goto error;
+  }
+  res = enif_make_tuple2(env, g_ok, branches);
+  goto ok;
  error:
-  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  res = enif_make_tuple2(env, g_error, res);
   enif_fprintf(stderr, "%T\n", res);
-  git_repository_free(r);
+ ok:
+  git_branch_iterator_free(i);
+  git_repository_free(repo);
   free(repo_dir);
   return res;
 }
 
-static ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
-                              const ERL_NIF_TERM argv[])
+int check_repo_dir (const char *s)
+{
+  return !s || !s[0] || s[0] == '.' || strstr(s, "/.");
+}
+
+ERL_NIF_TERM content_nif (ErlNifEnv *env, int argc,
+                          const ERL_NIF_TERM argv[])
+{
+  git_blob *blob = NULL;
+  ERL_NIF_TERM content;
+  const void *data = NULL;
+  git_oid oid = {0};
+  git_repository *repo = NULL;
+  char *repo_dir = NULL;
+  ERL_NIF_TERM res;
+  char *sha = NULL;
+  git_object_size_t size = 0;
+  if (argc != 2 || !argv || !argv[0] || !argv[1]) {
+    res = enif_make_atom(env, "badarg");
+    goto error;
+  }
+  repo_dir = enif_term_to_string(env, argv[0]);
+  if (!repo_dir || !repo_dir[0]) {
+    res = enif_make_atom(env, "repo_dir");
+    goto error;
+  }
+  if (check_repo_dir(repo_dir)) {
+    res = enif_make_atom(env, "repo_dir");
+    goto error;
+  }
+  sha = enif_term_to_string(env, argv[1]);
+  if (!sha || !sha[0]){
+    res = enif_make_atom(env, "sha");
+    goto error;
+  }
+  if (git_repository_open_bare(&repo, repo_dir)) {
+    res = enif_make_atom(env, "git_repository_open_bare");
+    goto error;
+  }
+  if (git_oid_fromstr(&oid, sha)) {
+    res = enif_make_atom(env, "git_oid_fromstr");
+    goto error;
+  }
+  if (git_blob_lookup(&blob, repo, &oid)) {
+    res = enif_make_atom(env, "git_blob_lookup");
+    goto error;
+  }
+  size = git_blob_rawsize(blob);
+  data = git_blob_rawcontent(blob);
+  content = enif_string_to_term_len(env, data, size);
+  res = enif_make_tuple2(env, g_ok, content);
+  goto ok;
+ error:
+  res = enif_make_tuple2(env, g_error, res);
+  enif_fprintf(stderr, "%T\n", res);
+ ok:
+  git_blob_free(blob);
+  git_repository_free(repo);
+  free(repo_dir);
+  free(sha);
+  return res;
+}
+
+ERL_NIF_TERM create_nif (ErlNifEnv *env, int argc,
+                         const ERL_NIF_TERM argv[])
+{
+  git_repository *repo = NULL;
+  char *repo_dir = NULL;
+  ERL_NIF_TERM res;
+  if (argc != 1 || !argv || !argv[0]) {
+    res = enif_make_atom(env, "badarg");
+    goto error;
+  }
+  repo_dir = enif_term_to_string(env, argv[0]);
+  if (!repo_dir || !repo_dir[0]) {
+    res = enif_make_atom(env, "repo_dir_missing");
+    goto error;
+  }
+  if (check_repo_dir(repo_dir)) {
+    res = enif_make_atom(env, "repo_dir");
+    goto error;
+  }
+  if (git_repository_init(&repo, repo_dir, 1)) {
+    res = enif_make_atom(env, "git_repository_init");
+    goto error;
+  }
+  res = g_ok;
+  goto ok;
+ error:
+  res = enif_make_tuple2(env, g_error, res);
+  enif_fprintf(stderr, "%T\n", res);
+ ok:
+  git_repository_free(repo);
+  free(repo_dir);
+  return res;
+}
+
+ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
+                       const ERL_NIF_TERM argv[])
 {
   git_buf buf = {NULL, 0, 0};
   git_commit *commit[2] = {NULL, NULL};
   git_diff *diff = NULL;
   char *from = NULL;
   git_object *obj = NULL;
-  ERL_NIF_TERM ok;
-  git_patch *patch = NULL;
-  git_repository *r = NULL;
+  git_repository *repo = NULL;
   char *repo_dir = NULL;
   ERL_NIF_TERM res;
   char *to = NULL;
@@ -154,7 +208,7 @@ static ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "repo_dir_missing");
     goto error;
   }
-  if (strstr(repo_dir, "..")) {
+  if (check_repo_dir(repo_dir)) {
     res = enif_make_atom(env, "repo_dir");
     goto error;
   }
@@ -168,16 +222,15 @@ static ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "to_missing");
     goto error;
   }
-  if (git_repository_open_bare(&r, repo_dir)) {
+  if (git_repository_open_bare(&repo, repo_dir)) {
     res = enif_make_atom(env, "git_repository_open_bare");
     goto error;
   }
-  printf("from\n");
-  if (git_revparse_single(&obj, r, from)) {
+  if (git_revparse_single(&obj, repo, from)) {
     res = enif_make_atom(env, "from__git_revparse_single");
     goto error;
   }
-  if (git_commit_lookup(commit, r, git_object_id(obj))) {
+  if (git_commit_lookup(commit, repo, git_object_id(obj))) {
     res = enif_make_atom(env, "from__git_commit_lookup");
     goto error;
   }
@@ -185,12 +238,12 @@ static ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "from__git_commit_tree");
     goto error;
   }
-  printf("to\n");
-  if (git_revparse_single(&obj, r, to)) {
+  git_object_free(obj);
+  if (git_revparse_single(&obj, repo, to)) {
     res = enif_make_atom(env, "to__git_revparse_single");
     goto error;
   }
-  if (git_commit_lookup(commit + 1, r, git_object_id(obj))) {
+  if (git_commit_lookup(commit + 1, repo, git_object_id(obj))) {
     res = enif_make_atom(env, "to__git_commit_lookup");
     goto error;
   }
@@ -198,8 +251,7 @@ static ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "to__git_commit_tree");
     goto error;
   }
-  printf("diff\n");
-  if (git_diff_tree_to_tree(&diff, r, tree[0], tree[1], NULL)) {
+  if (git_diff_tree_to_tree(&diff, repo, tree[0], tree[1], NULL)) {
     res = enif_make_atom(env, "git_diff_tree_to_tree");
     goto error;
   }
@@ -207,58 +259,25 @@ static ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "git_diff_to_buf");
     goto error;
   }
-  printf("res\n");
-  res = enif_string_to_term(env, buf.ptr);
-  ok = enif_make_atom(env, "ok");
-  res = enif_make_tuple2(env, ok, res);
+  res = enif_string_to_term_len(env, buf.ptr, buf.size);
+  res = enif_make_tuple2(env, g_ok, res);
   goto ok;
  error:
-  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  res = enif_make_tuple2(env, g_error, res);
   enif_fprintf(stderr, "%T\n", res);
  ok:
   git_buf_dispose(&buf);
   git_commit_free(commit[0]);
   git_commit_free(commit[1]);
-  git_patch_free(patch);
-  git_repository_free(r);
-  free(repo_dir);
-  free(from);
+  git_diff_free(diff);
+  git_object_free(obj);
+  git_repository_free(repo);
+  git_tree_free(tree[0]);
+  git_tree_free(tree[1]);
   free(to);
+  free(from);
+  free(repo_dir);
   return res;
-}
-
-static ERL_NIF_TERM enif_string_to_term (ErlNifEnv *env,
-                                         const char *str)
-{
-  size_t len = strlen(str);
-  ErlNifBinary bin;
-  enif_alloc_binary(len, &bin);
-  memcpy(bin.data, str, len);
-  return enif_make_binary(env, &bin);
-}
-
-static char * enif_term_to_string (ErlNifEnv *env,
-                                   const ERL_NIF_TERM term)
-{
-  ErlNifBinary bin;
-  unsigned len;
-  char *str;
-  switch (enif_term_type(env, term)) {
-  case ERL_NIF_TERM_TYPE_BITSTRING:
-    enif_inspect_binary(env, term, &bin);
-    len = bin.size;
-    str = malloc(len + 1);
-    memcpy(str, bin.data, len);
-    str[len] = 0;
-    return str;
-  case ERL_NIF_TERM_TYPE_LIST:
-    enif_get_list_length(env, term, &len);
-    str = malloc(len + 1);
-    enif_get_string(env, term, str, len + 1, ERL_NIF_LATIN1);
-    return str;
-  default:
-    return NULL;
-  }
 }
 
 static ERL_NIF_TERM
@@ -277,7 +296,7 @@ files_make_map (ErlNifEnv *env,
   }
   type = git_tree_entry_type(entry);
   mode = git_tree_entry_filemode(entry);
-  git_oid_tostr(sha, 41, git_tree_entry_id(entry));
+  git_oid_tostr(sha, sizeof(sha), git_tree_entry_id(entry));
   k[0] = enif_make_atom(env, "name");
   v[0] = enif_string_to_term(env, name);
   k[1] = enif_make_atom(env, "type");
@@ -289,21 +308,19 @@ files_make_map (ErlNifEnv *env,
   v[2] = enif_make_int64(env, mode);
   k[3] = enif_make_atom(env, "sha1");
   v[3] = enif_string_to_term(env, sha);
-  /*fprintf(stderr, "enif_make_map_from_arrays\n");*/
   enif_make_map_from_arrays(env, k, v, 4, &file);
   return file;
 }
 
-static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
-                               const ERL_NIF_TERM argv[])
+ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
+                        const ERL_NIF_TERM argv[])
 {
   size_t count;
   git_tree_entry *entry = NULL;
   ERL_NIF_TERM files;
   git_object *obj = NULL;
-  ERL_NIF_TERM ok;
   char *path = NULL;
-  git_repository *r = NULL;
+  git_repository *repo = NULL;
   char *repo_dir = NULL;
   ERL_NIF_TERM res;
   char *rev = NULL;
@@ -322,7 +339,7 @@ static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "repo_dir_missing");
     goto error;
   }
-  if (strstr(repo_dir, "..")) {
+  if (check_repo_dir(repo_dir)) {
     res = enif_make_atom(env, "repo_dir");
     goto error;
   }
@@ -340,12 +357,11 @@ static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
   rev = malloc(rev_size);
   strlcpy(rev, tree_name, rev_size);
   strlcat(rev, "^{tree}", rev_size);
-  ok = enif_make_atom(env, "ok");
-  if (git_repository_open_bare(&r, repo_dir)) {
+  if (git_repository_open_bare(&repo, repo_dir)) {
     res = enif_make_atom(env, "git_repository_open_bare");
     goto error;
   }
-  if (git_revparse_single(&obj, r, rev)) {
+  if (git_revparse_single(&obj, repo, rev)) {
     res = enif_make_atom(env, "git_revparse_single");
     goto error;
   }
@@ -362,14 +378,10 @@ static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
     case GIT_OBJECT_BLOB:
       file = files_make_map(env, entry, path);
       files = enif_make_list(env, 1, file);
-      git_repository_free(r);
-      free(repo_dir);
-      free(tree_name);
-      free(path);
-      git_tree_entry_free(entry);
-      return enif_make_tuple2(env, ok, files);
+      res = enif_make_tuple2(env, g_ok, files);
+      goto ok;
     case GIT_OBJECT_TREE:
-      if (git_tree_lookup(&subtree, r, git_tree_entry_id(entry))) {
+      if (git_tree_lookup(&subtree, repo, git_tree_entry_id(entry))) {
         res = enif_make_atom(env, "git_tree_lookup");
         goto error;
       }
@@ -387,19 +399,20 @@ static ERL_NIF_TERM files_nif (ErlNifEnv *env, int argc,
     file = files_make_map(env, sub_entry, NULL);
     files = enif_make_list_cell(env, file, files);
   }
-  git_repository_free(r);
-  free(repo_dir);
-  free(tree_name);
-  free(path);
-  git_tree_entry_free(entry);
-  return enif_make_tuple2(env, ok, files);
+  res = enif_make_tuple2(env, g_ok, files);
+  goto ok;
  error:
-  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  res = enif_make_tuple2(env, g_error, res);
   enif_fprintf(stderr, "%T\n", res);
-  git_repository_free(r);
+ ok:
+  if (subtree != (git_tree*) obj)
+    git_tree_free(subtree);
+  git_object_free(obj);
+  git_repository_free(repo);
   free(repo_dir);
   free(tree_name);
   free(path);
+  free(rev);
   git_tree_entry_free(entry);
   return res;
 }
@@ -409,7 +422,10 @@ int load (ErlNifEnv *env, void **a, ERL_NIF_TERM b)
   (void) env;
   (void) a;
   (void) b;
+  (void) funcs;
   fprintf(stderr, "git_nif load\n");
+  g_ok = enif_make_atom(env, "ok");
+  g_error = enif_make_atom(env, "error");
   git_libgit2_init();
   return 0;
 }
@@ -461,18 +477,23 @@ static int log_push_rev(struct log_state *s,
 static int log_add_revision(struct log_state *s,
                             const char *revstr)
 {
-  git_revspec revs;
+  git_revspec revs = {0};
   int hide = 0;
+  int res = 0;
   if (!revstr)
     return log_push_rev(s, NULL, hide);
   if (*revstr == '^') {
     revs.flags = GIT_REVSPEC_SINGLE;
     hide = !hide;
-    if (git_revparse_single(&revs.from, s->repo, revstr + 1) < 0)
-      return -1;
+    if (git_revparse_single(&revs.from, s->repo, revstr + 1) < 0) {
+      res = -1;
+      goto error;
+    }
   }
-  else if (git_revparse(&revs, s->repo, revstr) < 0)
-    return -2;
+  else if (git_revparse(&revs, s->repo, revstr) < 0) {
+    res = -2;
+    goto error;
+  }
   if ((revs.flags & GIT_REVSPEC_SINGLE) != 0)
     log_push_rev(s, revs.from, hide);
   else {
@@ -481,18 +502,28 @@ static int log_add_revision(struct log_state *s,
       git_oid base;
       if (git_merge_base(&base, s->repo,
                          git_object_id(revs.from),
-                         git_object_id(revs.to)))
-        return -3;
+                         git_object_id(revs.to))) {
+        res = -3;
+        goto error;
+      }
       if (git_object_lookup(&revs.to, s->repo, &base,
-                            GIT_OBJECT_COMMIT))
-        return -4;
-      if (log_push_rev(s, revs.to, hide))
-        return -5;
+                            GIT_OBJECT_COMMIT)) {
+        res = -4;
+        goto error;
+      }
+      if (log_push_rev(s, revs.to, hide)) {
+        res = -5;
+        goto error;
+      }
     }
-    if (log_push_rev(s, revs.from, !hide))
-      return -6;
+    if (log_push_rev(s, revs.from, !hide)) {
+      res = -6;
+      goto error;
+    }
   }
-  return 0;
+  error:
+    git_object_free(revs.to);
+  return res;
 }
 
 struct log_options {
@@ -512,8 +543,7 @@ static int log_match_with_parent (git_commit *commit,
                                   git_diff_options *opts)
 {
   git_commit *parent = NULL;
-  git_tree *a = NULL;
-  git_tree *b = NULL;
+  git_tree *tree[2] = {NULL, NULL};
   git_diff *diff = NULL;
   int ndeltas = 0;
   int res = 0;
@@ -521,16 +551,16 @@ static int log_match_with_parent (git_commit *commit,
     res = -1;
     goto error;
   }
-  if (git_commit_tree(&a, parent)) {
+  if (git_commit_tree(&tree[0], parent)) {
     res = -2;
     goto error;
   }
-  if (git_commit_tree(&b, commit)) {
+  if (git_commit_tree(&tree[1], commit)) {
     res = -3;
     goto error;
   }
   if (git_diff_tree_to_tree(&diff, git_commit_owner(commit),
-                            a, b, opts)) {
+                            tree[0], tree[1], opts)) {
     res = -4;
     goto error;
   }
@@ -538,8 +568,8 @@ static int log_match_with_parent (git_commit *commit,
   res = ndeltas > 0;
  error:
   git_diff_free(diff);
-  git_tree_free(a);
-  git_tree_free(b);
+  git_tree_free(tree[0]);
+  git_tree_free(tree[1]);
   git_commit_free(parent);
   return res;
 }
@@ -582,11 +612,11 @@ static ERL_NIF_TERM log_push_commit (ErlNifEnv *env,
     v[0] = enif_string_to_term(env, sig->email);
   }
   enif_make_map_from_arrays(env, k, v, 6, &res);
-  return enif_make_list_cell(env, res, acc);
+  return enif_make_list_cell(env, res, (ERL_NIF_TERM)acc);
 }
 
-static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
-                             const ERL_NIF_TERM argv[])
+ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
+                      const ERL_NIF_TERM argv[])
 {
   char *branch_name = NULL;
   git_commit *commit = NULL;
@@ -594,17 +624,15 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
   git_diff_options diffopts = {GIT_DIFF_OPTIONS_VERSION, 0, GIT_SUBMODULE_IGNORE_UNSPECIFIED, {NULL, 0}, NULL, NULL, NULL, 3, 0, 0, 0, 0, 0};
   int i = 0;
   git_oid oid = {0};
-  ERL_NIF_TERM ok;
-  struct log_options opt;
+  struct log_options opt = {0};
   int parents = 0;
   char *path = NULL;
   int printed = 0;
   git_pathspec *ps = NULL;
-  git_repository *r = NULL;
   char *repo_dir = NULL;
   ERL_NIF_TERM log;
   ERL_NIF_TERM res;
-  struct log_state s;
+  struct log_state s = {0};
   if (argc != 5 || !argv || !argv[0] || !argv[1] ||
       !argv[2] || !argv[3] || !argv[4]) {
     res = enif_make_atom(env, "badarg");
@@ -615,7 +643,7 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "repo_dir_missing");
     goto error;
   }
-  if (strstr(repo_dir, "..")) {
+  if (check_repo_dir(repo_dir)) {
     res = enif_make_atom(env, "repo_dir");
     goto error;
   }
@@ -629,7 +657,6 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "path_missing");
     goto error;
   }
-  bzero(&s, sizeof(s));
   if (git_repository_open_bare(&s.repo, repo_dir)) {
     res = enif_make_atom(env, "git_repository_open_bare");
     goto error;
@@ -639,11 +666,10 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "bad_branch");
     goto error;
   }
-  bzero(&opt, sizeof(opt));
   opt.max_parents = -1;
-  enif_get_int(env, argv[3], &i);
+  enif_get_int(env, (ERL_NIF_TERM)argv[3], &i);
   opt.skip = i;
-  enif_get_int(env, argv[4], &i);
+  enif_get_int(env, (ERL_NIF_TERM)argv[4], &i);
   opt.limit = i;
   if (path[0]) {
     diffopts.pathspec.strings = &path;
@@ -666,7 +692,7 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
     if (diffopts.pathspec.count > 0) {
       int unmatched = parents;
       if (parents == 0) {
-        git_tree *tree;
+        git_tree *tree = NULL;
         if (git_commit_tree(&tree, commit)) {
           res = enif_make_atom(env, "git_commit_tree");
           goto error;
@@ -695,35 +721,31 @@ static ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
     }
     log = log_push_commit(env, commit, log);
   }
-  git_pathspec_free(ps);
-  git_repository_free(r);
-  free(repo_dir);
-  free(branch_name);
-  free(path);
-  ok = enif_make_atom(env, "ok");
   enif_make_reverse_list(env, log, &res);
-  res = enif_make_tuple2(env, ok, res);
-  return res;
+  res = enif_make_tuple2(env, g_ok, res);
+  goto ok;
  error:
-  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  res = enif_make_tuple2(env, g_error, res);
   enif_fprintf(stderr, "%T\n", res);
-  git_repository_free(r);
+ ok:
+  git_pathspec_free(ps);
+  git_revwalk_free(s.walker);
+  git_repository_free(s.repo);
   free(repo_dir);
   free(branch_name);
   free(path);
   return res;
 }
 
-static ERL_NIF_TERM tags_nif (ErlNifEnv *env, int argc,
-                              const ERL_NIF_TERM argv[])
+ERL_NIF_TERM tags_nif (ErlNifEnv *env, int argc,
+                       const ERL_NIF_TERM argv[])
 {
-  git_repository *r = NULL;
+  git_repository *repo = NULL;
   char *repo_dir = NULL;
   git_strarray tags = {0};
   int i = 0;
   ERL_NIF_TERM acc;
   ERL_NIF_TERM tag;
-  ERL_NIF_TERM ok;
   ERL_NIF_TERM res;
   if (argc != 1 || !argv || !argv[0]) {
     res = enif_make_atom(env, "badarg");
@@ -734,15 +756,15 @@ static ERL_NIF_TERM tags_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "repo_dir_missing");
     goto error;
   }
-  if (strstr(repo_dir, "..")) {
+  if (check_repo_dir(repo_dir)) {
     res = enif_make_atom(env, "repo_dir");
     goto error;
   }
-  if (git_repository_open_bare(&r, repo_dir)) {
+  if (git_repository_open_bare(&repo, repo_dir)) {
     res = enif_make_atom(env, "git_repository_open_bare");
     goto error;
   }
-  if (git_tag_list(&tags, r)) {
+  if (git_tag_list(&tags, repo)) {
     res = enif_make_atom(env, "git_tag_list");
     goto error;
   }
@@ -751,14 +773,14 @@ static ERL_NIF_TERM tags_nif (ErlNifEnv *env, int argc,
     tag = enif_string_to_term(env, tags.strings[i]);
     acc = enif_make_list_cell(env, tag, acc);
   }
-  ok = enif_make_atom(env, "ok");
-  git_repository_free(r);
-  free(repo_dir);
-  return enif_make_tuple2(env, ok, acc);
+  res = enif_make_tuple2(env, g_ok, acc);
+  goto ok;
  error:
-  res = enif_make_tuple2(env, enif_make_atom(env, "error"), res);
+  res = enif_make_tuple2(env, g_error, res);
   enif_fprintf(stderr, "%T\n", res);
-  git_repository_free(r);
+ ok:
+  git_strarray_free(&tags);
+  git_repository_free(repo);
   free(repo_dir);
   return res;
 }
@@ -767,7 +789,7 @@ static ERL_NIF_TERM push_string (ErlNifEnv *env, const char *str,
                                  const ERL_NIF_TERM acc)
 {
   ERL_NIF_TERM term = enif_string_to_term(env, str);
-  return enif_make_list_cell(env, term, acc);
+  return enif_make_list_cell(env, term, (ERL_NIF_TERM)acc);
 }
 
 void unload (ErlNifEnv *env, void *a)
@@ -777,16 +799,6 @@ void unload (ErlNifEnv *env, void *a)
   git_libgit2_shutdown();
   fprintf(stderr, "git_nif unload\n");
 }
-
-static ErlNifFunc funcs[] = {
-  {"branches_nif", 1, branches_nif, 0},
-  {"content_nif",  2, content_nif,  0},
-  {"create_nif",   1, create_nif,   0},
-  {"diff_nif",     3, diff_nif,     0},
-  {"files_nif",    3, files_nif,    0},
-  {"log_nif",      5, log_nif,      0},
-  {"tags_nif",     1, tags_nif,     0}
-};
 
 int upgrade (ErlNifEnv* env, void** priv_data, void** old_priv_data,
              ERL_NIF_TERM load_info)

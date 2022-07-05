@@ -1,7 +1,6 @@
 defmodule KmxgitWeb.Admin.DashboardController do
   use KmxgitWeb, :controller
 
-  alias Kmxgit.Git
   alias Kmxgit.OrganisationManager
   alias Kmxgit.RepositoryManager
   alias Kmxgit.UserManager

@@ -16,3 +16,7 @@
   <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
 <% end %>
 <%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @tree | String.split(@path, "/")])), class: "btn btn-primary" %>
+
+<%= if Mix.env == :dev do %>
+  <%= hd(@git.files).sha1 %>
+<% end %>

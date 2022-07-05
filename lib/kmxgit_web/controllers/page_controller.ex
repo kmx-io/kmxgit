@@ -3,7 +3,6 @@ defmodule KmxgitWeb.PageController do
 
   require Logger
 
-  alias Kmxgit.Git
   alias Kmxgit.OrganisationManager
   alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager
@@ -92,12 +91,13 @@ defmodule KmxgitWeb.PageController do
           conn
           |> UserAuth.log_in_user(user, user_params)
           |> redirect(to: "/")
-        {:error, changeset} ->
-          conn
-          |> assign(:no_navbar_links, true)
-          |> assign(:changeset, changeset)
-          |> assign(:action, Routes.page_path(conn, :new_admin))
-          |> render("new_admin.html")
+          {:error, changeset} ->
+            IO.inspect(changeset)
+            conn
+            |> assign(:no_navbar_links, true)
+            |> assign(:changeset, changeset)
+            |> assign(:action, Routes.page_path(conn, :new_admin))
+            |> render("new_admin.html")
       end
     else
       redirect(conn, to: "/")

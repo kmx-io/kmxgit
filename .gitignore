@@ -1,5 +1,17 @@
+/assets/node_modules/
+
+/bin/gitport
+/bin/size
+/config.mk
+
 # The directory Mix will write compiled artifacts to.
 /_build/
+
+/c_src/test/git_nif_test
+/c_src/test/git_nif_test_asan
+/c_src/test/git_nif_test_cov
+
+*.core
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
@@ -10,8 +22,7 @@
 # Where 3rd-party dependencies like ExDoc output generated docs.
 /doc/
 
-# Ignore .fetch files in case you like to edit your project deps locally.
-/.fetch
+/.env
 
 # If the VM crashes, it generates a dump, let's ignore it too.
 erl_crash.dump
@@ -19,26 +30,22 @@ erl_crash.dump
 # Also ignore archive artifacts (built via "mix archive.build").
 *.ez
 
+# Ignore .fetch files in case you like to edit your project deps locally.
+/.fetch
+
+*.gcno
+
 # Ignore package tarball (built via "mix hex.build").
 kmxgit-*.tar
 
-# Ignore assets that are produced by build tools.
-/priv/static/assets/
-
-# Ignore digested assets cache.
-/priv/static/cache_manifest.json
-
-# In case you use Node.js/npm, you want to ignore these.
 npm-debug.log
-/assets/node_modules/
 
-/priv/git
-/.env
+*.o
 
 /priv/avatar/
+/priv/git
+/priv/libgit_nif.so
 /priv/repo/dumps/
 /priv/static/
 
-/bin/gitport
-/bin/size
-*.o
+test_git_nif_create

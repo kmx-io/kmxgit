@@ -57,9 +57,9 @@ defmodule KmxgitWeb.Router do
     scope "/_error" do
       get "/*code", ErrorController, :show
     end
-end
+  end
 
-    ## Authentication routes
+  ## Authentication routes
 
   scope "/", KmxgitWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
@@ -155,6 +155,10 @@ end
     scope "/_dev" do
       pipe_through :browser
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+
+      scope "/test_git_nif", KmxgitWeb do
+        get "/:fun/:count", TestGitNifController, :test
+      end
     end
   end
 

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+LIBBSD_CFLAGS="$(pkg-config libbsd-overlay --cflags)"
+LIBBSD_LIBS="$(pkg-config libbsd-overlay --libs)"
+LIBGIT2_CFLAGS="$(pkg-config libgit2 --cflags)"
+LIBGIT2_LIBS="$(pkg-config libgit2 --libs)"
+
+CFLAGS="$CFLAGS $LIBBSD_CFLAGS $LIBGIT2_CFLAGS"
+LIBS="$LIBBSD_LIBS $LIBGIT2_LIBS"
+
+if [ -f /usr/include/alloca.h ]; then
+    CFLAGS="$CFLAGS -DHAVE_ALLOCA_H"
+fi
+
+echo "# This file was generate by configure." > config.mk
+echo "CFLAGS += $CFLAGS" >> config.mk
+echo "LIBS += $LIBS" >> config.mk
