@@ -72,6 +72,9 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - DONE pygmentize -> prismjs
    - DONE shell commands -> elixir (mkdir mv rm)
    - slugs without joins
+     - DONE front
+     - admin
+   - disk usage
  - Markdown refactor
  - Shared deploy SSH keys.
    - For now deploy keys must be unique (cannot be shared between repos).
