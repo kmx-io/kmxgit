@@ -329,6 +329,9 @@ defmodule KmxgitWeb.RepositoryController do
     slug = Repository.full_slug(repo)
     log1 = case Git.log(slug, tree, path || "", 0, 1) do
              {:ok, [log1]} -> log1
+             {:ok, result} ->
+               IO.inspect({:log1, result})
+               nil
              {:error, err} ->
                IO.inspect(err)
                nil
@@ -457,7 +460,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_log1(repo, tree, path)
     |> git_put_tags(repo, conn, op, nil)
     tag = Enum.find(git.tags, fn tag -> tag == tree end)
-    if tag do
+    if git.log1 && tag do
       conn
       |> assign_current_organisation(org)
       |> assign(:current_repository, repo)
