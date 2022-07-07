@@ -5,8 +5,10 @@ defmodule KmxgitWeb.PageController do
 
   alias Kmxgit.Git
   alias Kmxgit.OrganisationManager
+  alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
+  alias Kmxgit.SlugManager
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.UserAuth
@@ -70,17 +72,27 @@ defmodule KmxgitWeb.PageController do
   def new_admin_post(conn, params) do
     if ! UserManager.admin_user_present? do
       user_params = Map.merge(params["user"], %{"is_admin" => true})
-      case UserManager.admin_create_user(user_params) do
+      case Repo.transaction(fn ->
+            case UserManager.admin_create_user(user_params) do
+              {:ok, user} ->
+                case SlugManager.create_slug(user) do
+                  {:ok, _slug} -> user
+                  {:error, changeset} -> Repo.rollback(changeset)
+                end
+              {:error, changeset} ->
+                Repo.rollback(changeset)
+            end
+          end) do
         {:ok, user} ->
           conn
           |> UserAuth.log_in_user(user, user_params)
           |> redirect(to: "/")
-          {:error, changeset} ->
-            conn
-            |> assign(:no_navbar_links, true)
-            |> assign(:changeset, changeset)
-            |> assign(:action, Routes.page_path(conn, :new_admin))
-            |> render("new_admin.html")
+        {:error, changeset} ->
+          conn
+          |> assign(:no_navbar_links, true)
+          |> assign(:changeset, changeset)
+          |> assign(:action, Routes.page_path(conn, :new_admin))
+          |> render("new_admin.html")
       end
     else
       redirect(conn, to: "/")
