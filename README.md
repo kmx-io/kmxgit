@@ -32,7 +32,6 @@ Please see [git-auth README.md](https://git.kmx.io/kmx.io/git-auth).
  * Change directory with `cd kmxgit`
  * Install dependencies with `mix deps.get`
  * Create and migrate your database with `mix ecto.setup`
- * Install `bin/*` into `/usr/local/bin`
  * Start Phoenix endpoint with `mix phx.server` or inside IEx with
    `iex -S mix phx.server`
 
