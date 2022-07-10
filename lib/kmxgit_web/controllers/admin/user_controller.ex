@@ -3,7 +3,10 @@ defmodule KmxgitWeb.Admin.UserController do
 
   alias Kmxgit.IndexParams
   alias Kmxgit.GitAuth
+  alias Kmxgit.GitManager
+  alias Kmxgit.Repo
   alias Kmxgit.RepositoryManager
+  alias Kmxgit.SlugManager
   alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
@@ -83,9 +86,27 @@ defmodule KmxgitWeb.Admin.UserController do
   def update(conn, params) do
     user = UserManager.get_user(params["id"])
     if user do
-      case UserManager.admin_update_user(user, params["user"]) do
+      case Repo.transaction(fn ->
+            case UserManager.admin_update_user(user, params["user"]) do
+              {:ok, user1} ->
+                if user.slug_ != user1.slug_ do
+                  case SlugManager.rename_slug(user.slug_, user1.slug_) do
+                    {:ok, _slug} ->
+                      case GitManager.rename_dir(user.slug_, user1.slug_) do
+                        :ok ->
+                          GitAuth.update()
+                          user1
+                        {:error, err} -> Repo.rollback(err)
+                      end
+                    {:error, err} -> Repo.rollback(err)
+                  end
+                else
+                  user1
+                end
+              {:error, changeset} -> Repo.rollback(changeset)
+            end
+          end) do
         {:ok, user1} ->
-          GitAuth.update()
           conn
           |> redirect(to: Routes.admin_user_path(conn, :show, user1))
         {:error, changeset} ->
