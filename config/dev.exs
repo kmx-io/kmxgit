@@ -5,7 +5,7 @@ config :kmxgit, Kmxgit.Repo,
   database: "git",
   hostname: "localhost",
   username: "git",
-  password: "kHoe+doaJNo55rf+gcmRZsO9fiANjNy",
+  password: "L4GNDeg+UAlsBYnX",
   show_sensitive_data_on_connection_error: true,
   pool_size: 2
 

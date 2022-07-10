@@ -9,10 +9,7 @@ import Config
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
-      raise """
-      environment variable DATABASE_URL is missing.
-      For example: ecto://USER:PASS@HOST/DATABASE
-      """
+    "ecto://git:L4GNDeg+UAlsBYnX@localhost/git"
 
   config :kmxgit, Kmxgit.Repo,
     # ssl: true,
