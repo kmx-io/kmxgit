@@ -6,6 +6,7 @@ defmodule KmxgitWeb.Admin.OrganisationController do
   alias Kmxgit.GitManager
   alias Kmxgit.OrganisationManager
   alias Kmxgit.Repo
+  alias Kmxgit.SlugManager
   alias KmxgitWeb.ErrorView
 
   def index(conn, params) do
