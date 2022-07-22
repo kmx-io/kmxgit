@@ -19,7 +19,7 @@ config :kmxgit, KmxgitWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: KmxgitWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Kmxgit.PubSub,
-  live_view: [signing_salt: "0HhihW2z"]
+  live_view: [signing_salt: System.get_env("LIVE_VIEW_SALT")]
 
 # Configures the mailer
 #
