@@ -74,6 +74,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
    - disk usage
      - DONE disabled port
      - remove
+ - Bug: git log only shows first patch
  - Display dotfiles
  - Markdown
    - display "markdown" in edit pages
