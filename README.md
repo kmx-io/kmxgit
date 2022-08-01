@@ -77,7 +77,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
      - DONE disabled port
      - remove
  - DONE Display dotfiles
- - Markdown
+ - DONE Markdown
    - DONE refactor calls to module
    - DONE display "Markdown syntax enabled" in edit pages
  - Shared deploy SSH keys.
