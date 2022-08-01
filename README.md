@@ -80,6 +80,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
  - DONE Markdown
    - DONE refactor calls to module
    - DONE display "Markdown syntax enabled" in edit pages
+ - Display required characters for register pages.
  - Shared deploy SSH keys.
    - For now deploy keys must be unique (cannot be shared between repos).
  - Releases
