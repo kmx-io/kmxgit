@@ -203,14 +203,8 @@ static ERL_NIF_TERM diff_nif (ErlNifEnv *env, int argc,
     res = enif_make_atom(env, "git_diff_tree_to_tree");
     goto error;
   }
-  printf("patch\n");
-  if (git_patch_from_diff(&patch, diff, 0)) {
-    res = enif_make_atom(env, "git_patch_from_diff");
-    goto error;
-  }
-  printf("buf\n");
-  if (git_patch_to_buf(&buf, patch)) {
-    res = enif_make_atom(env, "git_patch_to_buf");
+  if (git_diff_to_buf(&buf, diff, GIT_DIFF_FORMAT_PATCH)) {
+    res = enif_make_atom(env, "git_diff_to_buf");
     goto error;
   }
   printf("res\n");
