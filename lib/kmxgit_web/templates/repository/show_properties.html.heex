@@ -24,7 +24,7 @@
     <th><%= gettext "Description" %></th>
     <td>
       <%= if @repo.description do %>
-        <%= raw Earmark.as_html!(@repo.description) %>
+        <%= raw Markdown.to_html!(@repo.description) %>
       <% end %>
     </td>
   </tr>

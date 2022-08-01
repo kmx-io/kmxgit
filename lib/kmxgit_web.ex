@@ -56,6 +56,7 @@ defmodule KmxgitWeb do
       unquote(view_helpers())
 
       alias Kmxgit.UserManager.User
+      alias KmxgitWeb.LayoutView
 
       def disk_usage(size) do
         units = {:kb, :mb, :gb, :tb}

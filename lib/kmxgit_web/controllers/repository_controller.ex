@@ -287,7 +287,7 @@ defmodule KmxgitWeb.RepositoryController do
           #content_html = Pygmentize.html(content, filename)
           line_numbers = line_numbers(content)
           markdown_html = if ext && String.match?(ext, ~r/md/i) do
-            Earmark.as_html!(content)
+            Markdown.to_html!(content)
           end
           lang = lang(ext, filename)
           #IO.inspect(path: path, name: name, type: type)
@@ -306,7 +306,7 @@ defmodule KmxgitWeb.RepositoryController do
     readme = Enum.map(files, fn f ->
       if String.match?(f.name, ~r/^readme\.md$/i) do
         {:ok, content} = Git.content(Repository.full_slug(repo), f.sha1)
-        %{html: Earmark.as_html!(content),
+        %{html: Markdown.to_html!(content),
           name: f.name,
           txt: content}
       else

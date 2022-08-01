@@ -67,18 +67,19 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 ## kmxgit 0.4
 
  - Performance improvements :
-   - DONE git bindings
+   - git bindings
+     - free
+     - segfault
    - DONE pygmentize -> prismjs
    - DONE shell commands -> elixir (mkdir mv rm)
    - DONE slugs without joins
    - disk usage
      - DONE disabled port
      - remove
- - Bug: git log only shows first patch
- - Display dotfiles
+ - DONE Display dotfiles
  - Markdown
-   - display "markdown" in edit pages
-   - refactor calls to module
+   - DONE refactor calls to module
+   - DONE display "Markdown syntax enabled" in edit pages
  - Shared deploy SSH keys.
    - For now deploy keys must be unique (cannot be shared between repos).
  - Releases
