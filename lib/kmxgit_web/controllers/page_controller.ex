@@ -36,7 +36,6 @@ defmodule KmxgitWeb.PageController do
     else
       conn
       |> assign(:discord, Application.get_env(:kmxgit, :discord))
-      |> assign(:disk_usage, Git.du_ks("priv/git/"))
       |> assign(:git_ssh_url, Application.get_env(:kmxgit, :git_ssh_url))
       |> assign(:org_count, OrganisationManager.count_organisations())
       |> assign(:repo_count, RepositoryManager.count_repositories())
