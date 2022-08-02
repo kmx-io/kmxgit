@@ -74,13 +74,19 @@ defmodule KmxgitWeb.PageController do
       user_params = Map.merge(params["user"], %{"is_admin" => true})
       case Repo.transaction(fn ->
             case UserManager.admin_create_user(user_params) do
-              {:ok, user} ->
+              {:ok, user, changeset} ->
                 case SlugManager.create_slug(user) do
                   {:ok, _slug} -> user
-                  {:error, changeset} -> Repo.rollback(changeset)
+                  {:error, changeset1} ->
+                    IO.inspect(changeset1)
+                    changeset
+                    |> Map.put(:action, :insert)
+                    |> Ecto.Changeset.add_error(:slug_, "is already taken", [constraint: :unique, constraint_name: "slugs_slug_index"])
+                    |> Repo.rollback()
                 end
-              {:error, changeset} ->
-                Repo.rollback(changeset)
+              {:error, changeset1} ->
+                IO.inspect(changeset1)
+                Repo.rollback(changeset1)
             end
           end) do
         {:ok, user} ->
