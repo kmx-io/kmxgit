@@ -30,14 +30,16 @@
     </div>
 
     <div class="mb-3">
-      <%= label f, :slug_, class: "form-label" %>
+      <%= label f, :slug_, gettext("Login"), class: "form-label" %>
       <%= text_input f, :slug_, class: "form-control" %>
+      <small class="form-text text-muted">Must start with a letter and contain no space.</small>
       <%= error_tag f, :slug_ %>
     </div>
 
     <div class="mb-3">
       <%= label f, :password, class: "form-label" %>
       <%= password_input f, :password, class: "form-control" %>
+      <small class="form-text text-muted">Must contain letters, numbers, special characters and be 12 character long.</small>
       <%= error_tag f, :password %>
     </div>
 
