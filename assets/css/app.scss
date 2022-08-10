@@ -23,6 +23,9 @@ a {
     text-decoration: none;
     color: var(--bs-primary);
 }
+pre {
+    overflow: visible;
+}
 pre.wrap {
     word-break: break-all;
     white-space: pre-wrap;
