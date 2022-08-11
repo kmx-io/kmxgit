@@ -49,7 +49,7 @@ defmodule Kmxgit.UserManager.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :slug_])
+    |> cast(attrs, [:email, :name, :password, :slug_])
     |> generate_totp_secret()
     |> validate_email()
     |> validate_password(opts)
