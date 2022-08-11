@@ -30717,6 +30717,10 @@ pre.wrap {
   white-space: pre-wrap;
 }
 
+.clear {
+  clear: both;
+}
+
 /* navbar */
 .navbar {
   padding-top: 0.3rem;

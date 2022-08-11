@@ -1,4 +1,5 @@
 <div class="footer bg-dark">
   <%= raw Application.fetch_env!(:kmxgit, :footer) %>
   <%= link "kmxgit v#{Kmxgit.MixProject.project[:version]}", to: Kmxgit.MixProject.project[:version_url], class: "version" %>
+  <div class="clear"></div>
 </div>
