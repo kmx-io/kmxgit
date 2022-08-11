@@ -485,7 +485,6 @@ static int log_push_rev(struct log_state *s,
       goto error;
     }
  error:
-  git_object_free(obj);
   return res;
 }
 
@@ -536,8 +535,9 @@ static int log_add_revision(struct log_state *s,
       goto error;
     }
   }
-  error:
-    git_object_free(revs.to);
+ error:
+  git_object_free(revs.from);
+  git_object_free(revs.to);
   return res;
 }
 
