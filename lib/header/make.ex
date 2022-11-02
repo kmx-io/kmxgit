@@ -1,4 +1,4 @@
-## cl89
+## kmxgit
 ## Copyright 2022 kmx.io <contact@kmx.io>
 ##
 ## Permission is hereby granted to use this software granted
@@ -10,6 +10,8 @@
 ## PURPOSE AND PERFORMANCE. IN NO EVENT WHATSOEVER SHALL THE
 ## AUTHOR BE CONSIDERED LIABLE FOR THE USE AND PERFORMANCE OF
 ## THIS SOFTWARE.
+
+
 
 defmodule Header.Make do
   def split(src) do
@@ -31,7 +33,7 @@ defmodule Header.Make do
       {:ok, dest} = File.read(dest_path)
       dest_lines = String.split(dest, "\n")
       {_, rest} = split(dest_lines)
-      result = header <> "\n" <> rest
+      result = header <> "\n\n" <> rest
       File.write(dest_path, result)
     end
   end
