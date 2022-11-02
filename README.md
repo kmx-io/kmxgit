@@ -66,6 +66,7 @@ location ~ ^(.*/info/refs|.*/git-upload-pack)$ {
 
 ## kmxgit 0.4
 
+ - Read only users
  - Performance improvements :
    - git bindings
      - free
