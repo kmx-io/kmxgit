@@ -40,7 +40,7 @@ ${git_nif_test}: ${git_nif_test_OBJ}
 	${CC} ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} ${git_nif_test_OBJ} ${LIBS} -o ${git_nif_test}
 
 ${git_nif_test_asan}: ${git_nif_test_asan_OBJ}
-	${CC} ${ASAN_CFLAGS} ${CPPFLAGS} ${ASAN_LDFLAGS} ${git_nif_test_OBJ} ${LIBS} -o ${git_nif_test_asan}
+	${CC} ${ASAN_CFLAGS} ${CPPFLAGS} ${ASAN_LDFLAGS} ${git_nif_test_asan_OBJ} ${LIBS} -o ${git_nif_test_asan}
 
 ${git_nif_test_cov}: ${git_nif_test_cov_OBJ}
 	${CC} ${CFLAGS} ${COV_CFLAGS} ${CPPFLAGS} ${COV_LDFLAGS} ${git_nif_test_cov_OBJ} ${LIBS} -o ${git_nif_test_cov}
