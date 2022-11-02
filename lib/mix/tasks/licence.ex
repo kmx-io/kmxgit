@@ -1,16 +1,3 @@
-## c3
-## Copyright 2022 kmx.io <contact@kmx.io>
-##
-## Permission is hereby granted to use this software granted
-## the above copyright notice and this permission paragraph
-## are included in all copies and substantial portions of this
-## software.
-##
-## THIS SOFTWARE IS PROVIDED "AS-IS" WITHOUT ANY GUARANTEE OF
-## PURPOSE AND PERFORMANCE. IN NO EVENT WHATSOEVER SHALL THE
-## AUTHOR BE CONSIDERED LIABLE FOR THE USE AND PERFORMANCE OF
-## THIS SOFTWARE.
-
 defmodule Mix.Tasks.Licence do
   use Mix.Task
 
@@ -37,6 +24,8 @@ defmodule Mix.Tasks.Licence do
                                        "-or", "-name", "[a-z]*.h"])
     {ex_files, 0} = System.cmd("find", ["lib", "-name", "[a-z]*.ex",
                                         "-or", "-name", "[a-z]*.exs"])
+    c_files = c_files |> String.split("\n") |> Enum.filter(& &1 != "")
+    ex_files = ex_files |> String.split("\n") |> Enum.filter(& &1 != "")
     update("c_src/git_nif.c", c_files)
     update("lib/kmxgit.ex", ex_files)
   end
