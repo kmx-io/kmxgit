@@ -22,6 +22,9 @@ defmodule Header.C do
   def split("/*" <> rest, acc) do
     {"", acc <> "/*" <> rest}
   end
+  def split("*/\n\n" <> rest, acc) do
+    split("*/\n" <> rest, acc)
+  end
   def split("*/\n" <> rest, acc) do
     header = acc <> "*/"
     {header, rest}

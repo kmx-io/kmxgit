@@ -11,8 +11,6 @@
 ## AUTHOR BE CONSIDERED LIABLE FOR THE USE AND PERFORMANCE OF
 ## THIS SOFTWARE.
 
-
-
 defmodule Header.Make do
   def split(src) do
     split(src, [])
@@ -21,8 +19,14 @@ defmodule Header.Make do
   def split([line = ("#" <> _) | rest], acc) do
     split(rest, [line | acc])
   end
-  def split(rest, acc) do
-    {Enum.reverse(acc) |> Enum.join("\n"), rest |> Enum.join("\n")}
+  def split([line | rest], acc) do
+    case Regex.run(~r/^\s*$/, line) do
+      [_] -> split(rest, acc)
+      _ ->
+        acc = Enum.reverse(acc) |> Enum.join("\n")
+        rest = [line | rest] |> Enum.join("\n")
+        {acc, rest}
+    end
   end
 
   def main([src_path | dest_paths]) do
