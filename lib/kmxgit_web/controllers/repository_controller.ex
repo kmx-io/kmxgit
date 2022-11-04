@@ -120,10 +120,14 @@ defmodule KmxgitWeb.RepositoryController do
       org = repo.organisation
       user = repo.user
       git = setup_git(repo, conn, op, op_params)
-      first_tree = case Enum.at(git.trees, 0) do
-                       {_, first_tree, _} -> first_tree
-                       nil -> nil
-                     end
+      first_tree = Enum.find_value(git.trees,
+        fn {:branch, "master", _} -> "master"
+          _ -> false
+        end) ||
+        case Enum.at(git.trees, 0) do
+          {_, first_tree, _} -> first_tree
+          nil -> nil
+        end
       tree1 = op_params.tree || first_tree
       op_params = %OpParams{op_params | tree: tree1, git: git, org: org, repo: repo, user: user}
       if git.valid do
