@@ -30,8 +30,7 @@ defmodule Kmxgit.UserManager.User do
     field :hashed_password, :string, redact: true
     field :is_admin, :boolean, null: false, default: false
     field :name, :string
-    field :totp_last, :integer, default: 0, redact: true
-    field :totp_secret, :string, redact: true
+    many_to_many :organisations, Organisation, join_through: "users_organisations", on_delete: :delete_all
     has_many :owned_repositories, Repository, on_delete: :delete_all
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
@@ -39,7 +38,8 @@ defmodule Kmxgit.UserManager.User do
     has_one :slug, Slug, on_delete: :delete_all
     field :slug_, :string
     field :ssh_keys, :string
-    many_to_many :organisations, Organisation, join_through: "users_organisations", on_delete: :delete_all
+    field :totp_last, :integer, default: 0, redact: true
+    field :totp_secret, :string, redact: true
     timestamps()
   end
 
