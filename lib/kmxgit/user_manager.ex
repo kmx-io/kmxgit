@@ -365,18 +365,7 @@ defmodule Kmxgit.UserManager do
     end
   end
 
-  @doc """
-  Returns a URL that be rendered with a QR code.
-  It meets the Google Authenticator specification
-  at https://github.com/google/google-authenticator/wiki/Key-Uri-Format.
-  ## Examples
-      iex> generate_totp_enrolment_url(user)
-  """
-  def totp_enrolment_url(%User{email: email, totp_secret: secret}) do
-    "otpauth://totp/kmxgit:#{email}?secret=#{secret}&issuer=kmxgit&algorithm=SHA1&digits=6&period=30"
-  end
-
-  def update_user_totp(user = %User{}, params) do
+  def totp_update(user = %User{}, params) do
     case user
     |> User.totp_changeset(params)
     |> Repo.update()
@@ -388,11 +377,11 @@ defmodule Kmxgit.UserManager do
     end
   end
 
-  def verify_user_totp(user = %User{}, token) do
+  def totp_verify(user = %User{}, token) do
     User.totp_verify(user, token || 0)
   end
 
-  def delete_user_totp(user = %User{}) do
+  def totp_delete(user = %User{}) do
     case user
     |> User.totp_changeset(:delete)
     |> Repo.update()

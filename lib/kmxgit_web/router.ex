@@ -31,7 +31,7 @@ defmodule KmxgitWeb.Router do
   end
 
   pipeline :recaptcha do
-    plug PlugRecaptcha2, recaptcha_secret: Application.get_env(:kmxgit, :recaptcha_secret)
+    plug PlugRecaptcha2, recaptcha_secret: Application.compile_env(:kmxgit, :recaptcha_secret)
   end
 
   pipeline :admin do

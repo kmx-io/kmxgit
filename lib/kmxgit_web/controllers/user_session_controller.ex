@@ -33,7 +33,7 @@ defmodule KmxgitWeb.UserSessionController do
     end
     totp = user_params["totp"]
     if user do
-      if user.totp_last == 0 || totp && UserManager.verify_user_totp(user, totp) do
+      if user.totp_last == 0 || totp && UserManager.totp_verify(user, totp) do
         UserAuth.log_in_user(conn, user, user_params)
       else
         changeset = UserManager.change_user(%User{}, user_params)

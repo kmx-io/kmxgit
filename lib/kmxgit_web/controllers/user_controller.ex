@@ -98,8 +98,19 @@ defmodule KmxgitWeb.UserController do
     "data:#{type};base64,#{Base.encode64(data)}"
   end
 
+  @doc """
+  Returns a URL that be rendered with a QR code.
+  It meets the Google Authenticator specification
+  at https://github.com/google/google-authenticator/wiki/Key-Uri-Format.
+  ## Examples
+      iex> totp_enrolment_url(user)
+  """
+  def totp_enrolment_url(%User{email: email, totp_secret: secret}) do
+    "otpauth://totp/kmxgit:#{email}?secret=#{secret}&issuer=kmxgit&algorithm=SHA1&digits=6&period=30"
+  end
+
   defp totp_enrolment_qrcode_src(user) do
-    UserManager.totp_enrolment_url(user)
+    totp_enrolment_url(user)
     |> QRCodeEx.encode()
     |> QRCodeEx.svg()
     |> img_src_data("image/svg+xml")
@@ -128,7 +139,7 @@ defmodule KmxgitWeb.UserController do
     if params["login"] == User.login(current_user) do
       user = current_user
       IO.inspect(params)
-      case UserManager.update_user_totp(user, params["user"]) do
+      case UserManager.totp_update(user, params["user"]) do
         {:ok, user} ->
           conn
           |> put_flash(:info, "Enroled 2FA (TOTP) successfuly.")
@@ -151,7 +162,7 @@ defmodule KmxgitWeb.UserController do
     current_user = conn.assigns.current_user
     if params["login"] == User.login(current_user) do
       user = current_user
-      case UserManager.delete_user_totp(user) do
+      case UserManager.totp_delete(user) do
         {:ok, user} ->
           conn
           |> put_flash(:info, "Removed 2FA (TOTP) successfuly.")
