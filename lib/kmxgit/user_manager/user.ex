@@ -212,7 +212,7 @@ defmodule Kmxgit.UserManager.User do
 
   def admin_changeset(user, attrs \\ %{}, opts \\ []) do
     user
-    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :slug_, :ssh_keys])
+    |> cast(attrs, [:deploy_only, :description, :email, :is_admin, :name, :password, :slug_, :ssh_keys, :totp_last, :totp_secret])
     |> validate_email()
     |> maybe_validate_password(opts)
     |> common_changeset()
