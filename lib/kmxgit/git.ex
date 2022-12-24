@@ -78,9 +78,9 @@ defmodule Kmxgit.Git do
   # NIFs
 
   def branches(repo) do
-    IO.inspect({:branches, repo})
+    #IO.inspect({:branches, repo})
     dir = git_dir(repo)
-    IO.inspect({:branches_nif, dir})
+    #IO.inspect({:branches_nif, dir})
     branches_nif(dir)
   end
 
@@ -89,9 +89,9 @@ defmodule Kmxgit.Git do
   end
 
   def content(repo, sha) do
-    IO.inspect({:content, repo, sha})
+    #IO.inspect({:content, repo, sha})
     dir = git_dir(repo)
-    IO.inspect({:content_nif, dir, sha})
+    #IO.inspect({:content_nif, dir, sha})
     content_nif(dir, sha)
   end
 
@@ -100,12 +100,12 @@ defmodule Kmxgit.Git do
   end
 
   def create(repo) do
-    IO.inspect({:create, repo})
+    #IO.inspect({:create, repo})
     dir = "#{@git_root}/#{Path.dirname(repo)}"
     name = "#{Path.basename(repo)}.git"
     :ok = File.mkdir_p(dir)
     path = "#{dir}/#{name}"
-    IO.inspect({:create_nif, path})
+    #IO.inspect({:create_nif, path})
     create_nif(path)
   end
 
@@ -114,9 +114,9 @@ defmodule Kmxgit.Git do
   end
 
   def diff(repo, from, to) do
-    IO.inspect({:diff, repo, from, to})
+    #IO.inspect({:diff, repo, from, to})
     dir = git_dir(repo)
-    IO.inspect({:diff_nif, dir, from, to})
+    #IO.inspect({:diff_nif, dir, from, to})
     diff_nif(dir, from, to)
   end
 
@@ -125,9 +125,9 @@ defmodule Kmxgit.Git do
   end
 
   def files(repo, tree, path, parent \\ ".") do
-    IO.inspect({:files, repo, tree, path, parent})
+    #IO.inspect({:files, repo, tree, path, parent})
     dir = git_dir(repo)
-    IO.inspect({:files_nif, dir, tree, path})
+    #IO.inspect({:files_nif, dir, tree, path})
     case files_nif(dir, tree, path) do
       {:ok, files} ->
         files1 = files
@@ -146,16 +146,16 @@ defmodule Kmxgit.Git do
   def init do
     path = "#{:code.priv_dir(:kmxgit)}/libgit_nif"
     |> String.to_charlist()
-    IO.inspect({:load_nif, path, 0})
+    #IO.inspect({:load_nif, path, 0})
     :ok = :erlang.load_nif(path, 0)
   end
 
   def log(repo, tree \\ "HEAD", path \\ "", skip \\ 0, limit \\ 100) do
-    IO.inspect({:log, repo, tree, path, skip, limit})
+    #IO.inspect({:log, repo, tree, path, skip, limit})
     tree = tree || "HEAD"
     dir = git_dir(repo)
     # [%{author: author, author_email: email, hash: hash, date: date, message: msg}]
-    IO.inspect({:log_nif, dir, tree, path, skip, limit})
+    #IO.inspect({:log_nif, dir, tree, path, skip, limit})
     log_nif(dir, tree, path, skip, limit)
   end
 
@@ -164,9 +164,9 @@ defmodule Kmxgit.Git do
   end
 
   def tags(repo) do
-    IO.inspect({:tags, repo})
+    #IO.inspect({:tags, repo})
     dir = git_dir(repo)
-    IO.inspect({:tags_nif, dir})
+    #IO.inspect({:tags_nif, dir})
     tags_nif(dir)
   end
 
