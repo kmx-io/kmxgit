@@ -36,6 +36,8 @@
         </ul>
       </p>
 
+    </div>
+    <div class="col col-12 col-md-4">
       <p>
         <ul class="list-group">
           <li class="list-group-item bg-h">
@@ -44,7 +46,7 @@
           <%= for org <- Enum.sort_by(@user.organisations, & &1.slug_) do %>
             <li class="list-group-item">
               <%= link to: Routes.slug_path(@conn, :show, org.slug_), class: "org" do %>
-                <i class="fa fa-users"></i>&nbsp;
+                <i class="fa fa-circle"></i>&nbsp;
                 <%= org.name || org.slug_ %>
               <% end %>
             </li>
@@ -56,8 +58,7 @@
           <% end %>
         </ul>
       </p>
-    </div>
-    <div class="col col-12 col-md-4">
+
       <p>
         <ul class="list-group">
           <li class="list-group-item bg-h">
@@ -80,7 +81,7 @@
               <tr>
                 <th><%= gettext "SSH keys" %></th>
                 <td>
-                  <%= link gettext("Show"), to: Routes.user_path(@conn, :ssh_keys, User.login(@user)), class: "btn btn-primary" %>
+                  <%= link gettext("Show"), to: Routes.user_path(@conn, :ssh_keys, User.login(@user)), class: "btn btn-primary btn-sm" %>
                 </td>
               </tr>
             </table>
