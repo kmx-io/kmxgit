@@ -98,6 +98,17 @@ defmodule KmxgitWeb.UserController do
     "data:#{type};base64,#{Base.encode64(data)}"
   end
 
+  def ssh_keys(conn, params) do
+    user = UserManager.get_user_by_login(params["login"])
+    if user do
+      conn
+      |> put_resp_content_type("text/plain")
+      |> resp(200, user.ssh_keys)
+    else
+      not_found(conn)
+    end
+  end
+
   @doc """
   Returns a URL that be rendered with a QR code.
   It meets the Google Authenticator specification

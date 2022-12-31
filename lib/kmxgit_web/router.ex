@@ -178,6 +178,7 @@ defmodule KmxgitWeb.Router do
   scope "/", KmxgitWeb do
     pipe_through [:browser]
     get "/:slug", SlugController, :show
+    get "/:login/_ssh_keys", UserController, :ssh_keys
     get "/:owner/*slug", RepositoryController, :show
     match :*, "/*path", PageController, :not_found
   end

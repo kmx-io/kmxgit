@@ -1,17 +1,24 @@
 <%= if !@git.content do %>
-  <%= Enum.map @git.readme, fn readme -> %>
-    <hr/>
-    <h3><a id={readme.name} href={"##{readme.name}"} ><%= readme.name %></a></h3>
-    <div class="container-fluid">
-      <div class="container-fluid file_content">
-        <div class="content_html">
-          <%= if readme.html do %>
-            <%= raw readme.html %>
-          <% else %>
-            <pre><%= readme.txt %></pre>
-          <% end %>
-        </div>
-      </div>
+  <div class="row">
+    <div class="col col-12">
+      <%= Enum.map @git.readme, fn readme -> %>
+        <p>
+          <ul class="list-group">
+            <li class="list-group-item bg-h">
+              <h3><a id={readme.name} href={"##{readme.name}"} ><%= readme.name %></a></h3>
+            </li>
+            <li class="list-group-item">
+              <div class="content_html">
+                <%= if readme.html do %>
+                  <%= raw readme.html %>
+                <% else %>
+                  <pre><%= readme.txt %></pre>
+                <% end %>
+              </div>
+            </li>
+          </ul>
+        </p>        
+      <% end %>
     </div>
-  <% end %>
+  </div>
 <% end %>

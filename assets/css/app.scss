@@ -73,11 +73,6 @@ pre.wrap {
 }
 /* borders */
 $border-radius: 0.375rem;
-.highlight > pre {
-    padding: 0.5rem;
-    border: solid 1px #ccc;
-    border-radius: $border-radius;
-}
 .list-group {
     border-radius: $border-radius;
 }
@@ -89,12 +84,18 @@ $border-radius: 0.375rem;
     float: left;
     margin: 0 0.5em 0.5em 0;
 }
+.bg-h {
+    background: #faf9ff;
+}
 .commit-avatar {
     float: left;
     margin-right: 0.5em;
 }
 .clear {
     clear: both;
+}
+.fa.fixed-width {
+    width: 1.2em;
 }
 /* user */
 .btn-danger, .btn-danger:hover {
@@ -173,6 +174,8 @@ code, pre, code[class*=language-], pre[class*=language-] {
     font-size: 1.1rem;
     font-family: courier_new;
     font-weight: bold;
+}
+.bg-dark pre {
     color: #ddd;
 }
 pre[class*=language-] {

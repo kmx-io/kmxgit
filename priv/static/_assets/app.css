@@ -19298,12 +19298,6 @@ pre.wrap {
 }
 
 /* borders */
-.highlight > pre {
-  padding: 0.5rem;
-  border: solid 1px #ccc;
-  border-radius: 0.375rem;
-}
-
 .list-group {
   border-radius: 0.375rem;
 }
@@ -19318,6 +19312,10 @@ pre.wrap {
   margin: 0 0.5em 0.5em 0;
 }
 
+.bg-h {
+  background: #faf9ff;
+}
+
 .commit-avatar {
   float: left;
   margin-right: 0.5em;
@@ -19325,6 +19323,10 @@ pre.wrap {
 
 .clear {
   clear: both;
+}
+
+.fa.fixed-width {
+  width: 1.2em;
 }
 
 /* user */
@@ -19414,6 +19416,9 @@ code, pre, code[class*=language-], pre[class*=language-] {
   font-size: 1.1rem;
   font-family: courier_new;
   font-weight: bold;
+}
+
+.bg-dark pre {
   color: #ddd;
 }
 

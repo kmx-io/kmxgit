@@ -1,14 +1,16 @@
-<div class="log1">
-  <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, title: @git.log1.author, class: "commit-avatar") %>
-  <span class="hash">
-    <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @tree] ++ (if @path, do: String.split(@path, "/"), else: []))) <> "##{@git.log1.hash}" %>
-  </span>
-  <span class="date">
-    <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], @git.log1.date) %>
-  </span>
-  <br/>
-  <span class="message" %>
-    <%= @git.log1.message %>
-  </span>
-</div>
-<div class="clear"></div>
+<p>
+  <div class="log1">
+    <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, title: @git.log1.author, class: "commit-avatar") %>
+    <span class="hash">
+      <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @tree] ++ (if @path, do: String.split(@path, "/"), else: []))) <> "##{@git.log1.hash}" %>
+    </span>
+    <span class="date">
+      <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], @git.log1.date) %>
+    </span>
+    <br/>
+    <span class="message" %>
+      <%= @git.log1.message %>
+    </span>
+  </div>
+  <div class="clear"></div>
+</p>

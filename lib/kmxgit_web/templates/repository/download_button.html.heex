@@ -1,0 +1,3 @@
+<p>
+  <%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @tree | String.split(@path, "/")])), class: "btn btn-primary" %>
+</p>

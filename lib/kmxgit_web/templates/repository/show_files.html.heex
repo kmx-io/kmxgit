@@ -4,32 +4,33 @@
     <%= if @git.log1 do %>
       <%= render("show_commit_message.html", assigns) %>
     <% end %>
-    <ul class="list-group">
-      <li class="list-group-item">
-        <h2><%= gettext("Files") %></h2>
-      </li>
-      <%= for file <- @git.files do %>
-        <li class="list-group-item">
-          <%= case file.type do %>
-            <% :blob -> %>
-              <%= link to: file.url do %>
-                <i class="fa fas-file"></i>
-                <%= file.name %>
-              <% end %>
-            <% :tree -> %>
-              <%= link "#{file.name}/", to: file.url %>
-            <% _ -> %>
-              <%= "#{file.type} #{file.name}" %>
-          <% end %>
+    <p>
+      <ul class="list-group">
+        <li class="list-group-item bg-h">
+          <h2><%= gettext("Files") %></h2>
         </li>
-      <% end %>
-    </ul>
+        <%= for file <- @git.files do %>
+          <li class="list-group-item">
+            <%= case file.type do %>
+              <% :blob -> %>
+                <%= link to: file.url do %>
+                  <i class="fa fa-file fixed-width"></i>
+                  <%= file.name %>
+                <% end %>
+              <% :tree -> %>
+                <%= link to: file.url do %>
+                  <i class="fa fa-folder fixed-width"></i>
+                  <%= "#{file.name}/" %>
+                <% end %>
+              <% _ -> %>
+                <%= "#{file.type} #{file.name}" %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </p>
   </div>
   <div class="col col-12 col-md-5">
     <%= render("show_properties.html", assigns) %>
   </div>
-</div>
-
-<div class="row">
-  <%= render("show_readmes.html", assigns) %>
 </div>

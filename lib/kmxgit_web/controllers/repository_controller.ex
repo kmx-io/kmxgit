@@ -214,6 +214,7 @@ defmodule KmxgitWeb.RepositoryController do
       line_numbers: nil,
       log1: nil,
       markdown_html: nil,
+      path: op_params.path,
       readme: [],
       status: "",
       tags: [],
@@ -272,7 +273,8 @@ defmodule KmxgitWeb.RepositoryController do
 
   @ext_lang %{
     "ex" => "elixir",
-    "exs" => "elixir"
+    "exs" => "elixir",
+    "h" => "c"
   }
 
   defp lang(nil, filename) do

@@ -1,7 +1,11 @@
 <%= render("show_branch.html", assigns) %>
+
 <%= if @git.log1 do %>
   <%= render("show_commit_message.html", assigns) %>
 <% end %>
+
+<%= render("download_button.html", assigns) %>
+
 <%= if String.match?(@git.content_type, ~r(^text/)) do %>
   <%= if @git.markdown_html do %>
     <div class="content_html">
@@ -12,11 +16,22 @@
   <% end %>
   <%= render("show_git_content_text.html", assigns) %>
 <% end %>
+
 <%= if String.match?(@git.content_type, ~r(^image/)) do %>
   <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
 <% end %>
-<%= link gettext("Download"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_blob", @tree | String.split(@path, "/")])), class: "btn btn-primary" %>
+
+<%= render("download_button.html", assigns) %>
 
 <%= if Mix.env == :dev do %>
-  <%= hd(@git.files).sha1 %>
+  <p>
+    <ul class="list-group">
+      <li class="list-group-item bg-h">
+        <h3>Debug (Mix.env = :dev)</h3>
+      </li>
+      <li class="list-group-item">
+        sha1: <%= hd(@git.files).sha1 %>
+      </li>
+    </ul>
+  </p>
 <% end %>

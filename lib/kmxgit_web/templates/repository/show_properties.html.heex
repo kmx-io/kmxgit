@@ -1,67 +1,75 @@
-<h2><%= gettext "Properties" %></h2>
-<table class="table admin-properties">
-  <%= if @repo.public_access do %>
-    <tr>
-      <th><%= gettext "Git HTTP" %></th>
-      <td><%= Repository.http_url(@repo) %></td>
-    </tr>
-  <% end %>
-  <tr>
-    <th><%= gettext "Git SSH" %></th>
-    <td><%= Repository.ssh_url(@repo) %></td>
-  </tr>
-  <tr>
-    <th><%= gettext "Public access ?" %></th>
-    <td>
-      <%= if @repo.public_access do %>
-        <%= gettext "public" %>
-      <% else %>
-        <%= gettext "private" %>
-      <% end %>
-    </td>
-  </tr>
-  <tr>
-    <th><%= gettext "Description" %></th>
-    <td>
-      <%= if @repo.description do %>
-        <%= raw Markdown.to_html!(@repo.description) %>
-      <% end %>
-    </td>
-  </tr>
-  <tr>
-    <th>
-      <%= gettext "Users" %><br/>
-      <%= if Repository.owner?(@repo, @current_user) do %>
-        <%= link "-",
-        to: Routes.repository_path(@conn, :remove_user, @owner.slug_, Repository.splat(@repo)),
-        class: "btn btn-danger btn-sm" %>
-        <%= link "+",
-        to: Routes.repository_path(@conn, :add_user, @owner.slug_, Repository.splat(@repo)),
-        class: "btn btn-primary btn-sm" %>
-      <% end %>
-    </th>
-    <td>
-      <%= for user <- @members do %>
-        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
-      <% end %>
-    </td>
-  </tr>
-  <%= if @git.tags do %>
-    <tr>
-      <th><%= gettext("Tags") %></th>
-      <td>
-        <ul>
-          <%= for tag <- @git.tags |> Enum.reverse() do %>
-            <li>
-              <%= link tag, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tag", tag])) %>
-            </li>
-          <% end %>
-        </ul>
-      </td>
-    </tr>
-  <% end %>
-  <tr>
-    <th><%= gettext("Disk usage") %></th>
-    <td><%= disk_usage(@disk_usage) %></td>
-  </tr>
-</table>
+<p>
+  <ul class="list-group">
+    <li class="list-group-item bg-h">
+      <h2><%= gettext "Properties" %></h2>
+    </li>
+    <li class="list-group-item">
+      <table class="table admin-properties">
+        <%= if @repo.public_access do %>
+          <tr>
+            <th><%= gettext "Git HTTP" %></th>
+            <td><%= Repository.http_url(@repo) %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <th><%= gettext "Git SSH" %></th>
+          <td><%= Repository.ssh_url(@repo) %></td>
+        </tr>
+        <tr>
+          <th><%= gettext "Public access ?" %></th>
+          <td>
+            <%= if @repo.public_access do %>
+              <%= gettext "public" %>
+            <% else %>
+              <%= gettext "private" %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "Description" %></th>
+          <td>
+            <%= if @repo.description do %>
+              <%= raw Markdown.to_html!(@repo.description) %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <%= gettext "Users" %><br/>
+            <%= if Repository.owner?(@repo, @current_user) do %>
+              <%= link "-",
+              to: Routes.repository_path(@conn, :remove_user, @owner.slug_, Repository.splat(@repo)),
+              class: "btn btn-danger btn-sm" %>
+              <%= link "+",
+              to: Routes.repository_path(@conn, :add_user, @owner.slug_, Repository.splat(@repo)),
+              class: "btn btn-primary btn-sm" %>
+            <% end %>
+          </th>
+          <td>
+            <%= for user <- @members do %>
+              <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
+            <% end %>
+          </td>
+        </tr>
+        <%= if @git.tags do %>
+          <tr>
+            <th><%= gettext("Tags") %></th>
+            <td>
+              <ul>
+                <%= for tag <- @git.tags |> Enum.reverse() do %>
+                  <li>
+                    <%= link tag, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tag", tag])) %>
+                  </li>
+                <% end %>
+              </ul>
+            </td>
+          </tr>
+        <% end %>
+        <tr>
+          <th><%= gettext("Disk usage") %></th>
+          <td><%= disk_usage(@disk_usage) %></td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+</p>

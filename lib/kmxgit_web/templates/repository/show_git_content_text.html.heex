@@ -1,9 +1,18 @@
-<div class="file_content">
-  <div class="content_text">
-    <div class="line_numbers">
-      <pre><%= for ln <- @git.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
-<% end %></pre>
-    </div>
-    <pre><code class={"language-#{@git.content_lang}"}><%= @git.content %></code></pre>
-  </div>
-</div>
+<p>
+  <ul class="list-group">
+    <li class="list-group-item bg-h">
+      <h2><i class="fa fa-file fixed-width"></i> <%= @git.path %></h2>
+    </li>
+    <li class="list-group-item">
+      <div class="file_content">
+        <div class="content_text">
+          <div class="line_numbers">
+            <pre><%= for ln <- @git.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
+            <% end %></pre>
+          </div>
+          <pre><code class={"language-#{@git.content_lang}"}><%= @git.content %></code></pre>
+        </div>
+      </div>
+    </li>
+  </ul>
+</p>
