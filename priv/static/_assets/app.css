@@ -19405,11 +19405,19 @@ table.admin-properties th {
 .content_text .line_numbers pre {
   overflow: hidden;
 }
-.content_text code[class*=language-], .content_text pre[class*=language-] {
+
+pre {
+  margin-bottom: 0;
+}
+
+code, pre, code[class*=language-], pre[class*=language-] {
+  font-size: 1.1rem;
   font-family: courier_new;
   font-weight: bold;
+  color: #ddd;
 }
-.content_text pre[class*=language-] {
+
+pre[class*=language-] {
   margin: -0.3em;
   padding: 0.3em;
 }

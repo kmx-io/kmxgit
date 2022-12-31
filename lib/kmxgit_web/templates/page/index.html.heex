@@ -22,8 +22,17 @@
         </p>
       <% end %>
 
-      <h3><%= link gettext("SSH keys fingerprint"), to: "#ssh-keys", id: "ssh-keys" %></h3>
-      <pre class="wrap"><%= render("ssh_keys_fingerprint.txt") %></pre>
+      <h3><%= gettext("Security") %></h3>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <h5><%= link gettext("SSH keys fingerprint"), to: "#ssh-keys", id: "ssh-keys" %></h5>
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre class="wrap"><%= render("ssh_keys_fingerprint.txt") %></pre>
+          </li>
+        </ul>
+      </p>
 
       <h3><%= link gettext("Help"), to: "#help", id: "help" %></h3>
       <p>
@@ -31,33 +40,92 @@
       </p>
 
       <p>
-        <div class="highlight">
-          <pre class="wrap"><code><span class="c1"># <%= gettext "Clone repository user/path/to/repo if repo does not exist" %> :</span>
-git clone <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
-cd <b>repo</b>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Clone repository user/path/to/repo if repo does not exist" %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git clone <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
+cd <b>repo</b></code></pre>
+          </li>
+        </ul>
+      </p>
 
-<span class="c1"># <%= gettext "Change branch" %> :</span>
-git branch <b>master</b>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Change branch" %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git branch <b>master</b></code></pre>
+          </li>
+        </ul>
+      </p>
 
-<span class="c1"># <%= gettext "Pull changes from remote" %> :</span>
-git pull
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Pull changes from remote" %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git pull</code></pre>
+          </li>
+        </ul>
+      </p>
 
-<span class="c1"># <%= gettext "Add local changes to next commit" %> :</span>
-git add <b>README.md static/index.html</b>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Add local changes to next commit" %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git add <b>README.md static/index.html</b></code></pre>
+          </li>
+        </ul>
+      </p>
 
-<span class="c1"># <%= gettext "Commit" %> :</span>
-git commit -m "<b>a short and descriptive message</b>"
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Commit" %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git commit -m "<b>a short and descriptive message</b>"</code></pre>
+          </li>
+        </ul>
+      </p>
 
-<span class="c1"># <%= gettext "Push changes to remote" %> :</span>
-git push
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Push changes to remote" %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git push</code></pre>
+          </li>
+        </ul>
+      </p>
 
-<span class="c1"># <%= gettext "Or if your local repo already exists," %></span>
-<span class="c1"># <%= gettext "Add remote to existing repo" %> :</span>
-git remote add kmx <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Or if your local repo already exists, add remote to existing repo." %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git remote add kmx <b><%= @git_ssh_url %>:user/path/to/repo.git</b></code></pre>
+          </li>
+        </ul>
+      </p>
 
-<span class="c1"># <%= gettext "Push to new remote" %> :</span>
-git push -u kmx master</code></pre>
-        </div>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <%= gettext "Push to new remote" %> :
+          </li>
+          <li class="list-group-item bg-dark">
+            <pre><code class="language-sh">git push -u kmx master</code></pre>
+          </li>
+        </ul>
       </p>
 
       <p>
@@ -73,26 +141,31 @@ git push -u kmx master</code></pre>
         </ul>
       </p>
 
-      <hr/>
-
-      <h3><%= link gettext("Stats"), to: "#stats", id: "stats" %></h3>
-
       <div class="row">
         <div class="col col-12 col-md-5">
-          <table class="table">
-            <tr>
-              <th><%= gettext "Users" %></th>
-              <td><%= @user_count %></td>
-            </tr>
-            <tr>
-              <th><%= gettext "Organisations" %></th>
-              <td><%= @org_count %></td>
-            </tr>
-            <tr>
-              <th><%= gettext "Repositories" %></th>
-              <td><%= @repo_count %></td>
-            </tr>
-          </table>
+          <p>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <h3><%= link gettext("Stats"), to: "#stats", id: "stats" %></h3>
+              </li>
+              <li class="list-group-item">
+                <table class="table">
+                  <tr>
+                    <th><%= gettext "Users" %></th>
+                    <td><%= @user_count %></td>
+                  </tr>
+                  <tr>
+                    <th><%= gettext "Organisations" %></th>
+                    <td><%= @org_count %></td>
+                  </tr>
+                  <tr>
+                    <th><%= gettext "Repositories" %></th>
+                    <td><%= @repo_count %></td>
+                  </tr>
+                </table>
+              </li>
+            </ul>
+          </p>
         </div>
       </div>
     </div>

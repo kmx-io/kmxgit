@@ -9,7 +9,6 @@ $font-family-sans-serif: "Inter", sans-serif;
 $font-family-monospace: "courier_new", "Courier New", monospace;
 @import "./courier_new.scss";
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
-$code-font-size: $font-size-base;
 @import "./fontawesome-5.15.4-free.scss";
 @import "./fontawesome-5.15.4-free-v4-shims.scss";
 @import "./fontawesome-5.15.4-free-v4-font-face.scss";
@@ -166,14 +165,19 @@ table.admin-properties th {
             overflow: hidden;
         }
     }
-    code[class*=language-], pre[class*=language-] {
-        font-family: courier_new;
-        font-weight: bold;
-    }
-    pre[class*=language-] {
-        margin: -0.3em;
-        padding: 0.3em;
-    }
+}
+pre {
+    margin-bottom: 0;
+}
+code, pre, code[class*=language-], pre[class*=language-] {
+    font-size: 1.1rem;
+    font-family: courier_new;
+    font-weight: bold;
+    color: #ddd;
+}
+pre[class*=language-] {
+    margin: -0.3em;
+    padding: 0.3em;
 }
 .content_html {
     margin: 0;
