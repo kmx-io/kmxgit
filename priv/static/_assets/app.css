@@ -19329,6 +19329,10 @@ pre.wrap {
   width: 1.2em;
 }
 
+.list-group.inline {
+  display: inline-block;
+}
+
 /* user */
 .btn-danger, .btn-danger:hover {
   color: #fff;

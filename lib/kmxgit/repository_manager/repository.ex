@@ -29,7 +29,7 @@ defmodule Kmxgit.RepositoryManager.Repository do
     belongs_to :forked_from, __MODULE__
     belongs_to :organisation, Organisation, on_replace: :nilify
     field :owner_slug, :string, virtual: true
-    field :public_access, :boolean, null: false, default: false
+    field :public_access, :boolean, default: false
     field :slug, :string
     belongs_to :user, User, on_replace: :nilify
     many_to_many :members, User, join_through: "users_repositories", on_replace: :delete, on_delete: :delete_all

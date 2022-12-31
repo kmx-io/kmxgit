@@ -23,12 +23,12 @@ defmodule Kmxgit.UserManager.User do
 
   schema "users" do
     field :confirmed_at, :utc_datetime
-    field :deploy_only, :boolean, null: false, default: false
-    field :description, :string, null: true
+    field :deploy_only, :boolean, default: false
+    field :description, :string
     field :disk_usage, :integer, default: 0
     field :email, :string
     field :hashed_password, :string, redact: true
-    field :is_admin, :boolean, null: false, default: false
+    field :is_admin, :boolean, default: false
     field :name, :string
     many_to_many :organisations, Organisation, join_through: "users_organisations", on_delete: :delete_all
     has_many :owned_repositories, Repository, on_delete: :delete_all
