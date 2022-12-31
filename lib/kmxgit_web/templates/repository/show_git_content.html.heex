@@ -15,13 +15,13 @@
     <h3><%= gettext "Source" %></h3>
   <% end %>
   <%= render("show_git_content_text.html", assigns) %>
+  <%= render("download_button.html", assigns) %>
 <% end %>
 
 <%= if String.match?(@git.content_type, ~r(^image/)) do %>
   <img src={"data:#{@git.content_type};base64,#{Base.encode64(@git.content)}"}/>
+  <%= render("download_button.html", assigns) %>
 <% end %>
-
-<%= render("download_button.html", assigns) %>
 
 <%= if Mix.env == :dev do %>
   <p>
