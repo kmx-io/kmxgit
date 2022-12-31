@@ -15,57 +15,68 @@
 
   <div class="row">
     <div class="col col-12 col-md-7">
-      <h2><%= gettext "Repositories" %></h2>
-      <ul>
-        <%= for repo <- @repos do %>
-          <li>
-            <%= link Repository.full_slug(repo), to: Routes.repository_path(@conn, :show, @org.slug_, Repository.splat(repo)) %>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <h2><%= gettext "Repositories" %></h2>
           </li>
-        <% end %>
-      </ul>  
+          <%= for repo <- @repos do %>
+            <li class="list-group-item">
+              <%= link to: Routes.repository_path(@conn, :show, @org.slug_, Repository.splat(repo)) do %>
+                <i class="fa fa-code-fork"></i>
+                <%= Repository.full_slug(repo) %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </p>
     </div>
     <div class="col col-12 col-md-4">
-      <h2><%= gettext "Properties" %></h2>
-      <table class="table admin-properties">
-        <tr>
-          <th><%= gettext "Name" %></th>
-          <td><%= @org.name %></td>
-        </tr>
-        <tr>
-          <th><%= gettext "Slug" %></th>
-          <td><%= @org.slug_ %></td>
-        </tr>
-        <tr>
-          <th><%= gettext "Description" %></th>
-          <td>
-            <%= if @org.description do %>
-              <%= raw Markdown.to_html!(@org.description) %>
-            <% end %>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            <%= gettext "Users" %><br/>
-            <%= if Organisation.owner?(@org, @current_user) do %>
-              <%= link "-",
-                  to: Routes.organisation_path(@conn, :remove_user, @org.slug_),
-                  class: "btn btn-danger btn-sm" %>
-              <%= link "+",
-                  to: Routes.organisation_path(@conn, :add_user, @org.slug_),
-                  class: "btn btn-primary btn-sm" %>
-            <% end %>
-          </th>
-          <td>
-            <%= for user <- @org.users do %>
-              <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
-            <% end %>
-          </td>
-        </tr>
-        <tr>
-          <th><%= gettext("Disk usage") %></th>
-          <td><%= disk_usage(@disk_usage) %></td>
-        </tr>
-      </table>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <h2><%= gettext "Properties" %></h2>
+          </li>
+          <li class="list-group-item">
+            <table class="table admin-properties">
+              <tr>
+                <th><%= gettext "Name" %></th>
+                <td><%= @org.name %></td>
+              </tr>
+              <tr>
+                <th><%= gettext "Slug" %></th>
+                <td><%= @org.slug_ %></td>
+              </tr>
+              <tr>
+                <th><%= gettext "Description" %></th>
+                <td>
+                  <%= if @org.description do %>
+                    <%= raw Markdown.to_html!(@org.description) %>
+                  <% end %>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  <%= gettext "Users" %><br/>
+                  <%= if Organisation.owner?(@org, @current_user) do %>
+                    <%= link "-",
+                    to: Routes.organisation_path(@conn, :remove_user, @org.slug_),
+                    class: "btn btn-danger btn-sm" %>
+                    <%= link "+",
+                    to: Routes.organisation_path(@conn, :add_user, @org.slug_),
+                    class: "btn btn-primary btn-sm" %>
+                  <% end %>
+                </th>
+                <td>
+                  <%= for user <- @org.users do %>
+                    <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
+                  <% end %>
+                </td>
+              </tr>
+            </table>
+          </li>
+        </ul>
+      </p>
     </div>
   </div>
 </div>

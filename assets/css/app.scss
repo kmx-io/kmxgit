@@ -8,8 +8,8 @@ $dark: #000;
 $font-family-sans-serif: "Inter", sans-serif;
 $font-family-monospace: "courier_new", "Courier New", monospace;
 @import "./courier_new.scss";
-$code-font-size: $font-size-base;
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+$code-font-size: $font-size-base;
 @import "./fontawesome-5.15.4-free.scss";
 @import "./fontawesome-5.15.4-free-v4-shims.scss";
 @import "./fontawesome-5.15.4-free-v4-font-face.scss";
@@ -72,6 +72,19 @@ pre.wrap {
 .kmxgit-logo-lg, .kmxgit-logo-light-lg {
     font-size: 4em;
 }
+/* borders */
+$border-radius: 0.375rem;
+.highlight > pre {
+    padding: 0.5rem;
+    border: solid 1px #ccc;
+    border-radius: $border-radius;
+}
+.list-group {
+    border-radius: $border-radius;
+}
+.list-group-item {
+    padding: 0.5rem;
+}
 /* misc */
 .avatar-lg {
     float: left;
@@ -131,7 +144,6 @@ table.admin-properties th {
     min-width: 8em;
 }
 .file_content {
-    border: solid 1px #ccc;
     padding: 0;
     margin: 0.5em 0;
 }

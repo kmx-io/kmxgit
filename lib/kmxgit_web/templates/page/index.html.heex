@@ -29,8 +29,10 @@
       <p>
         <%= link gettext("Install git"), to: Routes.page_path(@conn, :doc_git_install) %>
       </p>
-      <div class="highlight">
-        <pre class="wrap"><code><span class="c1"># <%= gettext "Clone repository user/path/to/repo if repo does not exist" %> :</span>
+
+      <p>
+        <div class="highlight">
+          <pre class="wrap"><code><span class="c1"># <%= gettext "Clone repository user/path/to/repo if repo does not exist" %> :</span>
 git clone <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
 cd <b>repo</b>
 
@@ -55,7 +57,9 @@ git remote add kmx <b><%= @git_ssh_url %>:user/path/to/repo.git</b>
 
 <span class="c1"># <%= gettext "Push to new remote" %> :</span>
 git push -u kmx master</code></pre>
-      </div>
+        </div>
+      </p>
+
       <p>
         <%= gettext("Get the git url at") %> <b><%= Routes.page_url(@conn, :index) %>user/path/to/repo</b>
       </p>
