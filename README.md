@@ -7,11 +7,11 @@ kmxgit started as a frontend for
 [git-auth](https://git.kmx.io/kmx.io/git-auth).
 Now public repositories are also supported.
 
-This branch is work in progress, for the stable branch see
-[v0.3](https://git.kmx.io/kmx.io/kmxgit/_tree/v0.3).
+This branch is the latest stable branch.
+[v0.4](https://git.kmx.io/kmx.io/kmxgit/_tree/v0.4).
 
 For releases see the tags, latest is
-[v0.3.2](https://git.kmx.io/kmx.io/kmxgit/_tag/v0.3.2).
+[v0.4.0](https://git.kmx.io/kmx.io/kmxgit/_tag/v0.4.0).
 
 [ChangeLog](#ChangeLog) | [TODO](#todo)
 
