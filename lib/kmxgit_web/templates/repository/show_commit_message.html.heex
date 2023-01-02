@@ -1,16 +1,38 @@
 <p>
-  <div class="log1">
-    <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, title: @git.log1.author, class: "commit-avatar") %>
-    <span class="hash">
-      <%= link String.slice(@git.log1.hash, 0..8), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @tree] ++ (if @path, do: String.split(@path, "/"), else: []))) <> "##{@git.log1.hash}" %>
-    </span>
-    <span class="date">
-      <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], @git.log1.date) %>
-    </span>
-    <br/>
-    <span class="message" %>
-      <%= @git.log1.message %>
-    </span>
-  </div>
-  <div class="clear"></div>
+  <ul class="list-group">
+    <li class="list-group-item bg-h">
+      <h2>Commit</h2>
+    </li>
+    <li class="list-group-item">
+      <table class="table properties">
+        <tr>
+          <th><%= gettext "Hash" %></th>
+          <td>
+            <%= link id: @git.log1.hash,
+                     to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) do %>
+              <%= String.slice(@git.log1.hash, 0..7) %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "Author" %></th>
+          <td>
+            <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, right: @git.log1.author, title: @git.log1.author, class: "commit-avatar") %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "Date" %></th>
+          <td>
+            <%= link NaiveDateTime.add(~N[1970-01-01 00:00:00], @git.log1.date), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_log", @tree] ++ (if @path, do: String.split(@path, "/"), else: []))) <> "##{@git.log1.hash}" %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= gettext "Message" %></th>
+          <td>
+            <pre><%= @git.log1.message %></pre>
+          </td>
+        </tr>
+      </table>
+    </li>
+  </ul>
 </p>

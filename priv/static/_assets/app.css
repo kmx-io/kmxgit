@@ -19316,11 +19316,6 @@ pre.wrap {
   background: #faf9ff;
 }
 
-.commit-avatar {
-  float: left;
-  margin-right: 0.5em;
-}
-
 .clear {
   clear: both;
 }
@@ -19382,7 +19377,10 @@ img.qrcode {
   color: #5a60f9;
 }
 
-table.admin-properties th {
+table.properties td {
+  vertical-align: middle;
+}
+table.properties th {
   min-width: 8em;
 }
 

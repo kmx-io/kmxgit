@@ -88,7 +88,6 @@ $border-radius: 0.375rem;
     background: #faf9ff;
 }
 .commit-avatar {
-    float: left;
     margin-right: 0.5em;
 }
 .clear {
@@ -143,8 +142,13 @@ img.qrcode {
     }
     word-break: break-all;
 }
-table.admin-properties th {
-    min-width: 8em;
+table.properties {
+    td {
+        vertical-align: middle;
+    }
+    th {
+        min-width: 8em;
+    }
 }
 .file_content {
     padding: 0;

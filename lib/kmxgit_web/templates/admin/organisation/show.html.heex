@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h1><%= gettext("Organisation %{org}", org: @org.name || @org.slug_) %></h1>
 
-  <table class="table admin-properties">
+  <table class="table properties">
     <tr>
       <th><%= gettext "Id" %></th>
       <td><%= @org.id %></td>
