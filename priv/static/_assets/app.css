@@ -19316,6 +19316,10 @@ pre.wrap {
   background: #faf9ff;
 }
 
+.commit-avatar {
+  margin-right: 0.5em;
+}
+
 .clear {
   clear: both;
 }
@@ -19458,6 +19462,16 @@ table.git-log .date {
 }
 table.git-log .message {
   min-width: 15em;
+}
+
+/* repository */
+.commit .btn {
+  float: right;
+}
+.commit .property {
+  display: inline-block;
+  font-weight: bold;
+  min-width: 5em;
 }
 
 /* LiveView specific classes for your customization */
