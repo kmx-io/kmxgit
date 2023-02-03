@@ -498,24 +498,28 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, op = :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
-    git = git
-    |> git_put_files(repo, tree, path, conn)
-    |> git_put_content(repo, path)
-    |> git_put_readme(repo)
-    |> git_put_log1(repo, tree, path)
-    |> git_put_tags(repo, conn, op, path)
-    conn
-    |> assign_current_organisation(org)
-    |> assign(:current_repository, repo)
-    |> assign(:disk_usage, Repository.disk_usage(repo))
-    |> assign(:git, git)
-    |> assign(:repo, repo)
-    |> assign(:members, Repository.members(repo))
-    |> assign(:owner, org || user)
-    |> assign(:path, path)
-    |> assign(:tree, tree)
-    |> assign(:tree_url, tree && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", tree] ++ (if path, do: String.split(path, "/"), else: []))))
-    |> render("show.html")
+    if ! String.match?(conn.request_path, ~r(/$)) do
+      redirect conn, to: conn.request_path <> "/"
+    else
+      git = git
+      |> git_put_files(repo, tree, path, conn)
+      |> git_put_content(repo, path)
+      |> git_put_readme(repo)
+      |> git_put_log1(repo, tree, path)
+      |> git_put_tags(repo, conn, op, path)
+      conn
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:disk_usage, Repository.disk_usage(repo))
+      |> assign(:git, git)
+      |> assign(:repo, repo)
+      |> assign(:members, Repository.members(repo))
+      |> assign(:owner, org || user)
+      |> assign(:path, path)
+      |> assign(:tree, tree)
+      |> assign(:tree_url, tree && Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_tree", tree] ++ (if path, do: String.split(path, "/"), else: []))))
+      |> render("show.html")
+    end
   end
   defp show_op(conn, _, _) do
     not_found(conn)
