@@ -300,7 +300,7 @@ defmodule KmxgitWeb.RepositoryController do
 
   defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: :blob}], valid: true}, repo, path) do
     if (path == name) do
-      IO.inspect({:git_put_content, git, repo, path})
+      #IO.inspect({:git_put_content, git, repo, path})
       case Git.content(Repository.full_slug(repo), sha1) do
         {:ok, content} ->
           {type, ext} = case Regex.run(~r/[.]([^.]+)$/, path) do
@@ -354,7 +354,7 @@ defmodule KmxgitWeb.RepositoryController do
     log1 = case Git.log(slug, tree, path || "", 0, 1) do
              {:ok, [log1]} -> log1
              {:ok, result} ->
-               IO.inspect({:log1, result})
+               #IO.inspect({:log1, result})
                nil
              {:error, err} ->
                IO.inspect(err)
