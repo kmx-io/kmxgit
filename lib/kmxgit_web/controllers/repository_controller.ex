@@ -498,15 +498,15 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, op = :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
-    if ! String.match?(conn.request_path, ~r(/$)) do
+    git = git
+    |> git_put_files(repo, tree, path, conn)
+    |> git_put_content(repo, path)
+    |> git_put_readme(repo)
+    |> git_put_log1(repo, tree, path)
+    |> git_put_tags(repo, conn, op, path)
+    if (git.content == nil) && ! String.match?(conn.request_path, ~r(/$)) do
       redirect conn, to: conn.request_path <> "/"
     else
-      git = git
-      |> git_put_files(repo, tree, path, conn)
-      |> git_put_content(repo, path)
-      |> git_put_readme(repo)
-      |> git_put_log1(repo, tree, path)
-      |> git_put_tags(repo, conn, op, path)
       conn
       |> assign_current_organisation(org)
       |> assign(:current_repository, repo)
