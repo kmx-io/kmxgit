@@ -19252,6 +19252,10 @@ pre.wrap {
   clear: both;
 }
 
+.circle {
+  border-radius: 50%;
+}
+
 /* navbar */
 .navbar {
   padding-top: 0.3rem;
