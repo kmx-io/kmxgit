@@ -1,3 +1,57 @@
-<h1><%= @path %></h1>
+<div class="container-fluid">
+  <%= render("ci_title.html", assigns) %>
 
-<%= inspect @ci %>
+  <%= inspect @ci %>
+
+  <%= if @ci.files do %>
+    <p>
+      <ul class="list-group">
+        <li class="list-group-item bg-h">
+          <h2><i class="fa fa-folder fixed-width"></i> <%= @path %></h2>
+        </li>
+        <%= Enum.map @ci.files, fn file -> %>
+          <li class="list-group-item">
+            <%= link to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_ci" | String.split("#{@path}/#{file}", "/")])) do %>
+              <%= if String.match?(file, ~r(/$)) do %>
+                <i class="fas fa-folder"></i>
+              <% else %>
+                <i class="fas fa-file"></i>
+              <% end %>
+              <%= file %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </p>
+  <% end %>
+
+  <%= if @ci.content do %>
+    <%= if String.match?(@ci.content_type, ~r(^text/)) do %>
+      <%= if @ci.markdown_html do %>
+        <div class="content_html">
+          <%= raw @ci.markdown_html %>
+        </div>
+        <hr/>
+        <h3><%= gettext "Source" %></h3>
+      <% end %>
+      <p>
+        <ul class="list-group">
+          <li class="list-group-item bg-h">
+            <h2><i class="fa fa-file fixed-width"></i> <%= @path %></h2>
+          </li>
+          <li class="list-group-item">
+            <div class="file_content">
+              <div class="content_text">
+                <div class="line_numbers">
+                  <pre><%= for ln <- @ci.line_numbers do %><%= link ln, id: ln, to: "##{ln}" %>
+                  <% end %></pre>
+                </div>
+                <pre><code class={"language-#{@ci.content_lang}"}><%= @ci.content %></code></pre>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </p>
+    <% end %>
+  <% end %>
+</div>
