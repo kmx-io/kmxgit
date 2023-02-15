@@ -167,6 +167,7 @@ defmodule KmxgitWeb.RepositoryController do
     if path = chunks |> Enum.at(1) do
       case path |> Enum.at(0) do
         "_blob" -> :blob
+        "_ci" -> :ci
         "_commit" -> :commit
         "_diff" -> :diff
         "_log" -> :log
@@ -187,6 +188,23 @@ defmodule KmxgitWeb.RepositoryController do
     case path |> Enum.split(3) do
       {[_, from, to], _} -> %OpParams{from: from, to: to}
       _ -> nil
+    end
+  end
+  defp get_op_params(:ci, chunks) do
+    path = chunks |> Enum.at(1)
+    {_, rest} = chunks |> Enum.split(2)
+    rest1 = rest |> Enum.map(fn x ->
+      Enum.join(x, "/")
+    end)
+    case path |> Enum.split(1) do
+      {_, path1} ->
+        path2 = (path1 ++ rest1)
+        |> Enum.reject(&(!&1 || &1 == ""))
+        |> Enum.join("/")
+        path3 = if path2 != "", do: path2
+        %OpParams{path: path3}
+      _ ->
+        nil
     end
   end
   defp get_op_params(_, chunks) do
@@ -405,6 +423,23 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
+  defp ci_put_content(ci = %{path: path}) do
+    if (File.dir?(path)) do
+      ci
+    else
+      content = File.read(path)
+      %{ci | content: content}
+    end
+  end
+  defp ci_put_dir(ci = %{path: path}) do
+    if (File.dir?(path)) do
+      files = File.ls(path)
+      %{ci | files: files}
+    else
+      ci
+    end
+  end
+  
   defp show_op(conn, :blob, %{git: git, path: path, repo: repo, tree: tree}) do
     git = git
     |> git_put_files(repo, tree, path, conn)
@@ -418,6 +453,21 @@ defmodule KmxgitWeb.RepositoryController do
       IO.inspect(:no_content)
       not_found(conn)
     end
+  end
+  defp show_op(conn, op = :ci, %{org: org, path: path, repo: repo, user: user}) do
+    ci = %{content: nil,
+           files: nil,
+           path: "priv/ci/#{Repository.full_slug(repo)}/#{path}"}
+    |> ci_put_content()
+    |> ci_put_dir()
+    conn
+    |> assign(:ci, ci)
+    |> assign_current_organisation(org)
+    |> assign(:current_repository, repo)
+    |> assign(:owner, org || user)
+    |> assign(:path, path)
+    |> assign(:repo, repo)
+    |> render("ci.html")
   end
   defp show_op(conn, :commit = op, %{git: git, org: org, path: path, repo: repo, tree: tree}) do
     git = git
