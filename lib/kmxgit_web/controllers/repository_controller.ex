@@ -427,27 +427,31 @@ defmodule KmxgitWeb.RepositoryController do
     if (File.dir?(path)) do
       ci
     else
-      {:ok, content} = File.read(path)
-      {type, ext} = case Regex.run(~r/[.]([^.]+)$/, path) do
-                      [_, ext] -> {mime_type(content, ext), ext}
-                      _ -> {mime_type(content), nil}
-                    end
-      filename = filename(path)
-      line_numbers = line_numbers(content)
-      markdown_html = if ext && String.match?(ext, ~r/md/i) do
-        Markdown.to_html!(content)
+      case File.read(path) do
+        {:ok, content} ->
+          {type, ext} = case Regex.run(~r/[.]([^.]+)$/, path) do
+                          [_, ext] -> {mime_type(content, ext), ext}
+                          _ -> {mime_type(content), nil}
+                        end
+          filename = filename(path)
+          line_numbers = line_numbers(content)
+          markdown_html = if ext && String.match?(ext, ~r/md/i) do
+            Markdown.to_html!(content)
+          end
+          lang = lang(ext, filename)
+          %{ci | content: content, content_lang: lang, content_type: type, filename: filename, line_numbers: line_numbers, markdown_html: markdown_html}
+        _ ->
+          ci
       end
-      lang = lang(ext, filename)
-      %{ci | content: content, content_lang: lang, content_type: type, filename: filename, line_numbers: line_numbers, markdown_html: markdown_html}
     end
   end
   defp ci_put_dir(ci = %{path: path}) do
     if (File.dir?(path)) do
       case File.ls(path) do
         {:ok, files} ->
-          files1 = Enum.map files, fn file ->
+          files1 = files |> Enum.sort() |> Enum.map(fn file ->
             if File.dir?("#{path}/#{file}"), do: "#{file}/", else: file
-          end
+          end)
           %{ci | files: files1}
         _ ->
           ci
@@ -482,19 +486,23 @@ defmodule KmxgitWeb.RepositoryController do
            path: "priv/ci/#{Repository.full_slug(repo)}/#{path}"}
     |> ci_put_content()
     |> ci_put_dir()
-    if ci.content_lang == "html" do
-      conn
-      |> put_resp_content_type("text/html")
-      |> resp(200, ci.content)
+    if ci.content == nil && ci.files == nil do
+      not_found(conn)
     else
-      conn
-      |> assign(:ci, ci)
-      |> assign_current_organisation(org)
-      |> assign(:current_repository, repo)
-      |> assign(:owner, org || user)
-      |> assign(:path, path)
-      |> assign(:repo, repo)
-      |> render("ci.html")
+      if ci.content_lang == "html" do
+        conn
+        |> put_resp_content_type("text/html")
+        |> resp(200, ci.content)
+      else
+        conn
+        |> assign(:ci, ci)
+        |> assign_current_organisation(org)
+        |> assign(:current_repository, repo)
+        |> assign(:owner, org || user)
+        |> assign(:path, path)
+        |> assign(:repo, repo)
+        |> render("ci.html")
+      end
     end
   end
   defp show_op(conn, :commit = op, %{git: git, org: org, path: path, repo: repo, tree: tree}) do
