@@ -15,6 +15,14 @@
         <br/>
         <span class="property"><%= gettext "Date" %> :</span>
         <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], @git.log1.date) %>
+        <br/>
+        <%= if File.exists?("priv/ci/#{Repository.full_slug(@repo)}/ci/log/#{@repo.slug}.ci.commit_#{@git.log1.hash}.log.html") do %>
+          <span class="property"><%= gettext "CI" %> :</span>
+          <% ci_status_html = Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_ci", "ci", "log", "#{@repo.slug}.ci.commit_#{@git.log1.hash}.log.html"])) %>
+          <%= link to: ci_status_html do %>
+            <img src={"/_images/status_#{@git.log1.ci_status}.32.png"} alt="" class="status-#{@git.log1.ci_status}" />
+          <% end %>
+        <% end %>
       </p>
       <pre><%= @git.log1.message %></pre>
 </li>

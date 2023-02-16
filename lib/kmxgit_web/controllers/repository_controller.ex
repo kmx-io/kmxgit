@@ -202,7 +202,7 @@ defmodule KmxgitWeb.RepositoryController do
         |> Enum.reject(&(!&1 || &1 == ""))
         |> Enum.join("/")
         path3 = if path2 != "", do: path2
-        %OpParams{path: path3}
+        %OpParams{path: "/#{path3}"}
       _ ->
         nil
     end
@@ -370,7 +370,14 @@ defmodule KmxgitWeb.RepositoryController do
   defp git_put_log1(git = %{valid: true}, repo, tree, path) do
     slug = Repository.full_slug(repo)
     log1 = case Git.log(slug, tree, path || "", 0, 1) do
-             {:ok, [log1]} -> log1
+             {:ok, [log1]} ->
+               ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/#{repo.slug}.ci.commit_#{log1.hash}.status"
+               if File.exists?(ci_status_path) do
+                 {:ok, ci_status} = File.read(ci_status_path)
+                 %{log1 | ci_status: ci_status}
+               else
+                 log1
+               end
              {:ok, result} ->
                #IO.inspect({:log1, result})
                nil
@@ -416,7 +423,15 @@ defmodule KmxgitWeb.RepositoryController do
   defp git_log(repo, tree, path) do
     slug = Repository.full_slug(repo)
     case Git.log(slug, tree, path || "") do
-      {:ok, log} -> log
+      {:ok, log} -> Enum.map log, fn log1 ->
+          ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/#{repo.slug}.ci.commit_#{log1.hash}.status"
+          if File.exists?(ci_status_path) do
+            {:ok, ci_status} = File.read(ci_status_path)
+            %{log1 | ci_status: ci_status}
+          else
+            log1
+          end
+        end
       {:error, reason} ->
         Logger.error(inspect(reason))
         nil
@@ -489,19 +504,25 @@ defmodule KmxgitWeb.RepositoryController do
     if ci.content == nil && ci.files == nil do
       not_found(conn)
     else
-      if ci.content_lang == "html" do
+      if Path.extname(path) == ".log" || ci.content_type && String.match?(ci.content_type, ~r(^image/)) do
         conn
-        |> put_resp_content_type("text/html")
+        |> put_resp_content_type(ci.content_type)
         |> resp(200, ci.content)
       else
-        conn
-        |> assign(:ci, ci)
-        |> assign_current_organisation(org)
-        |> assign(:current_repository, repo)
-        |> assign(:owner, org || user)
-        |> assign(:path, path)
-        |> assign(:repo, repo)
-        |> render("ci.html")
+        if ci.content_lang == "html" do
+          conn
+          |> put_resp_content_type("text/html")
+          |> resp(200, ci.content)
+        else
+          conn
+          |> assign(:ci, ci)
+          |> assign_current_organisation(org)
+          |> assign(:current_repository, repo)
+          |> assign(:owner, org || user)
+          |> assign(:path, path)
+          |> assign(:repo, repo)
+          |> render("ci.html")
+        end
       end
     end
   end

@@ -596,15 +596,16 @@ static ERL_NIF_TERM log_push_commit (ErlNifEnv *env,
   int i;
   int count;
   const git_signature *sig;
-  ERL_NIF_TERM k[6] = {
+  ERL_NIF_TERM k[7] = {
     enif_make_atom(env, "author_email"),
     enif_make_atom(env, "message"),
     enif_make_atom(env, "author"),
     enif_make_atom(env, "parents"),
     enif_make_atom(env, "hash"),
-    enif_make_atom(env, "date")
+    enif_make_atom(env, "date"),
+    enif_make_atom(env, "ci_status")
   };
-  ERL_NIF_TERM v[6];
+  ERL_NIF_TERM v[7];
   ERL_NIF_TERM parent_sha;
   ERL_NIF_TERM parents = enif_make_list(env, 0);
   git_oid_tostr(buf, sizeof(buf), git_commit_id(commit));
@@ -624,8 +625,9 @@ static ERL_NIF_TERM log_push_commit (ErlNifEnv *env,
     v[2] = enif_string_to_term(env, sig->name);
     v[0] = enif_string_to_term(env, sig->email);
   }
-  enif_make_map_from_arrays(env, k, v, 6, &res);
-  return enif_make_list_cell(env, res, (ERL_NIF_TERM)acc);
+  v[6] = enif_make_atom(env, "nil");
+  enif_make_map_from_arrays(env, k, v, 7, &res);
+  return enif_make_list_cell(env, res, (ERL_NIF_TERM) acc);
 }
 
 ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
