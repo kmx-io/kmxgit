@@ -1,7 +1,9 @@
 <div class="container-fluid">
   <%= render("ci_title.html", assigns) %>
 
-  <%= inspect @ci %>
+  <%= if Mix.env == :dev do %>
+    <%= inspect @ci %>
+  <% end %>
 
   <%= if @ci.files do %>
     <p>
