@@ -1,6 +1,6 @@
 CFLAGS = -std=c89 -W -Wall -Werror -O0 -ggdb -fPIC
-CPPFLAGS = -I./c_src -I/usr/local/lib/erlang24/usr/include -I/usr/local/lib/erlang/usr/include -DDEBUG
-LDFLAGS = -shared
+CPPFLAGS = -I./c_src -I/usr/local/lib/erlang24/usr/include -I/usr/local/lib/erlang/usr/include -I/usr/local/include -DDEBUG
+LDFLAGS = -shared -L/usr/local/lib
 
 git_nif = priv/libgit_nif.so
 git_nif_SRC = \
