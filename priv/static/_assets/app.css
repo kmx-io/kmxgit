@@ -19241,6 +19241,7 @@ a {
 
 pre {
   overflow: visible;
+  max-width: 80em;
 }
 
 pre.wrap {
