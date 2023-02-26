@@ -424,7 +424,7 @@ defmodule KmxgitWeb.RepositoryController do
     slug = Repository.full_slug(repo)
     case Git.log(slug, tree, path || "") do
       {:ok, log} -> Enum.map log, fn log1 ->
-          ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/#{repo.slug}.ci.commit_#{log1.hash}.status"
+          ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/rbpkg_ci.#{repo.slug}.commit_#{log1.hash}.status"
           if File.exists?(ci_status_path) do
             {:ok, ci_status} = File.read(ci_status_path)
             %{log1 | ci_status: ci_status}
