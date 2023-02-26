@@ -18,7 +18,7 @@
         <br/>
         <%= if File.exists?("priv/ci/#{Repository.full_slug(@repo)}/ci/log/#{@repo.slug}.ci.commit_#{@git.log1.hash}.log.html") do %>
           <span class="property"><%= gettext "CI" %> :</span>
-          <% ci_status_html = Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_ci", "ci", "log", "#{@repo.slug}.ci.commit_#{@git.log1.hash}.log.html"])) %>
+          <% ci_status_html = Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_ci", "ci", "log", "rbpkg_ci.#{@repo.slug}.commit_#{@git.log1.hash}.html"])) %>
           <%= link to: ci_status_html do %>
             <img src={"/_images/status_#{@git.log1.ci_status}.32.png"} alt="" class="status-#{@git.log1.ci_status}" />
           <% end %>

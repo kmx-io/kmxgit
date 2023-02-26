@@ -43,6 +43,7 @@ npm-debug.log
 *.o
 
 /priv/avatar/
+/priv/ci
 /priv/git
 /priv/libgit_nif.so
 /priv/repo/dumps/
