@@ -372,13 +372,14 @@ defmodule KmxgitWeb.RepositoryController do
     log1 = case Git.log(slug, tree, path || "", 0, 1) do
              {:ok, [log1]} ->
                ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/rbpkg_ci.#{repo.slug}.commit_#{log1.hash}.status"
+               IO.inspect(ci_status_path)
                if File.exists?(ci_status_path) do
                  {:ok, ci_status} = File.read(ci_status_path)
-                 %{log1 | ci_status: ci_status}
+                 %{log1 | ci_status: String.trim(ci_status)}
                else
                  log1
                end
-             {:ok, result} ->
+             {:ok, _result} ->
                #IO.inspect({:log1, result})
                nil
              {:error, err} ->
@@ -427,7 +428,7 @@ defmodule KmxgitWeb.RepositoryController do
           ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/rbpkg_ci.#{repo.slug}.commit_#{log1.hash}.status"
           if File.exists?(ci_status_path) do
             {:ok, ci_status} = File.read(ci_status_path)
-            %{log1 | ci_status: ci_status}
+            %{log1 | ci_status: String.trim(ci_status)}
           else
             log1
           end
@@ -490,40 +491,44 @@ defmodule KmxgitWeb.RepositoryController do
       not_found(conn)
     end
   end
-  defp show_op(conn, op = :ci, %{org: org, path: path, repo: repo, user: user}) do
-    ci = %{content: nil,
-           content_lang: nil,
-           content_type: nil,
-           filename: nil,
-           files: nil,
-           line_numbers: nil,
-           markdown_html: nil,
-           path: "priv/ci/#{Repository.full_slug(repo)}/#{path}"}
-    |> ci_put_content()
-    |> ci_put_dir()
-    if ci.content == nil && ci.files == nil do
+  defp show_op(conn, :ci, %{org: org, path: path, repo: repo, user: user}) do
+    if String.match?(path, ~r{(^|/)[.][.](/|$)}) do
       not_found(conn)
     else
-      if Path.extname(path) == ".log" || ci.content_type && String.match?(ci.content_type, ~r(^image/)) do
-        conn
-        |> put_resp_content_type(ci.content_type)
-        |> resp(200, ci.content)
-      else
-        if ci.content_lang == "html" do
-          conn
-          |> put_resp_content_type("text/html")
-          |> resp(200, ci.content)
+        ci = %{content: nil,
+               content_lang: nil,
+               content_type: nil,
+               filename: nil,
+               files: nil,
+               line_numbers: nil,
+               markdown_html: nil,
+               path: "priv/ci/#{Repository.full_slug(repo)}/#{path}"}
+               |> ci_put_content()
+               |> ci_put_dir()
+        if ci.content == nil && ci.files == nil do
+          not_found(conn)
         else
-          conn
-          |> assign(:ci, ci)
-          |> assign_current_organisation(org)
-          |> assign(:current_repository, repo)
-          |> assign(:owner, org || user)
-          |> assign(:path, path)
-          |> assign(:repo, repo)
-          |> render("ci.html")
+          if Path.extname(path) == ".log" || ci.content_type && String.match?(ci.content_type, ~r(^image/)) do
+            conn
+            |> put_resp_content_type(ci.content_type)
+            |> resp(200, ci.content)
+          else
+            if ci.content_lang == "html" do
+              conn
+              |> put_resp_content_type("text/html")
+              |> resp(200, ci.content)
+            else
+              conn
+              |> assign(:ci, ci)
+              |> assign_current_organisation(org)
+              |> assign(:current_repository, repo)
+              |> assign(:owner, org || user)
+              |> assign(:path, path)
+              |> assign(:repo, repo)
+              |> render("ci.html")
+            end
+          end
         end
-      end
     end
   end
   defp show_op(conn, :commit = op, %{git: git, org: org, path: path, repo: repo, tree: tree}) do
