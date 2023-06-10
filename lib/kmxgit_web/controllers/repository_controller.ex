@@ -169,7 +169,7 @@ defmodule KmxgitWeb.RepositoryController do
         "_blob" -> :blob
         "_ci" -> :ci
         "_commit" -> :commit
-        "_diff" -> :diff
+#        "_diff" -> :diff
         "_log" -> :log
         "_tag" -> :tag
         "_tree" -> :tree

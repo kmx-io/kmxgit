@@ -5,7 +5,6 @@
     </div>
     <div class="col col-12 col-md-5">
       <%= link gettext("Browse"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @commit.hash])), class: "btn btn-primary" %>
-      <%= link gettext("Diff"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_diff", @commit.hash, "master"])), class: "btn btn-primary" %>
     </div>
   </div>
   <div class="row">
