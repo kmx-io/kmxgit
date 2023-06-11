@@ -1,7 +1,7 @@
 import Config
 
 config :kmxgit,
-  discord: "https://discord.gg/nUAr57YKsh",
+  discord: "https://discord.gg/8zkjse5Q9Z",
   discord_errors_webhook: System.get_env("DISCORD_ERRORS_WEBHOOK"),
   ecto_repos: [Kmxgit.Repo],
   footer: """
