@@ -23,8 +23,8 @@
           <tr>
             <th class="author"><%= gettext "Author" %></th>
             <th class="commit"><%= gettext "Commit" %></th>
-            <th class="ci"><%= gettext "CI" %></th>
             <th class="date"><%= gettext "Date" %></th>
+            <th class="ci"><%= gettext "CI" %></th>
             <th class="message"><%= gettext "Message" %></th>
           </tr>
         </thead>
@@ -37,6 +37,9 @@
               <td class="hash">
                 <%= link String.slice(commit.hash, 0..7), id: commit.hash, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", commit.hash])) %>
               </td>
+              <td class="date">
+                <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], commit.date) %>
+              </td>
               <td class="ci">
                 <%= if File.exists?("priv/ci/#{Repository.full_slug(@repo)}/ci/log/rbpkg_ci.#{@repo.slug}.commit_#{commit.hash}.html") do %>
                   <% ci_status_path = Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_ci", "ci", "log", "rbpkg_ci.#{@repo.slug}.commit_#{commit.hash}.html"])) %>
@@ -44,9 +47,6 @@
                     <img src={"/_images/status_#{commit.ci_status}.32.png"} alt={commit.ci_status} class="status-#{@git.log1.ci_status}" />
                   <% end %>
                 <% end %>
-              </td>
-              <td class="date">
-                <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], commit.date) %>
               </td>
               <td class="message" %>
                 <%= commit.message %>
