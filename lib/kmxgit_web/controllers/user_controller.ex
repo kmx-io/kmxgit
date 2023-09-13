@@ -103,7 +103,7 @@ defmodule KmxgitWeb.UserController do
     if user do
       conn
       |> put_resp_content_type("text/plain")
-      |> resp(200, user.ssh_keys)
+      |> resp(200, user.ssh_keys || "")
     else
       not_found(conn)
     end
