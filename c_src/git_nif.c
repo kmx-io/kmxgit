@@ -636,7 +636,7 @@ ERL_NIF_TERM log_nif (ErlNifEnv *env, int argc,
   char *branch_name = NULL;
   git_commit *commit = NULL;
   int count = 0;
-  git_diff_options diffopts = {GIT_DIFF_OPTIONS_VERSION, 0, GIT_SUBMODULE_IGNORE_UNSPECIFIED, {NULL, 0}, NULL, NULL, NULL, 3, 0, 0, 0, 0, 0};
+  git_diff_options diffopts = {GIT_DIFF_OPTIONS_VERSION, 0, GIT_SUBMODULE_IGNORE_UNSPECIFIED, {NULL, 0}, NULL, NULL, NULL, 3, 0, 0, 0, 0, 0, 0};
   int i = 0;
   git_oid oid = {0};
   struct log_options opt = {0};
