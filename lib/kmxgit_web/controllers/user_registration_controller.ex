@@ -25,8 +25,16 @@ defmodule KmxgitWeb.UserRegistrationController do
     render(conn, "new.html", changeset: changeset)
   end
 
+  defp merge_errors(changeset, errors) do
+    %Ecto.Changeset{changeset | errors: changeset.errors ++ errors,
+                    action: :insert,
+                    valid?: false}
+  end
+
   def create(conn, %{"user" => user_params}) do
     case Repo.transaction(fn ->
+          error_changeset = %User{}
+          |> User.registration_changeset(user_params)
           case UserManager.register_user(user_params) do
             {:ok, user} ->
               case SlugManager.create_slug(user) do
@@ -37,9 +45,13 @@ defmodule KmxgitWeb.UserRegistrationController do
                       &Routes.user_confirmation_url(conn, :edit, &1))
                   user
                 {:error, changeset} ->
-                  Repo.rollback(changeset)
+                  IO.inspect(changeset)
+                  error_changeset
+                  |> merge_errors(changeset.errors)
+                  |> Repo.rollback()
               end
             {:error, changeset} ->
+              IO.inspect(changeset)
               Repo.rollback(changeset)
           end
         end) do
