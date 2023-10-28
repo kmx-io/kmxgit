@@ -2,7 +2,7 @@
 @import "./prism-tomorrow.scss";
 @import "./inter.scss";
 @import "./kmx_colors.scss";
-$primary: $kmx_blue;
+$primary: #000;
 $danger: $kmx_orange;
 $dark: #000;
 $font-family-sans-serif: "Inter", sans-serif;
@@ -17,10 +17,6 @@ $font-family-monospace: "courier_new", "Courier New", monospace;
 @import "./flash.scss";
 @import "./footer.scss";
 
-a {
-    text-decoration: none;
-    color: var(--bs-primary);
-}
 pre {
     overflow: visible;
     max-width: 80em;
