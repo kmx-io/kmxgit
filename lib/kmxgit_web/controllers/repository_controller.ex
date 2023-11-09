@@ -908,6 +908,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:current_repository, repo)
     |> assign(:diff, diff)
     |> assign(:diff_line_numbers, diff_line_numbers)
+    |> assign(:git, git)
     |> assign(:path, path)
     |> assign(:repo, repo)
     |> render("commit.html")
