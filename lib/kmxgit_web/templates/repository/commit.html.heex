@@ -15,7 +15,7 @@
         <%= @commit.hash %>
       </h2>
       <div>
-        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @commit.author_email, size: 48, title: @commit.author, class: "commit-avatar") %>
+        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, user: Map.get(@git.users_by_email, @commit.author_email), email: @commit.author_email, size: 48, title: @commit.author, class: "commit-avatar") %>
         <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], @commit.date) %>
         <p>
           <%= @commit.message %>

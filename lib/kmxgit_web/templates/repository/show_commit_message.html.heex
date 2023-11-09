@@ -11,7 +11,7 @@
         to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_commit", @git.log1.hash])) do %><%= String.slice(@git.log1.hash, 0..7) %><% end %>
         <br/>
         <span class="property"><%= gettext "Author" %> :</span>
-        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, right: @git.log1.author, title: @git.log1.author, class: "commit-avatar") %>
+        <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, user: Map.get(@git.users_by_email, @git.log1.author_email), email: @git.log1.author_email, size: 48, right: @git.log1.author, title: @git.log1.author, class: "commit-avatar") %>
         <br/>
         <span class="property"><%= gettext "Date" %> :</span>
         <%= NaiveDateTime.add(~N[1970-01-01 00:00:00], @git.log1.date) %>

@@ -148,6 +148,19 @@ defmodule Kmxgit.UserManager do
       limit: 1
   end
  
+  def get_users_by_email(emails) when is_list(emails) do
+    Repo.all(from u in User,
+      where: u.email in ^emails)
+    |> get_users_by_email_map(%{})
+  end
+
+  defp get_users_by_email_map([], acc) do
+    acc
+  end
+  defp get_users_by_email_map([user | rest], acc) do
+    get_users_by_email_map(rest, Map.put(acc, user.email, user))
+  end
+ 
   def register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)

@@ -73,7 +73,7 @@
                 </th>
                 <td>
                   <%= for user <- @org.users do %>
-                    <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
+                    <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, user: user, email: user.email, size: 48, title: User.login(user), class: "") %>
                   <% end %>
                 </td>
               </tr>

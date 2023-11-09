@@ -22,6 +22,7 @@ defmodule KmxgitWeb.RepositoryController do
   alias Kmxgit.RepositoryManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.SlugManager
+  alias Kmxgit.UserManager
   alias Kmxgit.UserManager.User
   alias Kmxgit.Repo
   alias KmxgitWeb.OpParams
@@ -338,7 +339,7 @@ defmodule KmxgitWeb.RepositoryController do
       if op_params && repo && (repo.public_access || Repository.member?(repo, current_user)) do
         org = repo.organisation
         user = repo.user
-        git = setup_git(repo, conn, op, op_params)
+        git = git_setup(repo, conn, op, op_params)
         first_tree = Enum.find_value(git.trees,
           fn {:branch, "master", _} -> "master"
             _ -> false
@@ -563,6 +564,26 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
 
+  defp git_add_user_email(git, email) do
+    if Enum.find(git.users_email, email) do
+      git
+    else
+      %{git | users_email: [email | git.users_email]}
+    end
+  end
+
+  defp git_add_user_emails(git, []) do
+    git
+  end
+  defp git_add_user_emails(git, [email | rest]) do
+    git_add_user_emails(git_add_user_email(git, email), rest)
+  end
+
+  defp git_put_avatars(git = %{valid: true}) do
+    users_by_email = UserManager.get_users_by_email(Enum.uniq(git.users_email))
+    %{git | users_by_email: users_by_email}
+  end
+
   defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
     case Git.branches(Repository.full_slug(repo)) do
       {:ok, branches} ->
@@ -598,22 +619,25 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
-  defp git_log(repo, tree, path) do
+  defp git_put_log(git, repo, tree, path) do
     slug = Repository.full_slug(repo)
-    case Git.log(slug, tree, path || "") do
-      {:ok, log} -> Enum.map log, fn log1 ->
-          ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/rbpkg_ci.#{repo.slug}.commit_#{log1.hash}.status"
-          if File.exists?(ci_status_path) do
-            {:ok, ci_status} = File.read(ci_status_path)
-            %{log1 | ci_status: String.trim(ci_status)}
-          else
-            log1
+    log = case Git.log(slug, tree, path || "") do
+            {:ok, log} -> Enum.map log, fn log1 ->
+                ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/rbpkg_ci.#{repo.slug}.commit_#{log1.hash}.status"
+                if File.exists?(ci_status_path) do
+                  {:ok, ci_status} = File.read(ci_status_path)
+                  %{log1 | ci_status: String.trim(ci_status)}
+                else
+                  log1
+                end
+              end
+            {:error, reason} ->
+              Logger.error(inspect(reason))
+              nil
           end
-        end
-      {:error, reason} ->
-        Logger.error(inspect(reason))
-        nil
-    end
+    emails = Enum.map(log, & &1.author_email) |> Enum.uniq()
+    %{git | log: log}
+    |> git_add_user_emails(emails)
   end
 
   defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: :blob}], valid: true}, repo, path) do
@@ -647,14 +671,14 @@ defmodule KmxgitWeb.RepositoryController do
   defp git_put_log1(git = %{valid: true}, repo, tree, path) do
     slug = Repository.full_slug(repo)
     log1 = case Git.log(slug, tree, path || "", 0, 1) do
-             {:ok, [log1]} ->
-               ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/rbpkg_ci.#{repo.slug}.commit_#{log1.hash}.status"
+             {:ok, [commit]} ->
+               ci_status_path = "priv/ci/#{Repository.full_slug(repo)}/ci/status/rbpkg_ci.#{repo.slug}.commit_#{commit.hash}.status"
                IO.inspect(ci_status_path)
                if File.exists?(ci_status_path) do
                  {:ok, ci_status} = File.read(ci_status_path)
-                 %{log1 | ci_status: String.trim(ci_status)}
+                 %{commit | ci_status: String.trim(ci_status)}
                else
-                 log1
+                 commit
                end
              {:ok, _result} ->
                #IO.inspect({:log1, result})
@@ -664,6 +688,7 @@ defmodule KmxgitWeb.RepositoryController do
                nil
            end
     %{git | log1: log1}
+    |> git_add_user_email(log1.author_email)
   end
   defp git_put_log1(git, _, _, _) do
     git
@@ -740,6 +765,29 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
 
+  defp git_setup(repo, conn, op, op_params) do
+    %{trees: [],
+      content: nil,
+      content_lang: nil,
+      content_html: nil,
+      content_type: nil,
+      filename: nil,
+      files: [],
+      line_numbers: nil,
+      log: nil,
+      log1: nil,
+      markdown_html: nil,
+      path: op_params.path,
+      readme: [],
+      release: nil,
+      status: "",
+      tags: [],
+      users_by_email: %{},
+      users_email: [],
+      valid: true}
+      |> git_put_branches(repo, conn, op, op_params.path)
+  end
+
   @lang_ext %{
     "ex" => "elixir",
     "exs" => "elixir",
@@ -778,27 +826,7 @@ defmodule KmxgitWeb.RepositoryController do
       MIME.type(ext)
     end
   end
-
-  defp setup_git(repo, conn, op, op_params) do
-    %{trees: [],
-      content: nil,
-      content_lang: nil,
-      content_html: nil,
-      content_type: nil,
-      filename: nil,
-      files: [],
-      line_numbers: nil,
-      log1: nil,
-      markdown_html: nil,
-      path: op_params.path,
-      readme: [],
-      release: nil,
-      status: "",
-      tags: [],
-      valid: true}
-      |> git_put_branches(repo, conn, op, op_params.path)
-  end
-
+  
   defp show_op(conn, :blob, %{git: git, path: path, repo: repo, tree: tree}) do
     git = git
     |> git_put_files(repo, tree, path, conn)
@@ -857,6 +885,7 @@ defmodule KmxgitWeb.RepositoryController do
     git = git
     |> git_put_log1(repo, tree, path)
     |> git_put_commit(repo, conn, op, tree, path)
+    |> git_put_avatars()
     #IO.inspect(git)
     diff = case Git.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
              {:ok, diff} -> diff
@@ -896,16 +925,19 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
-    log = git_log(repo, tree, path)
+    git = git
+    |> git_put_log(repo, tree, path)
+    |> git_put_avatars()
+
     #IO.inspect([:log, tree: tree, git: git, path: path, log: log])
-    if log do
+    if git.log do
       conn
       |> assign(:tree, tree)
       |> assign(:tree_url, Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo, ["_log", tree] ++ (if path, do: String.split(path, "/"), else: []))))
       |> assign_current_organisation(org)
       |> assign(:current_repository, repo)
       |> assign(:git, git)
-      |> assign(:log, log)
+      |> assign(:log, git.log)
       |> assign(:path, path)
       |> assign(:repo, repo)
       |> render("log.html")
@@ -918,6 +950,8 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_log1(repo, tree, path)
     |> git_put_release(repo, tree, conn)
     |> git_put_tags(repo, conn, op, nil)
+    |> git_put_avatars()
+
     tag = Enum.find(git.tags, fn tag -> tag == tree end)
     if git.log1 && tag do
       conn
@@ -940,6 +974,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_readme(repo)
     |> git_put_log1(repo, tree, path)
     |> git_put_tags(repo, conn, op, path)
+    |> git_put_avatars()
     if (git.content == nil) && ! String.match?(conn.request_path, ~r(/$)) do
       redirect conn, to: conn.request_path <> "/"
     else

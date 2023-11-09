@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col col-12">
-      <%= render("avatar.html", conn: @conn, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %>
+      <%= render("avatar.html", conn: @conn, user: @user, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %>
       <h1><%= @user.name %> (<%= User.login(@user) %>)</h1>
       <div class="col col-12 col-md-8">
         <%= if @user.description do %>

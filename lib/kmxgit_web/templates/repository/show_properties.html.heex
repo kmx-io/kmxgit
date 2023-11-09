@@ -47,7 +47,7 @@
           </th>
           <td>
             <%= for user <- @members do %>
-              <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: user.email, size: 48, title: User.login(user), class: "") %>
+              <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, user: user, email: user.email, size: 48, title: User.login(user), class: "") %>
             <% end %>
           </td>
         </tr>
@@ -81,10 +81,6 @@
             </td>
           </tr>
         <% end %>
-        <tr>
-          <th><%= gettext("Disk usage") %></th>
-          <td><%= disk_usage(@disk_usage) %></td>
-        </tr>
       </table>
     </li>
   </ul>

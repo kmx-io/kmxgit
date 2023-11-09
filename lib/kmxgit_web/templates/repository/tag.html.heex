@@ -30,7 +30,7 @@
         </tr>
         <tr>
           <th><%= gettext("Author") %></th>
-          <td>  <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, email: @git.log1.author_email, size: 48, title: @git.log1.author, class: "commit-avatar") %>
+          <td>  <%= render(KmxgitWeb.UserView, "avatar.html", conn: @conn, user: Map.get(@git.users_by_email, @git.log1.author_email), email: @git.log1.author_email, size: 48, title: @git.log1.author, class: "commit-avatar") %>
 </td>
         </tr>
         <tr>
