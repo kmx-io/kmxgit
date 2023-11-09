@@ -65,6 +65,22 @@
             </td>
           </tr>
         <% end %>
+        <%= if @git.release do %>
+          <tr>
+            <th><%= gettext("Release") %></th>
+            <td>
+              <ul>
+                <%= for file <- @git.release |> Enum.sort() do %>
+                  <li>
+                    <%= link to: file.url do %>
+                      <%= file.name %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </td>
+          </tr>
+        <% end %>
         <tr>
           <th><%= gettext("Disk usage") %></th>
           <td><%= disk_usage(@disk_usage) %></td>
