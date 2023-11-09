@@ -51,20 +51,6 @@
             <% end %>
           </td>
         </tr>
-        <%= if @git.tags do %>
-          <tr>
-            <th><%= gettext("Tags") %></th>
-            <td>
-              <ul>
-                <%= for tag <- @git.tags |> Enum.reverse() do %>
-                  <li>
-                    <%= link tag, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tag", tag])) %>
-                  </li>
-                <% end %>
-              </ul>
-            </td>
-          </tr>
-        <% end %>
         <%= if @git.release do %>
           <tr>
             <th><%= gettext("Release") %></th>
@@ -75,6 +61,20 @@
                     <%= link to: file.url do %>
                       <%= file.name %>
                     <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </td>
+          </tr>
+        <% end %>
+        <%= if @git.tags do %>
+          <tr>
+            <th><%= gettext("Tags") %></th>
+            <td>
+              <ul>
+                <%= for tag <- @git.tags |> Enum.reverse() do %>
+                  <li>
+                    <%= link tag, to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tag", tag])) %>
                   </li>
                 <% end %>
               </ul>
