@@ -583,9 +583,13 @@ defmodule KmxgitWeb.RepositoryController do
     users_by_email = UserManager.get_users_by_email(Enum.uniq(git.users_email))
     %{git | users_by_email: users_by_email}
   end
+  defp git_put_avatars(git) do
+    git
+  end
 
   defp git_put_branches(git = %{valid: true}, repo, conn, op, path) do
-    case Git.branches(Repository.full_slug(repo)) do
+    slug = Repository.full_slug(repo)
+    case Git.branches(slug) do
       {:ok, branches} ->
         branch_trees = branches
         |> Enum.map(fn branch ->
@@ -593,7 +597,9 @@ defmodule KmxgitWeb.RepositoryController do
           {:branch, branch, url}
         end)
         %{git | trees: git.trees ++ branch_trees}
-      {:error, status} -> %{git | status: status, valid: false}
+      {:error, status} ->
+        IO.inspect({:git_put_branches, slug, status})
+        %{git | status: "#{git.status}\ngit_put_branches: #{status}", valid: false}
     end
   end
   defp git_put_branches(git, _, _, _, _) do
@@ -604,7 +610,8 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
   defp git_put_files(git = %{valid: true}, repo, tree, subdir, conn) do
-    case Git.files(Repository.full_slug(repo), tree, subdir || "") do
+    slug = Repository.full_slug(repo)
+    case Git.files(slug, tree, subdir || "") do
       {:ok, []} -> git
       {:ok, files} ->
         files = files
@@ -612,7 +619,9 @@ defmodule KmxgitWeb.RepositoryController do
           %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_tree", tree | String.split(url, "/")])}
         end)
         %{git | files: files}
-      {:error, status} -> %{git | status: "#{git.status}\n#{status}", valid: false}
+      {:error, status} ->
+        IO.inspect({:git_put_files, slug, status})
+        %{git | status: "#{git.status}\ngit_put_files: #{status}", valid: false}
     end
   end
   defp git_put_files(git, _, _, _, _) do
@@ -658,7 +667,7 @@ defmodule KmxgitWeb.RepositoryController do
           lang = lang(ext, filename)
           #IO.inspect(path: path, name: name, type: type)
           %{git | content: content, content_lang: lang, content_type: type, filename: filename, line_numbers: line_numbers, markdown_html: markdown_html}
-        {:error, error} -> %{git | status: error}
+        {:error, error} -> %{git | status: "#{git.status}\ngit_put_content: #{error}"}
       end
     else
       git
@@ -729,7 +738,7 @@ defmodule KmxgitWeb.RepositoryController do
           %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_blob", tree | String.split(url, "/")])}
         end)
         %{git | release: release}
-      {:error, status} -> %{git | status: "git_put_release: #{git.status}\n#{status}", valid: false}
+      {:error, _} -> git
     end
   end
   defp git_put_release(git, _, _, _) do
