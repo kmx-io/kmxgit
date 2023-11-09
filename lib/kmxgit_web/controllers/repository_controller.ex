@@ -565,7 +565,7 @@ defmodule KmxgitWeb.RepositoryController do
   end
 
   defp git_add_user_email(git, email) do
-    if Enum.find(git.users_email, email) do
+    if Enum.find(git.users_email, & &1 == email) do
       git
     else
       %{git | users_email: [email | git.users_email]}
