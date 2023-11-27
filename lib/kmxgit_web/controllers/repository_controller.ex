@@ -696,8 +696,12 @@ defmodule KmxgitWeb.RepositoryController do
                IO.inspect(err)
                nil
            end
-    %{git | log1: log1}
-    |> git_add_user_email(log1.author_email)
+    if log1 do
+      %{git | log1: log1}
+      |> git_add_user_email(log1.author_email)
+    else
+      git
+    end
   end
   defp git_put_log1(git, _, _, _) do
     git
