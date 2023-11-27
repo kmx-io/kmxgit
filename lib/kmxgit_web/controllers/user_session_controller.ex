@@ -42,6 +42,7 @@ defmodule KmxgitWeb.UserSessionController do
         |> assign(:changeset, changeset)
         |> assign(:error_message, "Invalid token")
         |> assign(:totp, totp)
+        |> assign(:user, user)
         |> render("totp.html")
       end
     else

@@ -255,7 +255,7 @@ defmodule Kmxgit.UserManager.User do
   end
 
   def totp_verify(%__MODULE__{totp_secret: secret}, token) do
-    :pot.valid_totp(token, secret, [window: 1, addwindow: 1])
+    :pot.valid_totp(token, secret, [window: 2, addwindow: 2])
   end
 
   def totp_changeset(user, :delete) do
