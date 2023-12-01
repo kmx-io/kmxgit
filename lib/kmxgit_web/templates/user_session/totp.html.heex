@@ -10,7 +10,7 @@
 
     <div class="mb-3">
       <%= label f, :totp, gettext("TOTP (Google Authenticator) for user %{user}",
-          %{user: @user.slug.slug}), class: "form-label" %>
+          %{user: @user.slug_}), class: "form-label" %>
       <%= number_input f, :totp, class: "form-control" %>
       <%= error_tag f, :totp %>
     </div>
