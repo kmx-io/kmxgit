@@ -30,6 +30,8 @@ defmodule KmxgitWeb.UserController do
       conn
       |> put_resp_content_type("image/png")
       |> send_file(200, path)
+    else
+      not_found(conn)
     end
   end
   def avatar(conn, _) do
