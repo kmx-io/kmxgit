@@ -156,7 +156,7 @@ defmodule Kmxgit.Git do
     dir = git_dir(repo)
     # [%{author: author, author_email: email, hash: hash, date: date, message: msg}]
     #IO.inspect({:log_nif, dir, tree, path, skip, limit})
-    log_nif(dir, tree, path, skip, limit)
+    log_nif(dir, tree, path, skip, limit) || []
   end
 
   def log_nif(_repo, _tree, _path, _skip, _limit) do
