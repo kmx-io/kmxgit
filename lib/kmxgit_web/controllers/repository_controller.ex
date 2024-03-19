@@ -644,9 +644,13 @@ defmodule KmxgitWeb.RepositoryController do
               Logger.error(inspect(reason))
               nil
           end
-    emails = Enum.map(log, & &1.author_email) |> Enum.uniq()
-    %{git | log: log}
-    |> git_add_user_emails(emails)
+    if log do
+      emails = Enum.map(log, & &1.author_email) |> Enum.uniq()
+      %{git | log: log}
+      |> git_add_user_emails(emails)
+    else
+      git
+    end
   end
 
   defp git_put_content(git = %{files: [%{name: name, sha1: sha1, type: :blob}], valid: true}, repo, path) do
