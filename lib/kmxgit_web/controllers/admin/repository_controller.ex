@@ -102,7 +102,7 @@ defmodule KmxgitWeb.Admin.RepositoryController do
 
   def show(conn, params) do
     repo = RepositoryManager.get_repository!(params["id"])
-    public_access = RepositoryManager.public_access?(Repository.full_slug(repo))
+    public_access = GitManager.public_access?(Repository.full_slug(repo))
     |> RepositoryManager.put_disk_usage()
     conn
     |> assign(:members, Repository.members(repo))
