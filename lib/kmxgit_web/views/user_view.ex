@@ -14,6 +14,7 @@
 defmodule KmxgitWeb.UserView do
   use KmxgitWeb, :view
 
+  alias Kmxgit.GitManager
   alias Kmxgit.RepositoryManager.Repository
   alias Kmxgit.UserManager.{Avatar, User}
 end
