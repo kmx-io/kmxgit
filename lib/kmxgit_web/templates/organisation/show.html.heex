@@ -23,7 +23,7 @@
           <%= for repo <- @repos do %>
             <li class="list-group-item">
               <%= link to: Routes.repository_path(@conn, :show, @org.slug_, Repository.splat(repo)) do %>
-                <%= if repo.public_access do %>
+                <%= if GitManager.public_access?(Repository.full_slug(repo)) do %>
                   <i class="fa fa-code-fork"></i>
                 <% else %>
                   <i class="fa fa-lock"></i>
