@@ -462,6 +462,7 @@ defmodule KmxgitWeb.RepositoryController do
         |> assign(:changeset, changeset)
         |> assign_current_organisation(owner)
         |> assign(:owner, owner)
+        |> assign(:public_access, changeset.public_access)
         |> render("new.html")
     end
   end
