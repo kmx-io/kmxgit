@@ -980,7 +980,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_release(repo, tree, conn)
     |> git_put_tags(repo, conn, op, nil)
     |> git_put_avatars()
-
+    public_access = GitManager.public_access?(Repository.full_slug(repo))
     tag = Enum.find(git.tags, fn tag -> tag == tree end)
     if git.log1 && tag do
       conn
@@ -989,6 +989,7 @@ defmodule KmxgitWeb.RepositoryController do
       |> assign(:git, git)
       |> assign(:path, nil)
       |> assign(:repo, repo)
+      |> assign(:public_access, public_access)
       |> assign(:tag, tag)
       |> render("tag.html")
     else
