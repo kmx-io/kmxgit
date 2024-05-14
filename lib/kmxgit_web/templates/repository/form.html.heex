@@ -12,7 +12,7 @@
   </div>
 
   <div class="mb-3 form-check">
-    <%= checkbox f, :public_access, class: "form-check-input" %>
+    <%= checkbox f, :public_access, value: @public_access, class: "form-check-input" %>
     <%= label f, :public_access, gettext("Public access ?"), class: "form-check-label" %>
     <%= error_tag f, :public_access %>
   </div>

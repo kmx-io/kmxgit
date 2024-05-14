@@ -5,7 +5,7 @@
     </li>
     <li class="list-group-item">
       <table class="table properties">
-        <%= if @repo.public_access do %>
+        <%= if @public_access do %>
           <tr>
             <th><%= gettext "Git HTTP" %></th>
             <td><%= Repository.http_url(@repo) %></td>
@@ -18,7 +18,7 @@
         <tr>
           <th><%= gettext "Public access ?" %></th>
           <td>
-            <%= if @repo.public_access do %>
+            <%= if @public_access do %>
               <%= gettext "public" %>
             <% else %>
               <%= gettext "private" %>
