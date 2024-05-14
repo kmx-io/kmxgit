@@ -15,6 +15,7 @@ defmodule KmxgitWeb.RepositoryController do
   use KmxgitWeb, :controller
   require Logger
 
+  alias Ecto.Changeset
   alias Kmxgit.Git
   alias Kmxgit.GitAuth
   alias Kmxgit.GitManager
@@ -462,7 +463,7 @@ defmodule KmxgitWeb.RepositoryController do
         |> assign(:changeset, changeset)
         |> assign_current_organisation(owner)
         |> assign(:owner, owner)
-        |> assign(:public_access, changeset.public_access)
+        |> assign(:public_access, Changeset.get_field(changeset, :public_access, false))
         |> render("new.html")
     end
   end
