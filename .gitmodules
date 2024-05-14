@@ -1,0 +1,3 @@
+[submodule "assets/js/prism"]
+	path = assets/js/prism
+	url = https://git.kmx.io/kmx.io/prism.js.git

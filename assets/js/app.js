@@ -3,8 +3,7 @@ window.$ = $;
 window.jQuery = $;
 
 import "bootstrap";
-import "../vendor/prism";
-
+import "./prism/prism";
 import "./repository";
 import "./kmx_anim";
 
