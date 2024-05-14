@@ -963,6 +963,7 @@ defmodule KmxgitWeb.RepositoryController do
       |> assign(:git, git)
       |> assign(:log, git.log)
       |> assign(:path, path)
+      |> assign(:public_access, public_access)
       |> assign(:repo, repo)
       |> render("log.html")
     else
