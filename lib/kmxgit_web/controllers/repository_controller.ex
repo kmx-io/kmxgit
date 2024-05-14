@@ -268,6 +268,7 @@ defmodule KmxgitWeb.RepositoryController do
         |> assign(:action, action)
         |> assign(:changeset, changeset)
         |> assign(:owner, slug.user)
+        |> assign(:public_access, false)
         |> render("new.html")
       else
         org = slug.organisation
@@ -278,6 +279,7 @@ defmodule KmxgitWeb.RepositoryController do
           |> assign(:changeset, changeset)
           |> assign(:current_organisation, org)
           |> assign(:owner, org)
+          |> assign(:public_access, false)
           |> render("new.html")
         else
           not_found(conn)
