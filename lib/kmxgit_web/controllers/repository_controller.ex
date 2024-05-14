@@ -902,6 +902,7 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, op = :commit, %{git: git, org: org, path: path, repo: repo, tree: tree}) do
+    public_access = GitManager.public_access?(Repository.full_slug(repo))
     git = git
     |> git_put_log1(repo, tree, path)
     |> git_put_commit(repo, conn, op, tree, path)
@@ -921,6 +922,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> assign(:diff_line_numbers, diff_line_numbers)
     |> assign(:git, git)
     |> assign(:path, path)
+    |> assign(:public_access, public_access)
     |> assign(:repo, repo)
     |> render("commit.html")
   end
@@ -946,6 +948,7 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, :log, %{tree: tree, git: git, org: org, path: path, repo: repo}) do
+    public_access = GitManager.public_access?(Repository.full_slug(repo))
     git = git
     |> git_put_log(repo, tree, path)
     |> git_put_avatars()
