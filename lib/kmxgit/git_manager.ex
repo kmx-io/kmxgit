@@ -77,7 +77,7 @@ defmodule Kmxgit.GitManager do
     end
   end
 
-  def public_access(repo) do
+  def public_access?(repo) do
     dir = git_dir(repo)
     export = "#{dir}/git-daemon-export-ok"
     File.exists?(export)

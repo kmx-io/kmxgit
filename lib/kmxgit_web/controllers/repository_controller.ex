@@ -96,7 +96,7 @@ defmodule KmxgitWeb.RepositoryController do
     if repo && Repository.owner?(repo, current_user) do
       org = repo.organisation
       changeset = RepositoryManager.change_repository(repo)
-      public_access = GitManager.public_access(Repository.full_slug(repo))
+      public_access = GitManager.public_access?(Repository.full_slug(repo))
       conn
       |> assign(:action, Routes.repository_path(conn, :update, params["owner"], Repository.splat(repo)))
       |> assign(:changeset, changeset)
@@ -338,7 +338,8 @@ defmodule KmxgitWeb.RepositoryController do
       op = get_op(chunks)
       op_params = get_op_params(op, chunks)
       repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-      if op_params && repo && (repo.public_access || Repository.member?(repo, current_user)) do
+      public_access = GitManager.public_access?(Repository.full_slug(repo))
+      if op_params && repo && (public_access || Repository.member?(repo, current_user)) do
         org = repo.organisation
         user = repo.user
         git = git_setup(repo, conn, op, op_params)
@@ -987,7 +988,7 @@ defmodule KmxgitWeb.RepositoryController do
     end
   end
   defp show_op(conn, op = :tree, %{tree: tree, git: git, org: org, path: path, repo: repo, user: user}) do
-    public_access = GitManager.public_access(Repository.full_slug(repo))
+    public_access = GitManager.public_access?(Repository.full_slug(repo))
     git = git
     |> git_put_files(repo, tree, path, conn)
     |> git_put_release(repo, tree, conn)
