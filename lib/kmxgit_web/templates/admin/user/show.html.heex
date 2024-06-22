@@ -49,10 +49,6 @@
       </td>
     </tr>
     <tr>
-      <th><%= gettext "Disk usage" %></th>
-      <td><%= disk_usage(@user.disk_usage) %></td>
-    </tr>
-    <tr>
       <th><%= gettext "2FA" %></th>
       <td><%= if @user.totp_last != 0, do: "TOTP", else: "none" %></td>
     </tr>

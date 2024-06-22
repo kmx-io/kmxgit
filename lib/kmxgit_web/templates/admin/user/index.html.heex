@@ -16,7 +16,6 @@
         <th><%= link gettext("Name"), to: Routes.admin_user_path(@conn, :index, search: @search, sort: "name#{if @index.column == "name" && !@index.reverse, do: "-"}") %><%= if @index.column == "name" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Email"), to: Routes.admin_user_path(@conn, :index, search: @search, sort: "email#{if @index.column == "email" && !@index.reverse, do: "-"}") %><%= if @index.column == "email" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Login"), to: Routes.admin_user_path(@conn, :index, search: @search, sort: "login#{if @index.column == "login" && !@index.reverse, do: "-"}") %><%= if @index.column == "login" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-        <th><%= link gettext("Disk usage"), to: Routes.admin_user_path(@conn, :index, search: @search, sort: "du#{if @index.column != "du" || (@index.column == "du" && !@index.reverse), do: "-"}") %><%= if @index.column == "du" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("2FA"), to: Routes.admin_user_path(@conn, :index, search: @search, sort: "mfa#{if @index.column == "mfa" && !@index.reverse, do: "-"}") %><%= if @index.column == "mfa" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Admin"), to: Routes.admin_user_path(@conn, :index, search: @search, sort: "admin#{if @index.column == "admin" && !@index.reverse, do: "-"}") %><%= if @index.column == "admin" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Deploy"), to: Routes.admin_user_path(@conn, :index, search: @search, sort: "deploy#{if @index.column == "deploy" && !@index.reverse, do: "-"}") %><%= if @index.column == "deploy" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
@@ -30,7 +29,6 @@
           <td><%= link user.name, to: Routes.admin_user_path(@conn, :show, user) %></td>
           <td><%= link user.email, to: "mailto:#{user.email}" %></td>
           <td><%= link User.login(user), to: Routes.admin_user_path(@conn, :show, user) %></td>
-          <td><%= disk_usage(user.disk_usage) %></td>
           <td><%= if user.totp_last != 0, do: "TOTP", else: "none" %></td>
           <td><%= user.is_admin %></td>
           <td><%= user.deploy_only %></td>

@@ -9,7 +9,6 @@
         <th><%= link gettext("Owner"), to: Routes.admin_repository_path(@conn, :index, search: @search, sort: "owner#{if @index.column == "owner" && !@index.reverse, do: "-"}") %><%= if @index.column == "owner" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Public access ?"), to: Routes.admin_repository_path(@conn, :index, search: @search, sort: "slug#{if @index.column == "public_access" && !@index.reverse, do: "-"}") %><%= if @index.column == "public_access" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Slug"), to: Routes.admin_repository_path(@conn, :index, search: @search, sort: "slug#{if @index.column == "slug" && !@index.reverse, do: "-"}") %><%= if @index.column == "slug" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-        <th><%= link gettext("Disk usage"), to: Routes.admin_repository_path(@conn, :index, search: @search, sort: "du#{if @index.column != "du" || (@index.column == "du" && !@index.reverse), do: "-"}") %><%= if @index.column == "du" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= gettext("Actions") %></th>
       </tr>
     </thead>
@@ -33,7 +32,6 @@
             <% end %>
           </td>
           <td><%= link Repository.full_slug(repo), to: Routes.admin_repository_path(@conn, :show, repo) %></td>
-          <td><%= disk_usage(repo.disk_usage) %></td>
           <td>
             <%= link gettext("Show"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(repo), Repository.splat(repo)), class: "btn btn-sm btn-primary" %>
           </td>

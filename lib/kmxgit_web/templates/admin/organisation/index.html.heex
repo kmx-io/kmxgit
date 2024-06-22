@@ -15,7 +15,6 @@
         <th><%= link gettext("Id"), to: Routes.admin_organisation_path(@conn, :index, search: @search, sort: "id#{if @index.column == "id" && !@index.reverse, do: "-"}") %><%= if @index.column == "id" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Name"), to: Routes.admin_organisation_path(@conn, :index, search: @search, sort: "name#{if @index.column == "name" && !@index.reverse, do: "-"}") %><%= if @index.column == "name" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= link gettext("Slug"), to: Routes.admin_organisation_path(@conn, :index, search: @search, sort: "slug#{if @index.column == "slug" && !@index.reverse, do: "-"}") %><%= if @index.column == "slug" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
-        <th><%= link gettext("Disk usage"), to: Routes.admin_organisation_path(@conn, :index, search: @search, sort: "du#{if @index.column != "du" || (@index.column == "du" && !@index.reverse), do: "-"}") %><%= if @index.column == "du" do %><%= if @index.reverse do %> <i class="fa fa-angle-down"></i><% else %> <i class="fa fa-angle-up"></i><% end %><% end %></th>
         <th><%= gettext("Actions") %></th>
       </tr>
     </thead>
@@ -25,7 +24,6 @@
           <td><%= link org.id, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
           <td><%= link org.name, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
           <td><%= link org.slug_, to: Routes.admin_organisation_path(@conn, :show, org) %></td>
-          <td><%= disk_usage(org.disk_usage) %></td>
           <td>
             <%= link gettext("Show"), to: Routes.slug_path(@conn, :show, org.slug_), class: "btn btn-sm btn-primary" %>
           </td>
