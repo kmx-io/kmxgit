@@ -745,12 +745,12 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
   defp git_put_release(git = %{valid: true}, repo, tree, conn) do
-    case Git.files(Repository.full_slug(repo), tree, "release/") do
+    case Git.files(Repository.full_slug(repo) + "/release", "master", "release/#{tree}") do
       {:ok, []} -> git
       {:ok, files} ->
         release = files
         |> Enum.map(fn f = %{url: url} ->
-          %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["_blob", tree | String.split(url, "/")])}
+          %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["release", "_blob", "master" | String.split(url, "/")])}
         end)
         %{git | release: release}
       {:error, _} -> git
