@@ -745,7 +745,7 @@ defmodule KmxgitWeb.RepositoryController do
     git
   end
   defp git_put_release(git = %{valid: true}, repo, tree, conn) do
-    case Git.files("#{Repository.full_slug(repo)}/release", "master", "release/#{tree}") do
+    case Git.files("#{Repository.full_slug(repo)}/release", "master", "#{tree}") do
       {:ok, []} ->
         IO.inspect("git_put_release: Git.files []")
         git
