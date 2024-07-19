@@ -753,7 +753,9 @@ defmodule KmxgitWeb.RepositoryController do
           %{f | url: Routes.repository_path(conn, :show, Repository.owner_slug(repo), Repository.splat(repo) ++ ["release", "_blob", "master" | String.split(url, "/")])}
         end)
         %{git | release: release}
-      {:error, _} -> git
+      {:error, e} ->
+        IO.inspect("git_put_release: Git.files error: #{e}") 
+        git
     end
   end
   defp git_put_release(git, _, _, _) do
