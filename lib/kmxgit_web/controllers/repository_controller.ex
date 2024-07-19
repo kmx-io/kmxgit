@@ -755,7 +755,7 @@ defmodule KmxgitWeb.RepositoryController do
         end)
         %{git | release: release}
       {:error, e} ->
-        IO.inspect("git_put_release: Git.files error: #{e}") 
+        #IO.inspect("git_put_release: Git.files error: #{e}") 
         git
     end
   end
