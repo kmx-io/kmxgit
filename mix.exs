@@ -1,5 +1,5 @@
 ## kmxgit
-## Copyright 2022 kmx.io <contact@kmx.io>
+## Copyright 2022,2023,2024 kmx.io <contact@kmx.io>
 ##
 ## Permission is hereby granted to use this software granted
 ## the above copyright notice and this permission paragraph

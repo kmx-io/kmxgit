@@ -3,7 +3,10 @@ window.$ = $;
 window.jQuery = $;
 
 import "bootstrap";
-import "prismjs";
+
+import hljs from "highlight.js";
+$(function () { hljs.highlightAll(); })
+
 import "./repository";
 import "./kmx_anim";
 

@@ -42,7 +42,7 @@ defmodule KmxgitWeb.UserRegistrationController do
                   {:ok, _} =
                     UserManager.deliver_user_confirmation_instructions(
                       user,
-                      &Routes.user_confirmation_url(conn, :edit, &1))
+                      & Routes.user_confirmation_url(conn, :edit, &1))
                   user
                 {:error, changeset} ->
                   IO.inspect(changeset)
