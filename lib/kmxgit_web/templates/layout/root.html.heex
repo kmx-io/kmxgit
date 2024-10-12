@@ -10,8 +10,7 @@
     <% else %>
       <%= live_title_tag "kmx git" %>
     <% end %>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/_assets/app.css")}/>
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/_assets/app.js")}></script>
+    <link rel="stylesheet" href="/_assets/app.css"/>
     <link rel="icon" type="image/png" sizes="128x128" href="/_images/kmxgit.logo.black.128.png">
     <link rel="icon" type="image/png" sizes="64x64" href="/_images/kmxgit.logo.black.64.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/_images/kmxgit.logo.black.32.png">
@@ -22,5 +21,6 @@
     <%= render "flash.html", assigns %>
     <%= @inner_content %>
     <%= render "footer.html", assigns %>
+    <script type="text/javascript" src="/_assets/app.js"></script>
   </body>
 </html>
