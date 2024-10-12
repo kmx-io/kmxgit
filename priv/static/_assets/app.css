@@ -20389,6 +20389,10 @@ pre > code[class*=language-] {
   font-size: 1rem;
 }
 
+pre > code.hljs {
+  padding: 0;
+}
+
 .clear {
   clear: both;
 }
