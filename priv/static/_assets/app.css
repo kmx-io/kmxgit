@@ -20385,6 +20385,10 @@ pre.wrap {
   white-space: pre-wrap;
 }
 
+pre > code[class*=language-] {
+  font-size: 1rem;
+}
+
 .clear {
   clear: both;
 }
