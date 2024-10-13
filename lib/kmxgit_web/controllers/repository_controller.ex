@@ -341,29 +341,33 @@ defmodule KmxgitWeb.RepositoryController do
       op = get_op(chunks)
       op_params = get_op_params(op, chunks)
       repo = RepositoryManager.get_repository_by_owner_and_slug(params["owner"], slug)
-      public_access = GitManager.public_access?(Repository.full_slug(repo))
-      if op_params && repo && (public_access || Repository.member?(repo, current_user)) do
-        org = repo.organisation
-        user = repo.user
-        git = git_setup(repo, conn, op, op_params)
-        first_tree = Enum.find_value(git.trees,
-          fn {:branch, "master", _} -> "master"
-            _ -> false
-          end) ||
-          case Enum.at(git.trees, 0) do
-            {_, first_tree, _} -> first_tree
-            nil -> nil
+      if (repo) do
+        public_access = GitManager.public_access?(Repository.full_slug(repo))
+        if op_params && repo && (public_access || Repository.member?(repo, current_user)) do
+          org = repo.organisation
+          user = repo.user
+          git = git_setup(repo, conn, op, op_params)
+          first_tree = Enum.find_value(git.trees,
+            fn {:branch, "master", _} -> "master"
+              _ -> false
+            end) ||
+            case Enum.at(git.trees, 0) do
+              {_, first_tree, _} -> first_tree
+              nil -> nil
+            end
+          tree1 = op_params.tree || first_tree
+          op_params = %OpParams{op_params | tree: tree1, git: git, org: org, repo: repo, user: user}
+          if git.valid do
+            show_op(conn, op || :tree, op_params)
+          else
+            IO.inspect(:invalid_git)
+            not_found(conn)
           end
-        tree1 = op_params.tree || first_tree
-        op_params = %OpParams{op_params | tree: tree1, git: git, org: org, repo: repo, user: user}
-        if git.valid do
-          show_op(conn, op || :tree, op_params)
         else
-          IO.inspect(:invalid_git)
+          IO.inspect(:no_repo)
           not_found(conn)
         end
       else
-        IO.inspect(:no_repo)
         not_found(conn)
       end
     end
