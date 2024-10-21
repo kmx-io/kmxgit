@@ -15,6 +15,7 @@
   <div class="mb-3">
     <%= label f, :slug_, gettext("Login"), class: "form-label" %>
     <%= text_input f, :slug_, class: "form-control" %>
+    <%= error_tag f, :slug %>
     <%= error_tag f, :slug_ %>
   </div>
 

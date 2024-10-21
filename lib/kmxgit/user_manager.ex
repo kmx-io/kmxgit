@@ -306,7 +306,7 @@ defmodule Kmxgit.UserManager do
     end
   end
 
-  def admin_create_user(attrs \\ %{}) do
+  def admin_create_user(attrs) do
     changeset = User.admin_create_user_changeset(%User{}, attrs)
     with {:ok, user} <- Repo.insert(changeset) do
       {:ok, user, changeset}
