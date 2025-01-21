@@ -15,7 +15,7 @@
       </h2>
 
       <p>
-        <%= @git.log1.message %>
+        <pre><%= @git.log1.message %></pre>
       </p>
 
       <%= link gettext("Browse"), to: Routes.repository_path(@conn, :show, Repository.owner_slug(@repo), Repository.splat(@repo, ["_tree", @tag])), class: "btn btn-primary" %>
