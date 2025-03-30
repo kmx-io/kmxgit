@@ -24,6 +24,9 @@ pre {
     max-width: 80em;
 }
 pre.wrap {
+    white-space: pre-wrap;
+}
+pre.word-break {
     word-break: break-all;
     white-space: pre-wrap;
 }
