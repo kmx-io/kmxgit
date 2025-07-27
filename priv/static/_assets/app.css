@@ -20301,6 +20301,7 @@ code.hljs {
 pre {
   overflow: visible;
   max-width: 80em;
+  margin-bottom: 2rem;
 }
 
 pre.wrap {
