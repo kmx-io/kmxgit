@@ -20318,7 +20318,7 @@ pre code.hljs {
   overflow: visible;
 }
 
-content_html p {
+.content_html p {
   max-width: 40em;
 }
 
