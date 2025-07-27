@@ -30,10 +30,13 @@ pre.word-break {
     word-break: break-all;
     white-space: pre-wrap;
 }
-pre > code.hljs {
+pre code.hljs {
     padding: 0;
+    overflow: visible;
 }
-
+content_html p {
+    max-width: 40em;
+}
 .clear {
     clear: both;
 }
