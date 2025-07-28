@@ -22,7 +22,7 @@ $font-family-monospace: "courier_new", "Courier New", monospace;
 pre {
     overflow: visible;
     max-width: 80em;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
 }
 pre.wrap {
     white-space: pre-wrap;
@@ -37,6 +37,9 @@ pre code.hljs {
 }
 .content_html p {
     max-width: 40em;
+}
+.content_html pre {
+    margin-bottom: 2rem;
 }
 .clear {
     clear: both;
