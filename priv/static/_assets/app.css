@@ -20512,10 +20512,6 @@ table.properties th {
   overflow: hidden;
 }
 
-pre {
-  margin-bottom: 0;
-}
-
 code, pre, code[class*=language-], pre[class*=language-] {
   font-size: 1.1rem;
   font-family: courier_new;
