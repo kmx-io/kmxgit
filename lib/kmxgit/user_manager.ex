@@ -334,7 +334,7 @@ defmodule Kmxgit.UserManager do
   def admin_update_user(%User{} = user, attrs) do
     case user
          |> User.admin_changeset(attrs)
-         |> Repo.update()
+         |> Repo.update() do
       {:ok, u} ->
         if attrs["avatar"] do
           %{path: path} = attrs["avatar"]
