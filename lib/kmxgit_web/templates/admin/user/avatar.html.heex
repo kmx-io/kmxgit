@@ -1,0 +1,11 @@
+<% right = try do
+if @right, do: " #{@right}", else: nil
+rescue
+_ -> nil
+end %>
+<%= if @user do %>
+  <% avatar_path = Avatar.path(@user, @size) %>
+  <%= link to: Routes.slug_path(@conn, :show, User.login(@user)) do %><%= if File.exists?(avatar_path) do %><%= img_tag(Routes.user_path(@conn, :avatar, User.login(@user), @size), alt: @title, title: @title, class: "#{@class} circle") %><% else %><img src={Exgravatar.gravatar_url(@email, s: @size)} alt={@title} title={@title} class={"#{@class} circle"} /><% end %><%= right %><% end %>
+<% else %>
+  <img src={Exgravatar.gravatar_url(@email, s: @size)} alt={@title} title={@title} class={"#{@class} circle"} />
+<% end %>
