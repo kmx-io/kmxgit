@@ -19,6 +19,10 @@
       <td><%= User.login(@user) %></td>
     </tr>
     <tr>
+      <th><%= gettext "Avatar" %></th>
+      <td><%= render("avatar.html", conn: @conn, user: @user, email: @user.email, size: 256, title: User.login(@user), class: "avatar-lg") %></td>
+    </tr>
+    <tr>
       <th><%= gettext "Description" %></th>
       <td>
         <%= if @user.description do %>

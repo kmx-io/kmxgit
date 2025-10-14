@@ -29,7 +29,7 @@ defmodule KmxgitWeb.SlugController do
     else
       current_user = conn.assigns.current_user
       slug = SlugManager.get_slug(params["slug"])
-      if !slug do
+      if ! slug do
         not_found(conn)
       else
         user = slug.user
