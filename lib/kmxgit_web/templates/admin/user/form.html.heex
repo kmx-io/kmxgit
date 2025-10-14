@@ -1,4 +1,4 @@
-<%= form_for @changeset, Routes.admin_user_path(@conn, :update, @user), fn f -> %>
+<%= form_for @changeset, Routes.admin_user_path(@conn, :update, @user), [multipart: true], fn f -> %>
 
   <div class="mb-3">
     <%= label f, :name, class: "form-label" %>
