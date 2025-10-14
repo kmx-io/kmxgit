@@ -332,9 +332,16 @@ defmodule Kmxgit.UserManager do
   end
 
   def admin_update_user(%User{} = user, attrs) do
-    user
-    |> User.admin_changeset(attrs)
-    |> Repo.update()
+    case user
+         |> User.admin_changeset(attrs)
+         |> Repo.update()
+      {:ok, u} ->
+        if attrs["avatar"] do
+          %{path: path} = attrs["avatar"]
+          Avatar.set_image(u, path)
+        end
+      x -> x
+    end
   end
 
   def admin_update_user_password(%User{} = user, attrs) do
