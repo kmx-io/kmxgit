@@ -195,7 +195,8 @@ defmodule KmxgitWeb.UserController do
 
   def delete(conn, params) do
     current_user = conn.assigns.current_user
-    if params["login"] == User.login(current_user) do
+    if params["login"] == User.login(current_user) ||
+       current_user.is_admin do
       case Repo.transaction(fn ->
             case UserManager.delete_user(current_user) do
               {:ok, _} ->
