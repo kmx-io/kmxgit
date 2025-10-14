@@ -24,6 +24,22 @@ defmodule KmxgitWeb.Admin.UserController do
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
 
+  def avatar(conn, %{"login" => login,
+                     "size" => size}) do
+    user = UserManager.get_user_by_login(login)
+    if user do
+      path = Avatar.path(user, size)
+      conn
+      |> put_resp_content_type("image/png")
+      |> send_file(200, path)
+    else
+      not_found(conn)
+    end
+  end
+  def avatar(conn, _) do
+    not_found(conn)
+  end
+
   def index(conn, params) do
     index_params = %IndexParams{}
     |> KmxgitWeb.Admin.page_params(params["page"], params["per"])

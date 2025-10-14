@@ -40,7 +40,8 @@ defmodule KmxgitWeb.UserController do
 
   def edit(conn, params) do
     current_user = conn.assigns.current_user
-    if params["login"] == User.login(current_user) do
+    if params["login"] == User.login(current_user) ||
+       current_user.is_admin do
       user = current_user
       changeset = UserManager.change_user(user)
       email_changeset = UserManager.change_user_email(user)
@@ -59,7 +60,8 @@ defmodule KmxgitWeb.UserController do
 
   def update(conn, params) do
     current_user = conn.assigns.current_user
-    if params["login"] == User.login(current_user) do
+    if params["login"] == User.login(current_user) ||
+       current_user.is_admin do
       user = current_user
       case Repo.transaction(fn ->
             case UserManager.update_user(user, params["user"]) do

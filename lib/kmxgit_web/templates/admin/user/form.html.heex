@@ -20,6 +20,12 @@
   </div>
 
   <div class="mb-3">
+    <%= label f, :avatar, class: "form-label" %>
+    <%= file_input f, :avatar, class: "form-control" %>
+    <%= error_tag f, :avatar %>
+  </div>
+
+  <div class="mb-3">
     <%= label f, :description, class: "form-label" %>
     <%= textarea f, :description, class: "form-control" %>
     <%= error_tag f, :description %>
