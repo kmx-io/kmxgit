@@ -339,6 +339,7 @@ defmodule Kmxgit.UserManager do
         if attrs["avatar"] do
           %{path: path} = attrs["avatar"]
           Avatar.set_image(u, path)
+          {:ok, u}
         end
       x -> x
     end
