@@ -21,6 +21,7 @@ defmodule KmxgitWeb.Admin.UserController do
   alias Kmxgit.RepositoryManager
   alias Kmxgit.SlugManager
   alias Kmxgit.UserManager
+  alias Kmxgit.UserManager.Avatar
   alias Kmxgit.UserManager.User
   alias KmxgitWeb.ErrorView
 
