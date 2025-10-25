@@ -919,26 +919,26 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_commit(repo, conn, op, tree, path)
     |> git_put_avatars()
     #IO.inspect(git)
-    diff = ""
-    diff_line_numbers = line_numbers(diff)
-    if git.log1 do
+    if ! git.log1 do
+      not_found(conn)
+    else
       diff = case Git.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
                {:ok, diff} -> diff
                _ -> nil
              end
       diff_line_numbers = diff && line_numbers(diff)
+      conn
+      |> assign(:commit, git.log1)
+      |> assign_current_organisation(org)
+      |> assign(:current_repository, repo)
+      |> assign(:diff, diff)
+      |> assign(:diff_line_numbers, diff_line_numbers)
+      |> assign(:git, git)
+      |> assign(:path, path)
+      |> assign(:public_access, public_access)
+      |> assign(:repo, repo)
+      |> render("commit.html")
     end
-    conn
-    |> assign(:commit, git.log1)
-    |> assign_current_organisation(org)
-    |> assign(:current_repository, repo)
-    |> assign(:diff, diff)
-    |> assign(:diff_line_numbers, diff_line_numbers)
-    |> assign(:git, git)
-    |> assign(:path, path)
-    |> assign(:public_access, public_access)
-    |> assign(:repo, repo)
-    |> render("commit.html")
   end
   defp show_op(conn, :diff, %{from: from, org: org, path: path, repo: repo, to: to}) do
     case Git.diff(Repository.full_slug(repo), from, to) do
