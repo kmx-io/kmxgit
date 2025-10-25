@@ -920,7 +920,7 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_avatars()
     #IO.inspect(git)
     diff = ""
-    diff_line_numbers = ""
+    diff_line_numbers = line_numbers(diff)
     if git.log1 do
       diff = case Git.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
                {:ok, diff} -> diff
