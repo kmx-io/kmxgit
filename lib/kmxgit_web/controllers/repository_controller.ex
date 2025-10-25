@@ -919,12 +919,16 @@ defmodule KmxgitWeb.RepositoryController do
     |> git_put_commit(repo, conn, op, tree, path)
     |> git_put_avatars()
     #IO.inspect(git)
-    diff = case Git.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
-             {:ok, diff} -> diff
-             _ -> nil
-           end
-    #diff_html = diff && Pygmentize.html(diff, "diff.patch")
-    diff_line_numbers = diff && line_numbers(diff)
+    if git.log1.hash do
+      diff = case Git.diff(Repository.full_slug(repo), "#{git.log1.hash}~1", git.log1.hash) do
+               {:ok, diff} -> diff
+               _ -> nil
+             end
+      diff_line_numbers = diff && line_numbers(diff)
+    else
+      diff = ""
+      diff_line_numbers = line_numbers(diff)
+    end
     conn
     |> assign(:commit, git.log1)
     |> assign_current_organisation(org)
